@@ -1,18 +1,21 @@
 package newgrader;
 
+import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.google.common.base.Preconditions;
 
-public abstract class Counter {
+import java.util.List;
+
+public abstract class Counter implements Processor {
     private final String counterName;
     private final String countedName;
-    private final int maxScore;
+    private final double maxScore;
     private final int minCount;
     private final int maxCount;
 
     protected VoidVisitorAdapter<MutableInteger> adapter;
 
-    public Counter(String counterName, String countedName, int maxScore, int minCount, int maxCount) {
+    public Counter(String counterName, String countedName, double maxScore, int minCount, int maxCount) {
         Preconditions.checkArgument(minCount >= 0);
         Preconditions.checkArgument(maxCount >= minCount);
         // It makes no sense to have minCount be 0 when MaxCount is Integer.MAX_VALUE.
@@ -25,8 +28,16 @@ public abstract class Counter {
         this.maxCount = maxCount;
     }
 
-    VoidVisitorAdapter<MutableInteger> getAdapter() {
-        return adapter;
+    @Override
+    public List<Result> process(CompilationUnit cu) {
+        MutableInteger mi = new MutableInteger();
+        adapter.visit(cu, mi);
+        return List.of(getResult(mi));
+    }
+
+    @Override
+    public double getTotalMaxScore() {
+        return this.maxScore;
     }
 
     private String getPrefix() {

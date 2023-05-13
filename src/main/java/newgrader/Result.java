@@ -10,4 +10,8 @@ package newgrader;
  */
 public record Result(String name, double score, double maxScore,
                      String message) {
+
+    static Result makeFailure(String name, double maxScore, String message) {
+        return new Result(name, 0, maxScore, message);
+    }
 }

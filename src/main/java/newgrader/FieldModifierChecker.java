@@ -13,9 +13,12 @@ import java.util.List;
  * static variables).
  */
 public class FieldModifierChecker extends Checker {
-    protected FieldModifierChecker(String name, double maxScore, List<String> varNames, List<Modifier> requiredModifiers, List<Modifier> optionalModifiers) {
+    private final List<String> varNames;
+
+    public FieldModifierChecker(String name, double maxScore, List<String> varNames, List<Modifier> requiredModifiers, List<Modifier> optionalModifiers) {
         super(name, maxScore);
-        adapter = new Adapter(varNames, requiredModifiers, optionalModifiers);
+        this.varNames = varNames;
+        adapter = new Adapter(requiredModifiers, optionalModifiers);
     }
 
     /**
@@ -66,13 +69,16 @@ public class FieldModifierChecker extends Checker {
         );
     }
 
+    @Override
+    public double getTotalMaxScore() {
+        return maxScore * varNames.size();
+    }
+
     private class Adapter extends VoidVisitorAdapter<List<Result>> {
-        private final List<String> varNames;
         private final List<Modifier> requiredModifiers;
         private final List<Modifier> optionalModifiers;
 
-        private Adapter(List<String> varNames, List<Modifier> requiredModifiers, List<Modifier> optionalModifiers) {
-            this.varNames = new ArrayList<>(varNames);
+        private Adapter(List<Modifier> requiredModifiers, List<Modifier> optionalModifiers) {
             this.requiredModifiers = new ArrayList<>(requiredModifiers);
             this.optionalModifiers = new ArrayList<>(optionalModifiers);
         }

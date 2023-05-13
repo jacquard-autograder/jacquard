@@ -1,5 +1,6 @@
 package newgrader;
 
+import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
@@ -7,12 +8,13 @@ import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.google.common.base.Preconditions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The base class for syntax checkers.
  */
-public abstract class Checker {
+public abstract class Checker implements Processor {
     /**
      * The message that appears in a successful {@link Result} if none is
      * provided.
@@ -26,7 +28,7 @@ public abstract class Checker {
     public static String DEFAULT_NAME = "Syntax Checker";
 
     private final String name;
-    private final double maxScore;
+    protected final double maxScore;
     // The subclass constructor must either pass the adapter to this class's
     // constructor or initialize it before returning.
     protected VoidVisitorAdapter<List<Result>> adapter;
@@ -50,12 +52,15 @@ public abstract class Checker {
         this(null, maxScore);
     }
 
-    String getName() {
-        return name;
+    @Override
+    public List<Result> process(CompilationUnit cu) {
+        List<Result> results = new ArrayList<>();
+        adapter.visit(cu, results);
+        return results;
     }
 
-    double getMaxScore() {
-        return maxScore;
+    String getName() {
+        return name;
     }
 
     VoidVisitorAdapter<List<Result>> getAdapter() {
