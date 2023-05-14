@@ -4,6 +4,7 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.ast.CompilationUnit;
+import com.google.common.annotations.VisibleForTesting;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Autograder {
+    private static final ParserConfiguration.LanguageLevel DEFAULT_LANGUAGE_LEVEL =
+            ParserConfiguration.LanguageLevel.JAVA_17;
     private final JavaParser parser;
     private final List<Processor> processors = new ArrayList<>();
     private double maxScore = 0.0;
@@ -19,6 +22,16 @@ public class Autograder {
         ParserConfiguration config = new ParserConfiguration();
         config.setLanguageLevel(languageLevel);
         parser = new JavaParser(config);
+    }
+
+    @VisibleForTesting
+    public static CompilationUnit parse(String program) {
+        Autograder autograder = new Autograder(DEFAULT_LANGUAGE_LEVEL);
+        ParseResult<CompilationUnit> parseResult = autograder.parser.parse(program);
+        if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
+            return parseResult.getResult().get();
+        }
+        throw new AssertionError(parseResult.getProblem(0));
     }
 
     public void addProcessor(Processor processor) {

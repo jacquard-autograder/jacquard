@@ -1,9 +1,7 @@
 package newgrader;
 
-import com.github.javaparser.ast.expr.CastExpr;
-import com.github.javaparser.ast.expr.Expression;
-import com.github.javaparser.ast.expr.InstanceOfExpr;
-import com.github.javaparser.ast.expr.UnaryExpr;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
@@ -29,7 +27,7 @@ public class ExpressionCounter extends Counter {
      * @throws IllegalArgumentException if minCount < 0 or maxCount < minCount,
      *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public ExpressionCounter(String name, int maxScore, int minCount, int maxCount, Class<? extends Expression> clazz) {
+    public ExpressionCounter(String name, double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz) {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount);
         adapter = new ExpressionAdapter(clazz);
     }
@@ -52,18 +50,118 @@ public class ExpressionCounter extends Counter {
             }
         }
 
-        private void check(Optional<Expression> expression, MutableInteger mi) {
+        private void check(NodeList<? extends Expression> expressions, MutableInteger mi) {
+            for (Expression expression : expressions) {
+                if (clazz.isInstance(expression)) {
+                    mi.increment();
+                }
+            }
+        }
+
+        private void check(Optional<? extends Expression> expression, MutableInteger mi) {
             if (expression.isPresent() && clazz.isInstance(expression.get())) {
                 mi.increment();
             }
         }
 
-        // To decide what visitor overloads to create, I searched
-        // the javadoc for getExpression() and classes that implement
-        // NodeWithExpression<?>.
+        // expressions
+        @Override
+        public void visit(ArrayAccessExpr node, MutableInteger mi) {
+            check(node.getName(), mi);
+            check(node.getIndex(), mi);
+        }
+
+        @Override
+        public void visit(ArrayCreationExpr node, MutableInteger mi) {
+            check(node.getInitializer(), mi);
+        }
+
+        @Override
+        public void visit(AssignExpr node, MutableInteger mi) {
+            check(node.getTarget(), mi);
+            check(node.getValue(), mi);
+        }
+
+        @Override
+        public void visit(BinaryExpr node, MutableInteger mi) {
+            check(node.getLeft(), mi);
+            check(node.getRight(), mi);
+        }
+
         @Override
         public void visit(CastExpr node, MutableInteger mi) {
             check(node.getExpression(), mi);
+        }
+
+        @Override
+        public void visit(ConditionalExpr node, MutableInteger mi) {
+            check(node.getCondition(), mi);
+            check(node.getElseExpr(), mi);
+            check(node.getThenExpr(), mi);
+        }
+
+        @Override
+        public void visit(EnclosedExpr node, MutableInteger mi) {
+            check(node.getInner(), mi);
+        }
+
+        @Override
+        public void visit(FieldAccessExpr node, MutableInteger mi) {
+            check(node.getScope(), mi);
+        }
+
+        @Override
+        public void visit(InstanceOfExpr node, MutableInteger mi) {
+            check(node.getExpression(), mi);
+        }
+
+        @Override
+        public void visit(LambdaExpr node, MutableInteger mi) {
+            check(node.getExpressionBody(), mi);
+        }
+
+        @Override
+        public void visit(MethodCallExpr node, MutableInteger mi) {
+            check(node.getScope(), mi);
+            check(node.getArguments(), mi);
+        }
+
+        @Override
+        public void visit(MethodReferenceExpr node, MutableInteger mi) {
+            check(node.getScope(), mi);
+        }
+
+        @Override
+        public void visit(ObjectCreationExpr node, MutableInteger mi) {
+            check(node.getScope(), mi);
+            check(node.getArguments(), mi);
+        }
+
+        @Override
+        public void visit(SwitchExpr node, MutableInteger mi) {
+            check(node.getSelector(), mi);
+        }
+
+        @Override
+        public void visit(UnaryExpr node, MutableInteger mi) {
+            check(node.getExpression(), mi);
+        }
+
+        @Override
+        public void visit(VariableDeclarationExpr node, MutableInteger mi) {
+            check(node.getAnnotations(), mi);
+        }
+
+        // statements
+
+        @Override
+        public void visit(AssertStmt node, MutableInteger mi) {
+            check(node.getCheck(), mi);
+        }
+
+        @Override
+        public void visit(DoStmt node, MutableInteger mi) {
+            check(node.getCondition(), mi);
         }
 
         @Override
@@ -77,13 +175,23 @@ public class ExpressionCounter extends Counter {
         }
 
         @Override
-        public void visit(InstanceOfExpr node, MutableInteger mi) {
-            check(node.getExpression(), mi);
+        public void visit(ForEachStmt node, MutableInteger mi) {
+            check(node.getIterable(), mi);
+        }
+
+        @Override
+        public void visit(IfStmt node, MutableInteger mi) {
+            check(node.getCondition(), mi);
         }
 
         @Override
         public void visit(ReturnStmt node, MutableInteger mi) {
             check(node.getExpression(), mi);
+        }
+
+        @Override
+        public void visit(SwitchStmt node, MutableInteger mi) {
+            check(node.getSelector(), mi);
         }
 
         @Override
@@ -97,8 +205,8 @@ public class ExpressionCounter extends Counter {
         }
 
         @Override
-        public void visit(UnaryExpr node, MutableInteger mi) {
-            check(node.getExpression(), mi);
+        public void visit(WhileStmt node, MutableInteger mi) {
+            check(node.getCondition(), mi);
         }
 
         @Override
