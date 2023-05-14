@@ -1,5 +1,7 @@
 package newgrader;
 
+// This is likely incorrect.
+
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.nodeTypes.NodeWithStatements;
 import com.github.javaparser.ast.stmt.BlockStmt;
@@ -11,9 +13,9 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 /**
  * A counter to test whether the number of occurrences of a given statement
  * type is within the specified range.
+ * @deprecated
  */
 public class StatementCounter extends Counter {
-    private final VoidVisitorAdapter<MutableInteger> adapter;
 
     /**
      * Creates a new counter to test whether the number of occurrences of
@@ -29,13 +31,7 @@ public class StatementCounter extends Counter {
      *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public StatementCounter(String name, int maxScore, int minCount, int maxCount, Class<? extends Statement> clazz) {
-        super(name, clazz.getSimpleName(), maxScore, minCount, maxCount);
-        adapter = new StatementAdapter(clazz);
-    }
-
-    @Override
-    protected VoidVisitorAdapter<MutableInteger> getAdapter() {
-        return adapter;
+        super(name, clazz.getSimpleName(), maxScore, minCount, maxCount, new StatementAdapter(clazz));
     }
 
     private static class StatementAdapter extends VoidVisitorAdapter<MutableInteger> {
