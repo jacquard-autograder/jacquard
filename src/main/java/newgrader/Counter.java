@@ -17,6 +17,7 @@ public abstract class Counter implements Processor {
     private final double maxScore;
     private final int minCount;
     private final int maxCount;
+    private final VoidVisitorAdapter<MutableInteger> adapter;
 
     /**
      * Creates a new counter to test whether the number of occurrences of an
@@ -31,7 +32,7 @@ public abstract class Counter implements Processor {
      * @throws IllegalArgumentException if minCount < 0 or maxCount < minCount,
      *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public Counter(String counterName, String countedName, double maxScore, int minCount, int maxCount) {
+    public Counter(String counterName, String countedName, double maxScore, int minCount, int maxCount, VoidVisitorAdapter<MutableInteger> adapter) {
         if (minCount < 0) {
             throw new IllegalArgumentException("minCount must be >= 0");
         }
@@ -48,16 +49,13 @@ public abstract class Counter implements Processor {
         this.maxScore = maxScore;
         this.minCount = minCount;
         this.maxCount = maxCount;
+        this.adapter = adapter;
     }
-
-    // The adapter is not set in the constructor because it might not be
-    // available until this constructor completes.
-    protected abstract VoidVisitorAdapter<MutableInteger> getAdapter();
 
     @Override
     public List<Result> process(CompilationUnit cu) {
         MutableInteger mi = new MutableInteger();
-        getAdapter().visit(cu, mi);
+        adapter.visit(cu, mi);
         return List.of(getResult(mi));
     }
 

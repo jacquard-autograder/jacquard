@@ -12,7 +12,6 @@ import java.util.Optional;
  * type is within the specified range.
  */
 public class ExpressionCounter extends Counter {
-    private final VoidVisitorAdapter<MutableInteger> adapter;
 
     /**
      * Creates a new counter to test whether the number of occurrences of an
@@ -28,13 +27,7 @@ public class ExpressionCounter extends Counter {
      *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public ExpressionCounter(String name, double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz) {
-        super(name, clazz.getSimpleName(), maxScore, minCount, maxCount);
-        adapter = new ExpressionAdapter(clazz);
-    }
-
-    @Override
-    protected VoidVisitorAdapter<MutableInteger> getAdapter() {
-        return adapter;
+        super(name, clazz.getSimpleName(), maxScore, minCount, maxCount, new ExpressionAdapter(clazz));
     }
 
     private static class ExpressionAdapter extends VoidVisitorAdapter<MutableInteger> {
