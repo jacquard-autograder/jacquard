@@ -8,7 +8,24 @@ import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.stmt.SwitchEntry;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
+/**
+ * A counter to test whether the number of occurrences of a given statement
+ * type is within the specified range.
+ */
 public class StatementCounter extends Counter {
+    /**
+     * Creates a new counter to test whether the number of occurrences of
+     * statement type is within the specified range.
+     *
+     * @param name     the name of this processor (for the {@link Result})
+     * @param maxScore the score if the condition holds
+     * @param minCount the minimum number of occurrences
+     * @param maxCount the maximum number of occurrences, or {@link Integer#MAX_VALUE}
+     *                 if there is no limit.
+     * @param clazz    the statement class
+     * @throws IllegalArgumentException if minCount < 0 or maxCount < minCount,
+     *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
+     */
     public StatementCounter(String name, int maxScore, int minCount, int maxCount, Class<? extends Statement> clazz) {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount);
         adapter = new StatementAdapter(clazz);

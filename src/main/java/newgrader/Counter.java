@@ -6,6 +6,10 @@ import com.google.common.base.Preconditions;
 
 import java.util.List;
 
+/**
+ * The base class for counters to test whether the number of occurrences of an
+ * element is within the specified range.
+ */
 public abstract class Counter implements Processor {
     private final String counterName;
     private final String countedName;
@@ -15,17 +19,41 @@ public abstract class Counter implements Processor {
 
     protected VoidVisitorAdapter<MutableInteger> adapter;
 
+    /**
+     * Creates a new counter to test whether the number of occurrences of an
+     * element is within the specified range.
+     *
+     * @param counterName the name of this processor (for the {@link Result})
+     * @param countedName the name of the element (for the {@link Result})
+     * @param maxScore    the score if the condition holds
+     * @param minCount    the minimum number of occurrences
+     * @param maxCount    the maximum number of occurrences, or {@link Integer#MAX_VALUE}
+     *                    if there is no limit.
+     * @throws IllegalArgumentException if minCount < 0 or maxCount < minCount,
+     *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
+     */
     public Counter(String counterName, String countedName, double maxScore, int minCount, int maxCount) {
-        Preconditions.checkArgument(minCount >= 0);
-        Preconditions.checkArgument(maxCount >= minCount);
-        // It makes no sense to have minCount be 0 when MaxCount is Integer.MAX_VALUE.
-        Preconditions.checkState(minCount > 0 || maxCount < Integer.MAX_VALUE);
+        if (minCount < 0) {
+            throw new IllegalArgumentException("minCount must be >= 0");
+        }
+        if (maxCount < minCount) {
+            throw new IllegalArgumentException("maxCount must be >= minCount");
+        }
+        if (minCount == 0 && maxCount == Integer.MAX_VALUE) {
+            throw new IllegalArgumentException(
+                    "There is no reason to create a Counter of 0 or more elements");
+        }
 
         this.counterName = counterName;
         this.countedName = countedName;
         this.maxScore = maxScore;
         this.minCount = minCount;
         this.maxCount = maxCount;
+    }
+
+    public Counter(String counterName, String countedName, double maxScore, int minCount, int maxCount, VoidVisitorAdapter<MutableInteger> adapter) {
+        this(counterName, countedName, maxScore, minCount, maxCount);
+        this.adapter = adapter;
     }
 
     @Override
@@ -55,12 +83,10 @@ public abstract class Counter implements Processor {
         if (mi.getValue() < minCount) {
             return new Result(counterName, 0, maxScore,
                     String.format("%s but had only %d", getPrefix(), mi.getValue()));
-        }
-        else if (mi.getValue() > maxCount) {
+        } else if (mi.getValue() > maxCount) {
             return new Result(counterName, 0, maxScore,
                     String.format("%s but had %d", getPrefix(), mi.getValue()));
-        }
-        else {
+        } else {
             return new Result(counterName, maxScore, maxScore,
                     String.format("%s and had %d.", getPrefix(), mi.getValue()));
         }

@@ -3,10 +3,7 @@ package client;
 import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.expr.SwitchExpr;
-import newgrader.Autograder;
-import newgrader.ExpressionCounter;
-import newgrader.FieldModifierChecker;
-import newgrader.Result;
+import newgrader.*;
 
 import java.util.List;
 
@@ -22,6 +19,8 @@ public class Main {
         autograder.addProcessor(
                 new ExpressionCounter(
                         "Switch expression check", 1, 1, Integer.MAX_VALUE, SwitchExpr.class));
+        autograder.addProcessor(
+                new StringInterpolationCounter("String interpolation counter", 1, 3, Integer.MAX_VALUE));
         List<Result> results = autograder.grade(Main.class.getClassLoader().getResourceAsStream("Mob.java"));
         for (Result result : results) {
             System.out.println(result);
