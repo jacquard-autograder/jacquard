@@ -13,6 +13,8 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
  * type is within the specified range.
  */
 public class StatementCounter extends Counter {
+    private final VoidVisitorAdapter<MutableInteger> adapter;
+
     /**
      * Creates a new counter to test whether the number of occurrences of
      * statement type is within the specified range.
@@ -29,6 +31,11 @@ public class StatementCounter extends Counter {
     public StatementCounter(String name, int maxScore, int minCount, int maxCount, Class<? extends Statement> clazz) {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount);
         adapter = new StatementAdapter(clazz);
+    }
+
+    @Override
+    protected VoidVisitorAdapter<MutableInteger> getAdapter() {
+        return adapter;
     }
 
     private static class StatementAdapter extends VoidVisitorAdapter<MutableInteger> {

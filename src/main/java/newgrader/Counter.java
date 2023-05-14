@@ -17,8 +17,6 @@ public abstract class Counter implements Processor {
     private final int minCount;
     private final int maxCount;
 
-    protected VoidVisitorAdapter<MutableInteger> adapter;
-
     /**
      * Creates a new counter to test whether the number of occurrences of an
      * element is within the specified range.
@@ -51,15 +49,14 @@ public abstract class Counter implements Processor {
         this.maxCount = maxCount;
     }
 
-    public Counter(String counterName, String countedName, double maxScore, int minCount, int maxCount, VoidVisitorAdapter<MutableInteger> adapter) {
-        this(counterName, countedName, maxScore, minCount, maxCount);
-        this.adapter = adapter;
-    }
+    // The adapter is not set in the constructor because it might not be
+    // available until this constructor completes.
+    protected abstract VoidVisitorAdapter<MutableInteger> getAdapter();
 
     @Override
     public List<Result> process(CompilationUnit cu) {
         MutableInteger mi = new MutableInteger();
-        adapter.visit(cu, mi);
+        getAdapter().visit(cu, mi);
         return List.of(getResult(mi));
     }
 

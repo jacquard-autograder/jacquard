@@ -14,6 +14,8 @@ import java.util.Optional;
  * type is within the specified range.
  */
 public class ExpressionCounter extends Counter {
+    private final VoidVisitorAdapter<MutableInteger> adapter;
+
     /**
      * Creates a new counter to test whether the number of occurrences of an
      * expression type is within the specified range.
@@ -30,6 +32,11 @@ public class ExpressionCounter extends Counter {
     public ExpressionCounter(String name, int maxScore, int minCount, int maxCount, Class<? extends Expression> clazz) {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount);
         adapter = new ExpressionAdapter(clazz);
+    }
+
+    @Override
+    protected VoidVisitorAdapter<MutableInteger> getAdapter() {
+        return adapter;
     }
 
     private static class ExpressionAdapter extends VoidVisitorAdapter<MutableInteger> {
