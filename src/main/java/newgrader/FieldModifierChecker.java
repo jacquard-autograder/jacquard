@@ -12,7 +12,7 @@ import java.util.List;
  * Checks whether the correct modifiers are used for fields (instance and
  * static variables).
  */
-public class FieldModifierChecker extends Checker {
+public class FieldModifierChecker extends SyntaxChecker {
     private final List<String> varNames;
 
     public FieldModifierChecker(String name, double maxScore, List<String> varNames, List<Modifier> requiredModifiers, List<Modifier> optionalModifiers) {

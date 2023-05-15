@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The base class for syntax checkers.
+ * The base class for any checkers that make use of the linked Java parser.
  */
-public abstract class Checker implements Processor {
+public abstract class SyntaxChecker implements Processor {
     /**
      * The message that appears in a successful {@link Result} if none is
      * provided.
@@ -33,22 +33,22 @@ public abstract class Checker implements Processor {
     // constructor or initialize it before returning.
     protected VoidVisitorAdapter<List<Result>> adapter;
 
-    protected Checker(String name, double maxScore, VoidVisitorAdapter<List<Result>> adapter) {
+    protected SyntaxChecker(String name, double maxScore, VoidVisitorAdapter<List<Result>> adapter) {
         this.name = name == null ? DEFAULT_NAME : name;
         this.maxScore = maxScore;
         this.adapter = adapter;
     }
 
-    protected Checker(String name, double maxScore) {
+    protected SyntaxChecker(String name, double maxScore) {
         this.name = name == null ? DEFAULT_NAME : name;
         this.maxScore = maxScore;
     }
 
-    protected Checker(double maxScore, VoidVisitorAdapter<List<Result>> adapter) {
+    protected SyntaxChecker(double maxScore, VoidVisitorAdapter<List<Result>> adapter) {
         this(null, maxScore, adapter);
     }
 
-    protected Checker(double maxScore) {
+    protected SyntaxChecker(double maxScore) {
         this(null, maxScore);
     }
 
