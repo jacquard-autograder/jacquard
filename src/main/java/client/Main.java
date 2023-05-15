@@ -17,7 +17,7 @@ public class Main {
                         List.of(Modifier.finalModifier(), Modifier.privateModifier()),
                         List.of()));
         autograder.addProcessor(
-                new MaxProcessor(List.of(
+                new MaxSyntaxGrader(List.of(
                         new ExpressionCounter(
                                 "Switch expression check", 1, 1, Integer.MAX_VALUE, SwitchExpr.class),
                         new StatementCounter(

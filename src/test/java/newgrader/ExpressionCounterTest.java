@@ -43,7 +43,7 @@ public class ExpressionCounterTest {
                     System.out.println(x);
                 }
                 """);
-        List<Result> results = counter.process(cu);
+        List<Result> results = counter.grade(cu);
         assertEquals(1, results.size());
         assertEquals(MAX_SCORE, results.get(0).score());
     }

@@ -9,21 +9,21 @@ import java.util.List;
  * A meta-processor that returns the highest-scoring results of its constituent
  * processors.
  */
-public class MaxProcessor implements Processor {
-    private final List<Processor> processors = new ArrayList<>();
+public class MaxSyntaxGrader implements SyntaxGrader {
+    private final List<SyntaxGrader> processors = new ArrayList<>();
     private final double totalMaxScore;
 
     /**
      * Creates a meta-processor whose results will be those of its
      * highest-scoring constituent processors. If the result of any call
-     * to {@link Processor#process(CompilationUnit)} is the highest possible
+     * to {@link SyntaxGrader#grade(CompilationUnit)} is the highest possible
      * score, it does not run later processors.
      *
      * @param processors the constituent processors
      * @throws IllegalArgumentException if fewer than 2 processors are provided
      *                                  or any have different maximum total scores
      */
-    public MaxProcessor(List<Processor> processors) {
+    public MaxSyntaxGrader(List<SyntaxGrader> processors) {
         if (processors.size() < 2) {
             throw new IllegalArgumentException("At least two processors must be provided.");
         }
@@ -38,11 +38,11 @@ public class MaxProcessor implements Processor {
     }
 
     @Override
-    public List<Result> process(CompilationUnit cu) {
+    public List<Result> grade(CompilationUnit cu) {
         List<Result> bestResults = null;
         double bestScore = 0;
-        for (Processor processor : processors) {
-            List<Result> results = processor.process(cu);
+        for (SyntaxGrader processor : processors) {
+            List<Result> results = processor.grade(cu);
             double score = results.stream().mapToDouble(Result::score).sum();
             if (bestResults == null || score > bestScore) {
                 bestResults = results;

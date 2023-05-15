@@ -2,8 +2,6 @@ package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
 
 import java.util.List;
 
@@ -11,7 +9,7 @@ import java.util.List;
  * The base class for counters to test whether the number of occurrences of an
  * element is within the specified range.
  */
-public abstract class Counter implements Processor {
+public abstract class Counter implements SyntaxGrader {
     private final String counterName;
     private final String countedName;
     private final double maxScore;
@@ -53,7 +51,7 @@ public abstract class Counter implements Processor {
     }
 
     @Override
-    public List<Result> process(CompilationUnit cu) {
+    public List<Result> grade(CompilationUnit cu) {
         MutableInteger mi = new MutableInteger();
         adapter.visit(cu, mi);
         return List.of(getResult(mi));

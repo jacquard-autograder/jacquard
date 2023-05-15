@@ -44,25 +44,25 @@ public class OverrideCheckerTest {
         assertEquals(2 * SCORE_PER_OVERRIDE, checker.getTotalMaxScore());
 
         // override none
-        List<Result> results0 = checker.process(
+        List<Result> results0 = checker.grade(
                 TestUtilities.parseProgramFromClass(
                         String.format(OVERRIDE_TEMPLATE, "", "")));
         assertEquals(0 * SCORE_PER_OVERRIDE, TestUtilities.getTotalScore(results0));
 
         // override first
-        List<Result> results1a = checker.process(
+        List<Result> results1a = checker.grade(
                 TestUtilities.parseProgramFromClass(
                         String.format(OVERRIDE_TEMPLATE, "@Override", "")));
         assertEquals(SCORE_PER_OVERRIDE, TestUtilities.getTotalScore(results1a));
 
         // override second
-        List<Result> results1b = checker.process(
+        List<Result> results1b = checker.grade(
                 TestUtilities.parseProgramFromClass(
                         String.format(OVERRIDE_TEMPLATE, "", "@Override")));
         assertEquals(SCORE_PER_OVERRIDE, TestUtilities.getTotalScore(results1b));
 
         // override both
-        List<Result> results2 = checker.process(
+        List<Result> results2 = checker.grade(
                 TestUtilities.parseProgramFromClass(
                         String.format(OVERRIDE_TEMPLATE, "@Override", "@Override")));
         assertEquals(2 * SCORE_PER_OVERRIDE, TestUtilities.getTotalScore(results2));
@@ -138,19 +138,19 @@ public class OverrideCheckerTest {
                 Class.class);
 
         // Override foo().
-        List<Result> results1a = checker.process(
+        List<Result> results1a = checker.grade(
                 TestUtilities.parseProgramFromClass(
                         String.format(OVERRIDE_TEMPLATE, "@Override", "")));
         assertEquals(SCORE_PER_OVERRIDE, TestUtilities.getTotalScore(results1a));
 
         // Override bar().
-        List<Result> results1b = checker.process(
+        List<Result> results1b = checker.grade(
                 TestUtilities.parseProgramFromClass(
                         String.format(OVERRIDE_TEMPLATE, "", "@Override")));
         assertEquals(0, TestUtilities.getTotalScore(results1b));
 
         // Override both.
-        List<Result> results2 = checker.process(
+        List<Result> results2 = checker.grade(
                 TestUtilities.parseProgramFromClass(
                         String.format(OVERRIDE_TEMPLATE, "@Override", "@Override")));
         assertEquals(SCORE_PER_OVERRIDE, TestUtilities.getTotalScore(results2));

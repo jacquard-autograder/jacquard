@@ -15,7 +15,7 @@ public class Autograder {
     private static final ParserConfiguration.LanguageLevel DEFAULT_LANGUAGE_LEVEL =
             ParserConfiguration.LanguageLevel.JAVA_17;
     private final JavaParser parser;
-    private final List<Processor> processors = new ArrayList<>();
+    private final List<SyntaxGrader> processors = new ArrayList<>();
     // classes or interfaces that the student is expected to subtype
     private final List<Class<?>> supertypes = new ArrayList<>();
     private double maxScore = 0.0;
@@ -36,7 +36,7 @@ public class Autograder {
         throw new AssertionError(parseResult.getProblem(0));
     }
 
-    public void addProcessor(Processor processor) {
+    public void addProcessor(SyntaxGrader processor) {
         processors.add(processor);
         maxScore += processor.getTotalMaxScore();
     }
@@ -78,8 +78,8 @@ public class Autograder {
         if (parseResult.isSuccessful()) {
             CompilationUnit cu = parseResult.getResult().get();
             List<Result> results = new ArrayList<>();
-            for (Processor processor : processors) {
-                results.addAll(processor.process(cu));
+            for (SyntaxGrader processor : processors) {
+                results.addAll(processor.grade(cu));
             }
             return results;
         } else {

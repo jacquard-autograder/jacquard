@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * The base class for any checkers that make use of the linked Java parser.
  */
-public abstract class SyntaxChecker implements Processor {
+public abstract class SyntaxChecker implements SyntaxGrader {
     /**
      * The message that appears in a successful {@link Result} if none is
      * provided.
@@ -48,7 +48,7 @@ public abstract class SyntaxChecker implements Processor {
     }
 
     @Override
-    public List<Result> process(CompilationUnit cu) {
+    public List<Result> grade(CompilationUnit cu) {
         List<Result> results = new ArrayList<>();
         adapter.visit(cu, results);
         return results;
