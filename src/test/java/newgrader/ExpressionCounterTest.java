@@ -38,7 +38,7 @@ public class ExpressionCounterTest {
 
     @Test
     public void scoreIsMaxIfRightNumber() {
-        CompilationUnit cu = TestUtilities.parse("""
+        CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
                 if (x instanceof String) {
                     System.out.println(x);
                 }

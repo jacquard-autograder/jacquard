@@ -28,28 +28,23 @@ public abstract class SyntaxChecker implements Processor {
     public static String DEFAULT_NAME = "Syntax Checker";
 
     private final String name;
-    protected final double maxScore;
-    // The subclass constructor must either pass the adapter to this class's
-    // constructor or initialize it before returning.
+    protected final double maxScorePerInstance;
     protected VoidVisitorAdapter<List<Result>> adapter;
 
-    protected SyntaxChecker(String name, double maxScore, VoidVisitorAdapter<List<Result>> adapter) {
+    /**
+     * Constructs a syntax checker. If the adapter is null, the constructor in
+     * the concrete subclass must set it before returning. (Non-static adapters
+     * that are inner classes cannot be created until this constructor has
+     * completed.)
+     *
+     * @param name the name of the syntax checker
+     * @param maxScorePerInstance the maximum score per application
+     * @param adapter the adapter
+     */
+    protected SyntaxChecker(String name, double maxScorePerInstance, VoidVisitorAdapter<List<Result>> adapter) {
         this.name = name == null ? DEFAULT_NAME : name;
-        this.maxScore = maxScore;
+        this.maxScorePerInstance = maxScorePerInstance;
         this.adapter = adapter;
-    }
-
-    protected SyntaxChecker(String name, double maxScore) {
-        this.name = name == null ? DEFAULT_NAME : name;
-        this.maxScore = maxScore;
-    }
-
-    protected SyntaxChecker(double maxScore, VoidVisitorAdapter<List<Result>> adapter) {
-        this(null, maxScore, adapter);
-    }
-
-    protected SyntaxChecker(double maxScore) {
-        this(null, maxScore);
     }
 
     @Override
@@ -63,20 +58,12 @@ public abstract class SyntaxChecker implements Processor {
         return name;
     }
 
-    VoidVisitorAdapter<List<Result>> getAdapter() {
-        return adapter;
-    }
-
     protected Result makeFailingResult(String message) {
-        return new Result(name, 0, maxScore, message);
+        return new Result(name, 0, maxScorePerInstance, message);
     }
 
     protected Result makeSuccessResult(String message) {
-        return new Result(name, maxScore, maxScore, message);
-    }
-
-    protected Result makeSuccessResult() {
-        return makeSuccessResult(SUCCESS_STRING);
+        return new Result(name, maxScorePerInstance, maxScorePerInstance, message);
     }
 
     // The remaining methods are helper methods for subclasses.

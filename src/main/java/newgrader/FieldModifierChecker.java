@@ -16,7 +16,7 @@ public class FieldModifierChecker extends SyntaxChecker {
     private final List<String> varNames;
 
     public FieldModifierChecker(String name, double maxScore, List<String> varNames, List<Modifier> requiredModifiers, List<Modifier> optionalModifiers) {
-        super(name, maxScore);
+        super(name, maxScore, null);
         this.varNames = varNames;
         adapter = new Adapter(requiredModifiers, optionalModifiers);
     }
@@ -71,7 +71,7 @@ public class FieldModifierChecker extends SyntaxChecker {
 
     @Override
     public double getTotalMaxScore() {
-        return maxScore * varNames.size();
+        return maxScorePerInstance * varNames.size();
     }
 
     private class Adapter extends VoidVisitorAdapter<List<Result>> {

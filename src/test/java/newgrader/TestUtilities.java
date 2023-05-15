@@ -1,6 +1,7 @@
 package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
+import java.util.List;
 
 public class TestUtilities {
     private static final String CODE_TEMPLATE = """
@@ -11,12 +12,15 @@ public class TestUtilities {
             }
             """;
 
-    static String makeProgram(String statements) {
-        return String.format(CODE_TEMPLATE, statements);
+    static CompilationUnit parseProgramFromStatements(String statements) {
+        return Autograder.parse(String.format(CODE_TEMPLATE, statements));
     }
 
-    static CompilationUnit parse(String statements) {
-        String program = makeProgram(statements);
-        return Autograder.parse(program);
+    static CompilationUnit parseProgramFromClass(String statements) {
+        return Autograder.parse(statements);
+    }
+
+    static double getTotalScore(List<Result> results) {
+        return results.stream().mapToDouble(Result::score).sum();
     }
 }

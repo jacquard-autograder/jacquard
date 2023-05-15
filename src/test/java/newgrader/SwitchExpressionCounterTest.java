@@ -1,7 +1,6 @@
 package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.expr.InstanceOfExpr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +9,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SwitchExpressionCounterTest {
-    private static final String NAME = "name";
     private static final double MAX_SCORE = 10.0;
 
     private SwitchExpressionCounter counter;
@@ -22,7 +20,7 @@ public class SwitchExpressionCounterTest {
 
     @Test
     public void scoreIsMaxIfRightNumber() {
-        CompilationUnit cu = TestUtilities.parse("""
+        CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
         return switch (behavior) {
             case Passive -> false;
             case Boss, Hostile -> true;
