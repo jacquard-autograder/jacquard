@@ -1,9 +1,10 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import newgrader.Result;
 
 import java.util.Optional;
 

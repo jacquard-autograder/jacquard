@@ -1,4 +1,4 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.expr.SwitchExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;

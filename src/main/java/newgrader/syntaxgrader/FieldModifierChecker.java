@@ -1,12 +1,11 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.Modifier;
-import com.github.javaparser.ast.body.FieldDeclaration;
-import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import newgrader.Result;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Checks whether the correct modifiers are used for fields (instance and
@@ -24,9 +23,9 @@ public class FieldModifierChecker extends SyntaxChecker {
     /**
      * Creates a field modifier checker.
      *
-     * @param name the name, which is used in the {@link Result}
-     * @param maxScore the maximum score for each variable
-     * @param varNames the names of the variables to check
+     * @param name              the name, which is used in the {@link Result}
+     * @param maxScore          the maximum score for each variable
+     * @param varNames          the names of the variables to check
      * @param requiredModifiers modifiers that should be used on each variable
      * @param optionalModifiers modifiers that may be used on variables
      * @return a new instance
@@ -50,8 +49,8 @@ public class FieldModifierChecker extends SyntaxChecker {
     /**
      * Creates a field modifier checker with a default name.
      *
-     * @param maxScore the maximum score for each variable
-     * @param varNames the names of the variables to check
+     * @param maxScore          the maximum score for each variable
+     * @param varNames          the names of the variables to check
      * @param requiredModifiers modifiers that should be used on each variable
      * @param optionalModifiers modifiers that may be used on variables
      * @return a new instance

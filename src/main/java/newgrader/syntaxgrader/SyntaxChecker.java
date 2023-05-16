@@ -1,15 +1,12 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.Modifier;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.FieldDeclaration;
-import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.google.common.base.Preconditions;
+import newgrader.Result;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * The base class for any checkers that make use of the linked Java parser.
@@ -37,9 +34,9 @@ public abstract class SyntaxChecker implements SyntaxGrader {
      * that are inner classes cannot be created until this constructor has
      * completed.)
      *
-     * @param name the name of the syntax checker
+     * @param name                the name of the syntax checker
      * @param maxScorePerInstance the maximum score per application
-     * @param adapter the adapter
+     * @param adapter             the adapter
      */
     protected SyntaxChecker(String name, double maxScorePerInstance, VoidVisitorAdapter<List<Result>> adapter) {
         this.name = name == null ? DEFAULT_NAME : name;

@@ -1,15 +1,13 @@
 package newgrader;
 
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParseResult;
-import com.github.javaparser.ParserConfiguration;
+import com.github.javaparser.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.google.common.annotations.VisibleForTesting;
+import newgrader.syntaxgrader.SyntaxGrader;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Autograder {
     private static final ParserConfiguration.LanguageLevel DEFAULT_LANGUAGE_LEVEL =

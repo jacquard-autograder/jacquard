@@ -1,12 +1,11 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import newgrader.Result;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.*;
+import java.util.*;
 
 public class OverrideChecker extends SyntaxChecker {
     private final List<Method> methodsToOverride;

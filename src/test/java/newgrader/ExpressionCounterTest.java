@@ -1,14 +1,14 @@
 package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.expr.InstanceOfExpr;
-import com.github.javaparser.ast.expr.SwitchExpr;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.github.javaparser.ast.expr.*;
+import newgrader.syntaxgrader.ExpressionCounter;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ExpressionCounterTest {
     private static final String NAME = "name";

@@ -1,7 +1,8 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import newgrader.Result;
 
 import java.util.List;
 

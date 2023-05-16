@@ -1,18 +1,17 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
 // This is likely incorrect.
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.nodeTypes.NodeWithStatements;
-import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.LabeledStmt;
-import com.github.javaparser.ast.stmt.Statement;
-import com.github.javaparser.ast.stmt.SwitchEntry;
+import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import newgrader.Result;
 
 /**
  * A counter to test whether the number of occurrences of a given statement
  * type is within the specified range.
+ *
  * @deprecated
  */
 public class StatementCounter extends Counter {

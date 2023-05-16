@@ -1,8 +1,8 @@
 package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import newgrader.syntaxgrader.SwitchExpressionCounter;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
@@ -21,12 +21,12 @@ public class SwitchExpressionCounterTest {
     @Test
     public void scoreIsMaxIfRightNumber() {
         CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
-        return switch (behavior) {
-            case Passive -> false;
-            case Boss, Hostile -> true;
-            case Neutral -> getStatus() == Status.Injured;
-        };
-                """);
+                return switch (behavior) {
+                    case Passive -> false;
+                    case Boss, Hostile -> true;
+                    case Neutral -> getStatus() == Status.Injured;
+                };
+                        """);
         List<Result> results = counter.grade(cu);
         assertEquals(1, results.size());
         assertEquals(MAX_SCORE, results.get(0).score());

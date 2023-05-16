@@ -1,4 +1,4 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;

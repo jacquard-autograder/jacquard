@@ -1,4 +1,4 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
 /**
  * A wrapper around a mutable integer value.

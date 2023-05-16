@@ -1,9 +1,9 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
+import newgrader.Result;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A meta-processor that returns the highest-scoring results of its constituent

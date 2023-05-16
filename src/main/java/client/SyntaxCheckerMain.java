@@ -5,6 +5,7 @@ import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.expr.SwitchExpr;
 import com.github.javaparser.ast.stmt.SwitchStmt;
 import newgrader.*;
+import newgrader.syntaxgrader.*;
 
 import java.util.List;
 
