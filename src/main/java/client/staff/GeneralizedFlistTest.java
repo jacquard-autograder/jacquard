@@ -6,7 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 public class GeneralizedFlistTest extends FlistTest {
     private final Constructor<? extends Flist<?>> constructor;
 
-    public GeneralizedFlistTest(Class<? extends Flist<?>> clazz) throws NoSuchMethodException {
+    public GeneralizedFlistTest(String className) throws ClassNotFoundException, NoSuchMethodException {
+        Class<? extends Flist<?>> clazz = (Class<? extends Flist<?>>) Class.forName(className);
         constructor = clazz.getConstructor(Object[].class);
     }
 

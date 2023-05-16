@@ -7,18 +7,21 @@ import client.staff.GeneralizedFlistTest;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class CrossGrader {
     private static final String DELIM = "\\s*,\\s*";
     private final Class<?> testClass;
+    private final Constructor<?> testClassConstructor;
     private String[] methodNames;
     private String[] cutNames; // classes under test
     private double[][] maxScores;
 
-    public CrossGrader(Class<?> testClass, InputStream is) throws FileNotFoundException {
+    public CrossGrader(Class<?> testClass, InputStream is) throws FileNotFoundException, NoSuchMethodException {
         this.testClass = testClass;
+        testClassConstructor = testClass.getConstructor(String.class);
         processFile(is);
     }
 
@@ -26,13 +29,11 @@ public class CrossGrader {
         JUnit5TestRunner runner = new JUnit5TestRunner(methodNames);
         for (String cutName : cutNames) {
             try {
-                Class<? extends Flist<?>> clazz = (Class<? extends Flist<?>>) Class.forName(cutName);
-                Object testInstance = testClass.getConstructors()[0].newInstance(clazz);
+                Object testInstance = testClassConstructor.newInstance(cutName);
                 Set<JUnit5TestRunner.TestFailureInfo> failures = new HashSet<>();
                 runner.runAutograderHelper(testInstance, failures);
                 System.out.println(failures);
-            } catch (ClassNotFoundException |
-                     InstantiationException | IllegalAccessException |
+            } catch (InstantiationException | IllegalAccessException |
                      InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
