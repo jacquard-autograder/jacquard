@@ -9,7 +9,8 @@ class MutableInteger {
     /**
      * Constructs a mutable integer with an initial value of 0.
      */
-    public MutableInteger() {}
+    public MutableInteger() {
+    }
 
     /**
      * Increments the value by 1.
