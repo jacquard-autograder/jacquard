@@ -1,0 +1,61 @@
+package client.staff;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public abstract class FlistTest {
+    Flist<Integer> emptyListInteger;
+    Flist<Integer> list1;
+    Flist<Integer> list123;
+    Flist<Integer> list321;
+    Flist<Character> listA;
+    Flist<Character> listAABB;
+    Flist<String> emptyListString;
+
+    public abstract <T> Flist<T> buildFlist(T... items);
+
+    @BeforeEach
+    public void setup() {
+        emptyListInteger = buildFlist();
+        list1 = buildFlist(1);
+        list123 = buildFlist(1, 2, 3);
+        list321 = buildFlist(3, 2, 1);
+        listA = buildFlist('A');
+        listAABB = buildFlist('A', 'A', 'B', 'B');
+        emptyListString = buildFlist();
+    }
+
+    @Test
+    public void sizeEmptyListHasSizeZero() {
+        assertEquals(0, emptyListInteger.size());
+    }
+
+    @Test
+    public void sizeNonEmptyListSizeReturnsSize() {
+        assertEquals(1, list1.size());
+        assertEquals(3, list123.size());
+        assertEquals(3, list321.size());
+    }
+
+    @Test
+    public void getRejectsNegativeIndex() {
+        assertThrows(IllegalArgumentException.class, () -> emptyListInteger.get(-1));
+        assertThrows(IllegalArgumentException.class, () -> list1.get(-5));
+    }
+
+    @Test
+    public void getRejectsOutOfBoundsIndex() {
+        assertThrows(IndexOutOfBoundsException.class, () -> emptyListInteger.get(0));
+        assertThrows(IndexOutOfBoundsException.class, () -> list1.get(1));
+        assertThrows(IndexOutOfBoundsException.class, () -> list123.get(3));
+    }
+
+    @Test
+    public void getReturnsRightValue() {
+        assertEquals(1, list123.get(0));
+        assertEquals(2, list123.get(1));
+        assertEquals(3, list123.get(2));
+    }
+}
