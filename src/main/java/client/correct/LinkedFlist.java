@@ -2,7 +2,7 @@ package client.correct;
 
 import client.staff.Flist;
 
-public class LinkedFlist<T extends Comparable<T>> implements Flist<T> {
+public class LinkedFlist<T> implements Flist<T> {
     private Node<T> head;
 
     /**
@@ -96,7 +96,7 @@ public class LinkedFlist<T extends Comparable<T>> implements Flist<T> {
         return head.get(index);
     }
 
-    static class Node<T extends Comparable<T>> {
+    static class Node<T> {
         private T value;
         private Node<T> next;
 

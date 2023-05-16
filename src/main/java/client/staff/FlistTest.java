@@ -6,13 +6,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class FlistTest {
-    Flist<Integer> emptyListInteger;
-    Flist<Integer> list1;
-    Flist<Integer> list123;
-    Flist<Integer> list321;
-    Flist<Character> listA;
-    Flist<Character> listAABB;
-    Flist<String> emptyListString;
+    private Flist<Integer> emptyListInteger;
+    private Flist<Integer> list1;
+    private Flist<Integer> list123;
+    private Flist<Integer> list321;
 
     public abstract <T> Flist<T> buildFlist(T... items);
 
@@ -22,9 +19,6 @@ public abstract class FlistTest {
         list1 = buildFlist(1);
         list123 = buildFlist(1, 2, 3);
         list321 = buildFlist(3, 2, 1);
-        listA = buildFlist('A');
-        listAABB = buildFlist('A', 'A', 'B', 'B');
-        emptyListString = buildFlist();
     }
 
     @Test

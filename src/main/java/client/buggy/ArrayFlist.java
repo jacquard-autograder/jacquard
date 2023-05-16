@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 // size() always returns 0
-public class ArrayFlist<T extends Comparable<T>> implements Flist<T> {
+public class ArrayFlist<T> implements Flist<T> {
     // If this constant is changed, also change the constructor javadoc.
     private static final int INITIAL_CAPACITY = 10;
 

@@ -8,7 +8,7 @@ import newgrader.*;
 
 import java.util.List;
 
-public class Main {
+public class SyntaxCheckerMain {
     public static void main(String[] args) {
         Autograder autograder = new Autograder(ParserConfiguration.LanguageLevel.JAVA_17);
         autograder.addProcessor(
@@ -24,7 +24,7 @@ public class Main {
                                 "Switch statement check", 1, 1, Integer.MAX_VALUE, SwitchStmt.class))));
         autograder.addProcessor(
                 new StringInterpolationCounter("String interpolation counter", 1, 2, Integer.MAX_VALUE));
-        List<Result> results = autograder.grade(Main.class.getClassLoader().getResourceAsStream("Mob.java"));
+        List<Result> results = autograder.grade(SyntaxCheckerMain.class.getClassLoader().getResourceAsStream("Mob.java"));
         for (Result result : results) {
             System.out.println(result);
         }
