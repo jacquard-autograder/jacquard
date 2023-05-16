@@ -10,7 +10,11 @@ public class JUnit5TestRunner {
     private List<String> methodsUnderTest; // sort longest first
 
     public JUnit5TestRunner(String[] methodsUnderTest) {
-        this.methodsUnderTest = Arrays.asList(methodsUnderTest);
+        // It is necessary to copy the data so changes to the list
+        // don't change the underlying array.
+        this.methodsUnderTest = new ArrayList<>(Arrays.asList(methodsUnderTest));
+        // Sort longest first to ensure that the correct method under test (MUT)
+        // is chosen even if multiple MUTs start with the same substring.
         this.methodsUnderTest.sort(
                 (String s1, String s2) -> s2.length() - s1.length()
         );
@@ -37,7 +41,7 @@ public class JUnit5TestRunner {
             }
             if (method.isAnnotationPresent(BeforeAll.class)) {
                 try {
-                    method.invoke(testInstance); // should this be null?
+                    method.invoke(null); // method must be static
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new AssertionError("Error running @BeforeAll method " + method.getName());
                 }
@@ -69,15 +73,4 @@ public class JUnit5TestRunner {
         return results;
     }
 
-    public record TestResult(String testName, boolean passed, String methodUnderTestName, String message) {
-        private static final String SUCCESS_MESSAGE = "PASSED";
-
-        private static TestResult makeFailure(String testName, String methodUnderTestName, String message) {
-            return new TestResult(testName, false, methodUnderTestName, message);
-        }
-
-        private static TestResult makeSuccess(String testName, String methodUnderTestName) {
-            return new TestResult(testName, true, methodUnderTestName, SUCCESS_MESSAGE);
-        }
-    }
 }

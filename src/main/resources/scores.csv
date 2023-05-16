@@ -1,5 +1,5 @@
 , client.correct.ArrayFlist, client.correct.LinkedFlist, client.buggy.ArrayFlist
-add, 2, 2, -2
+add, 2, 2, 0
 size, 1, 1, -1
 isEmpty, 3, 2, -1
 get, 2, 2, -2
