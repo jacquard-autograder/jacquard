@@ -61,8 +61,8 @@ public class JUnit5TestRunner {
                             method.getName(),
                             mutName,
                             e.getCause().toString()));
+                    break;
                 }
-                break;
             }
         }
     }
