@@ -1,12 +1,9 @@
 package newgrader.crossgrader;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
 
 public class JUnit5TestRunner {
@@ -29,9 +26,10 @@ public class JUnit5TestRunner {
         return null;
     }
 
-    public void runAutograderHelper(Object testInstance, Set<TestFailureInfo> methodsWithTestFailures) {
+    public List<TestResult> runAutograderHelper(Object testInstance) {
         Method[] methods = testInstance.getClass().getMethods();
         List<Method> beforeEachMethods = new ArrayList<>();
+        List<TestResult> results = new ArrayList<>();
 
         for (Method method : methods) {
             if (method.isAnnotationPresent(BeforeEach.class)) {
@@ -53,11 +51,14 @@ public class JUnit5TestRunner {
                         beforeEachMethod.invoke(testInstance);
                     }
                     method.invoke(testInstance);
+                    results.add(TestResult.makeSuccess(
+                            method.getName(),
+                            mutName));
                 } catch (IllegalAccessException e) {
                     throw new AssertionError("Internal problem with method " + method.getName());
                 } catch (InvocationTargetException e) {
                     System.err.println("Cause: " + e.getCause());
-                    methodsWithTestFailures.add(new TestFailureInfo(
+                    results.add(TestResult.makeFailure(
                             method.getName(),
                             mutName,
                             e.getCause().toString()));
@@ -65,8 +66,18 @@ public class JUnit5TestRunner {
                 }
             }
         }
+        return results;
     }
 
-    public record TestFailureInfo(String testName, String methodUnderTestName, String message) {
+    public record TestResult(String testName, boolean passed, String methodUnderTestName, String message) {
+        private static final String SUCCESS_MESSAGE = "PASSED";
+
+        private static TestResult makeFailure(String testName, String methodUnderTestName, String message) {
+            return new TestResult(testName, false, methodUnderTestName, message);
+        }
+
+        private static TestResult makeSuccess(String testName, String methodUnderTestName) {
+            return new TestResult(testName, true, methodUnderTestName, SUCCESS_MESSAGE);
+        }
     }
 }

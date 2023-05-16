@@ -1,14 +1,7 @@
 package newgrader.crossgrader;
 
-import client.staff.Flist;
-import client.staff.FlistTest;
-import client.staff.GeneralizedFlistTest;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 public class CrossGrader {
@@ -16,7 +9,7 @@ public class CrossGrader {
     private final Class<?> testClass;
     private final Constructor<?> testClassConstructor;
     private String[] methodNames;
-    private String[] cutNames; // classes under test
+    private String[] cutNames;  // classes under test
     private double[][] maxScores;
 
     public CrossGrader(Class<?> testClass, InputStream is) throws FileNotFoundException, NoSuchMethodException {
@@ -30,12 +23,13 @@ public class CrossGrader {
         for (String cutName : cutNames) {
             try {
                 Object testInstance = testClassConstructor.newInstance(cutName);
-                Set<JUnit5TestRunner.TestFailureInfo> failures = new HashSet<>();
-                runner.runAutograderHelper(testInstance, failures);
-                System.out.println(failures);
+                List<JUnit5TestRunner.TestResult> results = runner.runAutograderHelper(testInstance);
+                System.out.println(results);
             } catch (InstantiationException | IllegalAccessException |
                      InvocationTargetException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException(
+                        "Unable to instantiate class " + cutName,
+                        e);
             }
         }
     }
