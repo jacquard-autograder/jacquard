@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public abstract class FlistTest {
-    private static int i;
     private Flist<Integer> emptyListInteger;
     private Flist<Integer> list1;
     private Flist<Integer> list123;
