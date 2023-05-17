@@ -1,9 +1,5 @@
 package newgrader.syntaxgrader;
 
-// This is likely incorrect.
-
-import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.nodeTypes.NodeWithStatements;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import newgrader.Result;
@@ -11,28 +7,23 @@ import newgrader.Result;
 /**
  * A counter to test whether the number of occurrences of a given statement
  * type is within the specified range.
- *
- * @deprecated Because this is hard to implement/test, it is better to create a subclass
- * of {@link Counter} for any statement you want to detect, as demonstrated
- * in ??.
  */
-@Deprecated
 public class StatementCounter extends Counter {
 
     /**
-     * Creates a new counter to test whether the number of occurrences of
+     * Creates a new counter to test whether the number of occurrences of the
      * statement type is within the specified range.
      *
      * @param name     the name of this processor (for the {@link Result})
      * @param maxScore the score if the condition holds
-     * @param minCount the minimum number of occurrences
+     * @param minCount the minimum number of occurrences, which must be non-negative
      * @param maxCount the maximum number of occurrences, or {@link Integer#MAX_VALUE}
-     *                 if there is no limit.
+     *                 if there is no limit
      * @param clazz    the statement class
      * @throws IllegalArgumentException if minCount &lt; 0 or maxCount &lt; minCount,
      *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public StatementCounter(String name, int maxScore, int minCount, int maxCount, Class<? extends Statement> clazz) {
+    public StatementCounter(String name, double maxScore, int minCount, int maxCount, Class<? extends Statement> clazz) {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount, new StatementAdapter(clazz));
     }
 
@@ -43,29 +34,142 @@ public class StatementCounter extends Counter {
             this.clazz = clazz;
         }
 
-        private void count(NodeWithStatements<? extends Node> node, MutableInteger mi) {
-            for (Statement statement : node.getStatements()) {
-                if (clazz.isInstance(statement)) {
-                    mi.increment();
-                }
+        private void count(Statement statement, MutableInteger mi) {
+            if (clazz.isInstance(statement)) {
+                mi.increment();
             }
+        }
+
+        @Override
+        public void visit(AssertStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
         }
 
         @Override
         public void visit(BlockStmt node, MutableInteger mi) {
             count(node, mi);
+            super.visit(node, mi);
         }
 
         @Override
-        public void visit(SwitchEntry node, MutableInteger mi) {
+        public void visit(BreakStmt node, MutableInteger mi) {
             count(node, mi);
+            super.visit(node, mi);
         }
 
         @Override
-        public void visit(LabeledStmt ls, MutableInteger mi) {
-            if (clazz.isInstance(ls.getStatement())) {
-                mi.increment();
-            }
+        public void visit(ContinueStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(DoStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(EmptyStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(ExplicitConstructorInvocationStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(ExpressionStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(ForEachStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(ForStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(IfStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(LabeledStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(LocalClassDeclarationStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(LocalRecordDeclarationStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(ReturnStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(SwitchStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(SynchronizedStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(ThrowStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(TryStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(UnparsableStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(WhileStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
+        }
+
+        @Override
+        public void visit(YieldStmt node, MutableInteger mi) {
+            count(node, mi);
+            super.visit(node, mi);
         }
     }
 }

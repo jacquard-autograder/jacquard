@@ -36,15 +36,59 @@ public class ExpressionCounterTest {
                 () -> new ExpressionCounter(NAME, MAX_SCORE, 0, Integer.MAX_VALUE, SwitchExpr.class));
     }
 
+    private void testHelper(CompilationUnit cu, int actualCount, int minCount, int maxCount, Class<? extends Expression> expressionType) {
+        ExpressionCounter counter = new ExpressionCounter(
+                expressionType.getSimpleName() + " counter",
+                MAX_SCORE, minCount, maxCount, expressionType);
+        List<Result> results = counter.grade(cu);
+        assertEquals(1, results.size());
+        assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).score());
+    }
+
+    private void testTooFew(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) {
+        testHelper(cu, actualCount, actualCount + 1, actualCount + 10, expressionType);
+        testHelper(cu, actualCount, actualCount + 1, Integer.MAX_VALUE, expressionType);
+    }
+
+    // actualCount must be > 0
+    private void testTooMany(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) {
+        testHelper(cu, actualCount, 0, actualCount - 1, expressionType);
+    }
+
+    private void testRightNumber(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) {
+        testHelper(cu, actualCount, 0, actualCount, expressionType);
+        testHelper(cu, actualCount, actualCount, Integer.MAX_VALUE, expressionType);
+    }
+
+    private void testAllPossibilities(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) {
+        testTooFew(cu, actualCount, expressionType);
+        testTooMany(cu, actualCount, expressionType);
+        testRightNumber(cu, actualCount, expressionType);
+    }
+
     @Test
-    public void scoreIsMaxIfRightNumber() {
+    public void testInstanceOfExprCounter() {
         CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
                 if (x instanceof String) {
                     System.out.println(x);
                 }
                 """);
-        List<Result> results = counter.grade(cu);
-        assertEquals(1, results.size());
-        assertEquals(MAX_SCORE, results.get(0).score());
+        testAllPossibilities(cu, 1, InstanceOfExpr.class);
+    }
+
+    @Test
+    public void testBinaryExprCounter() {
+        CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
+                System.out.println(x + y + 1 + 2);
+                """);
+        testAllPossibilities(cu, 3, BinaryExpr.class);
+    }
+
+    @Test
+    public void testUnaryExprCounter() {
+        CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
+                System.out.println(-(-x));
+                """);
+        testAllPossibilities(cu, 2, UnaryExpr.class);
     }
 }

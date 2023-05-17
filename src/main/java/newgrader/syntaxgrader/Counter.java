@@ -51,6 +51,11 @@ public abstract class Counter implements SyntaxGrader {
         this.adapter = adapter;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The returned list will always have a single element.
+     */
     @Override
     public List<Result> grade(CompilationUnit cu) {
         MutableInteger mi = new MutableInteger();
