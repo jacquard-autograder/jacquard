@@ -20,8 +20,8 @@ public class StatementCounter extends Counter {
      * @param maxCount the maximum number of occurrences, or {@link Integer#MAX_VALUE}
      *                 if there is no limit
      * @param clazz    the statement class
-     * @throws IllegalArgumentException if minCount &lt; 0 or maxCount &lt; minCount,
-     *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
+     * @throws IllegalArgumentException if minCount &lt; 0, maxCount &lt; minCount,
+     *                                  , or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public StatementCounter(String name, double maxScore, int minCount, int maxCount, Class<? extends Statement> clazz) {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount, new StatementAdapter(clazz));

@@ -28,8 +28,8 @@ public abstract class Counter implements SyntaxGrader {
      * @param minCount    the minimum number of occurrences
      * @param maxCount    the maximum number of occurrences, or {@link Integer#MAX_VALUE}
      *                    if there is no limit.
-     * @throws IllegalArgumentException if minCount < 0 or maxCount < minCount,
-     *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
+     * @throws IllegalArgumentException if minCount &lt; 0, maxCount &lt; minCount,
+     *                                  or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public Counter(String counterName, String countedName, double maxScore, int minCount, int maxCount, VoidVisitorAdapter<MutableInteger> adapter) {
         if (minCount < 0) {

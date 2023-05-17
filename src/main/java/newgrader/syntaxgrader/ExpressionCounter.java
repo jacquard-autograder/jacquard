@@ -18,10 +18,10 @@ public class ExpressionCounter extends Counter {
      * @param maxScore the score if the condition holds
      * @param minCount the minimum number of occurrences
      * @param maxCount the maximum number of occurrences, or {@link Integer#MAX_VALUE}
-     *                 if there is no limit.
+     *                 if there is no limit
      * @param clazz    the expression class
-     * @throws IllegalArgumentException if minCount < 0 or maxCount < minCount,
-     *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
+     * @throws IllegalArgumentException if minCount &lt; 0, maxCount &lt; minCount,
+     *                                  or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public ExpressionCounter(String name, double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz) {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount, new ExpressionAdapter(clazz));

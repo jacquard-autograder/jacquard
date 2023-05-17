@@ -9,13 +9,13 @@ class MutableInteger {
     /**
      * Constructs a mutable integer with an initial value of 0.
      */
-    public MutableInteger() {
+    MutableInteger() {
     }
 
     /**
      * Increments the value by 1.
      */
-    public void increment() {
+    void increment() {
         value++;
     }
 
@@ -24,7 +24,7 @@ class MutableInteger {
      *
      * @return the value
      */
-    public int getValue() {
+    int getValue() {
         return value;
     }
 }
