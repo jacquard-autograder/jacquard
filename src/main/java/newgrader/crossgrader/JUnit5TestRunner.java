@@ -6,10 +6,28 @@ import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.util.*;
 
-public class JUnit5TestRunner {
-    private List<String> methodsUnderTest; // sort longest first
+/**
+ * A test runner for JUnit5 tests that is specifically designed for:
+ * <ul>
+ *     <li> tests written by students, with no additional annotation</li>
+ *     <li> running against multiple classes under test</li>
+ * </ul>
+ * <p>
+ * The only JUnit annotations that are currently supposed are {@code @Test},
+ * {@code @BeforeEach}, and {@code @BeforeAll}.
+ *
+ * @see CrossGrader
+ */
+class JUnit5TestRunner {
+    private final List<String> methodsUnderTest; // sort longest first
 
-    public JUnit5TestRunner(String[] methodsUnderTest) {
+    /**
+     * Create a test runner for methods with the given names. This assumes
+     * that tests start with the names of the methods under test.
+     *
+     * @param methodsUnderTest the names of the methods to test
+     */
+    JUnit5TestRunner(String[] methodsUnderTest) {
         // It is necessary to copy the data so changes to the list
         // don't change the underlying array.
         this.methodsUnderTest = new ArrayList<>(Arrays.asList(methodsUnderTest));
@@ -30,7 +48,17 @@ public class JUnit5TestRunner {
         return null;
     }
 
-    public List<TestResult> runAutograderHelper(Object testInstance) {
+    /**
+     * Run the tests on the provided instance of the test class, producing
+     * a {@link TestResult} for every test that runs. Tests are run only if
+     * their names start with the name of one of the methods under test.
+     *
+     * @param testInstance the test instance
+     * @return the results of each test run
+     * @throws RuntimeException if there is an {@link IllegalAccessException} or
+     *                          an error is through by the {@code @BeforeEach} method
+     */
+    List<TestResult> runAutograder(Object testInstance) {
         Method[] methods = testInstance.getClass().getMethods();
         List<Method> beforeEachMethods = new ArrayList<>();
         List<TestResult> results = new ArrayList<>();
@@ -43,7 +71,9 @@ public class JUnit5TestRunner {
                 try {
                     method.invoke(null); // method must be static
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new AssertionError("Error running @BeforeAll method " + method.getName());
+                    throw new RuntimeException(
+                            "Error running @BeforeAll method " + method.getName(),
+                            e);
                 }
             }
         }
@@ -72,5 +102,4 @@ public class JUnit5TestRunner {
         }
         return results;
     }
-
 }

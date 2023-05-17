@@ -41,6 +41,7 @@ public class OverrideChecker extends SyntaxChecker {
      * @param name              the name of the checker
      * @param maxScorePerMethod the per-method score
      * @param methodsToOverride methods to override
+     * @return a new override checker
      * @throws IllegalArgumentException if any of the methods are final
      */
     public static OverrideChecker makeOverrideCheckerFromMethodList(
@@ -81,6 +82,7 @@ public class OverrideChecker extends SyntaxChecker {
      * @param name              the name of the checker
      * @param maxScorePerMethod the per-method score
      * @param supertype         the class or interface containing the method declarations
+     * @return a new override checker
      */
     public static OverrideChecker makeAllAllowableMethodChecker(
             String name,
@@ -103,6 +105,7 @@ public class OverrideChecker extends SyntaxChecker {
      * @param maxScorePerMethod the per-method score
      * @param supertype         the class or interface containing the abstract
      *                          method declarations
+     * @return a new override checker
      */
     public static OverrideChecker makeAllAbstractMethodChecker(
             String name,

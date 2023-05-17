@@ -12,8 +12,11 @@ import newgrader.Result;
  * A counter to test whether the number of occurrences of a given statement
  * type is within the specified range.
  *
- * @deprecated
+ * @deprecated Because this is hard to implement/test, it is better to create a subclass
+ * of {@link Counter} for any statement you want to detect, as demonstrated
+ * in ??.
  */
+@Deprecated
 public class StatementCounter extends Counter {
 
     /**
@@ -26,7 +29,7 @@ public class StatementCounter extends Counter {
      * @param maxCount the maximum number of occurrences, or {@link Integer#MAX_VALUE}
      *                 if there is no limit.
      * @param clazz    the statement class
-     * @throws IllegalArgumentException if minCount < 0 or maxCount < minCount,
+     * @throws IllegalArgumentException if minCount &lt; 0 or maxCount &lt; minCount,
      *                                  or if minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public StatementCounter(String name, int maxScore, int minCount, int maxCount, Class<? extends Statement> clazz) {
