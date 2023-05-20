@@ -9,14 +9,27 @@ import java.util.*;
 
 /**
  * Checks whether the correct modifiers are used for fields (instance and
- * static variables).
+ * static variables/constants).
  */
 public class FieldModifierChecker extends SyntaxChecker {
     private final List<String> varNames;
 
-    public FieldModifierChecker(String name, double maxScore, List<String> varNames, List<Modifier> requiredModifiers, List<Modifier> optionalModifiers) {
+    /**
+     * Creates a field modifier checker, where a field declaration passes if
+     * it contains all the required modifiers and no modifiers that are neither
+     * required nor optional. Note that the score is per field. If there are
+     * 10 fields, each with a maximum score of 1.0, the maximum score produced
+     * by this checker will be 10.0.
+     *
+     * @param name              the name of this checker
+     * @param maxScore          the per field score if the check succeeds
+     * @param fieldNames        the names of the fields to check
+     * @param requiredModifiers modifiers that must be used
+     * @param optionalModifiers modifiers that may be used
+     */
+    public FieldModifierChecker(String name, double maxScore, List<String> fieldNames, List<Modifier> requiredModifiers, List<Modifier> optionalModifiers) {
         super(name, maxScore, null);
-        this.varNames = varNames;
+        this.varNames = fieldNames;
         adapter = new Adapter(requiredModifiers, optionalModifiers);
     }
 
