@@ -155,4 +155,20 @@ public class OverrideCheckerTest {
                         String.format(OVERRIDE_TEMPLATE, "@Override", "@Override")));
         assertEquals(SCORE_PER_OVERRIDE, TestUtilities.getTotalScore(results2));
     }
+
+    @Test
+    public void testArgumentMatching() {
+        OverrideChecker checker = OverrideChecker.makeAllAbstractMethodChecker(
+                "Override checker",
+                SCORE_PER_OVERRIDE,
+                Class.class);
+        List<Result> results = checker.grade(
+                TestUtilities.parseProgramFromClass("""
+                        class MyClass extends Something {
+                            @Override
+                            public double foo(int i) { return 1.0; } // wrong arg list
+                        }
+                        """));
+        assertEquals(0, TestUtilities.getTotalScore(results));
+    }
 }

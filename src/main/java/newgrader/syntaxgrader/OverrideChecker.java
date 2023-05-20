@@ -7,8 +7,14 @@ import newgrader.Result;
 import java.lang.reflect.*;
 import java.util.*;
 
+/**
+ * A checker that ensures that the {@link Override} annotation is used
+ * when overriding methods.
+ */
 public class OverrideChecker extends SyntaxChecker {
     private final List<Method> methodsToOverride;
+    // Methods will be removed from this list as they are found.
+    private List<Method> remainingMethodsToOverride;
 
     private OverrideChecker(String name, double maxScorePerMethod, List<Method> methodsToOverride) {
         // We can't create the adapter until the superclass constructor has completed.
@@ -27,16 +33,15 @@ public class OverrideChecker extends SyntaxChecker {
                                 "Method %s is static and cannot be overridden.", method.getName()));
             }
         }
-        this.methodsToOverride = methodsToOverride;
+        this.methodsToOverride = new ArrayList<>(methodsToOverride); // defensive copy
 
         // Now we can create and initialize the adapter.
         adapter = new OverrideCheckerAdapter();
     }
 
     /**
-     * Creates an override checker that ensures that, if methods with the same
-     * name as methodsToOverride are found, they have the {@link Override}
-     * annotation. This currently checks only method names.
+     * Creates an override checker that ensures that specified methods have the
+     * {@link Override} annotation.
      *
      * @param name              the name of the checker
      * @param maxScorePerMethod the per-method score
@@ -73,11 +78,10 @@ public class OverrideChecker extends SyntaxChecker {
     }
 
     /**
-     * Creates an override checker that ensures that, if methods with the
-     * same names as those in the supertype are found, they have the {@link Override}
-     * annotation. Final and static methods are skipped. This currently checks
-     * only method names, not argument lists, and does not consider methods
-     * declared in the supertype's supertypes.
+     * Creates an override checker that ensures that, if methods declared in
+     * the supertype are found in the actual code, they have the {@link Override}
+     * annotation. Final and static methods are skipped. This does not consider
+     * methods declared in the supertype's supertypes.
      *
      * @param name              the name of the checker
      * @param maxScorePerMethod the per-method score
@@ -93,13 +97,9 @@ public class OverrideChecker extends SyntaxChecker {
     }
 
     /**
-     * Creates an override checker that ensures that, if methods with the
-     * same names as abstract methods in the supertype are found, they have the
-     * {@link Override} annotation. All methods in interfaces are considered
-     * abstract.
-     * <p>
-     * This currently checks only method names, not argument lists, and does not
-     * consider methods declared in the supertype's supertypes.
+     * Creates an override checker that ensures that, if methods declared abstract
+     * in the supertype are found, they have the {@link Override} annotation.
+     * All methods in interfaces are considered abstract.
      *
      * @param name              the name of the checker
      * @param maxScorePerMethod the per-method score
@@ -126,25 +126,53 @@ public class OverrideChecker extends SyntaxChecker {
         return maxScorePerInstance * methodsToOverride.size();
     }
 
-    private class OverrideCheckerAdapter extends VoidVisitorAdapter<List<Result>> {
-        private final List<String> namesOfMethodsToOverride;
+    @Override
+    public void initialize() {
+        remainingMethodsToOverride = new ArrayList<>(methodsToOverride);
+    }
 
+    @Override
+    public void finalize(List<Result> results) {
+        for (Method method : remainingMethodsToOverride) {
+            results.add(makeFailingResult(String.format("Expected method '%s' not found", method.getName())));
+        }
+    }
+
+    private class OverrideCheckerAdapter extends VoidVisitorAdapter<List<Result>> {
         private OverrideCheckerAdapter() {
-            this.namesOfMethodsToOverride = methodsToOverride
-                    .stream()
-                    .map(Method::getName)
-                    .toList();
+        }
+
+        private boolean parameterListsEquivalent(MethodDeclaration methodDecl, Method method) {
+            if (methodDecl.getParameters().size() != method.getParameterTypes().length) {
+                return false;
+            }
+            for (int i = 0; i < methodDecl.getParameters().size(); i++) {
+                if (!methodDecl.getParameter(i).getType().asString().equals(
+                        method.getParameterTypes()[i].getSimpleName())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private Optional<Method> getMatchingMethod(MethodDeclaration methodDecl) {
+            return methodsToOverride.stream().filter((Method m) ->
+                            m.getName().equals(methodDecl.getNameAsString())
+                                    && parameterListsEquivalent(methodDecl, m))
+                    .findFirst();
         }
 
         @Override
         public void visit(MethodDeclaration methodDecl, List<Result> results) {
-            String methodName = methodDecl.getNameAsString();
-            if (namesOfMethodsToOverride.contains(methodName)) {
+            Optional<Method> expectedMethod = getMatchingMethod(methodDecl);
+            if (expectedMethod.isPresent()) {
+                String methodName = methodDecl.getNameAsString();
                 if (methodDecl.getAnnotationByClass(Override.class).isPresent()) {
                     results.add(makeSuccessResult("Override annotation used correctly for " + methodName));
                 } else {
                     results.add(makeFailingResult("Override annotation not used for " + methodName));
                 }
+                remainingMethodsToOverride.remove(expectedMethod.get());
             }
         }
     }

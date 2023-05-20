@@ -44,10 +44,26 @@ public abstract class SyntaxChecker implements SyntaxGrader {
         this.adapter = adapter;
     }
 
+    /**
+     * Performs any setup before a call to {@link #grade(CompilationUnit)}.
+     */
+    public void initialize() {
+    }
+
+    /**
+     * Adds any results that cannot be computed until all visits are complete.
+     *
+     * @param results the list of results, which may be mutated by this call
+     */
+    public void finalize(List<Result> results) {
+    }
+
     @Override
     public List<Result> grade(CompilationUnit cu) {
+        initialize();
         List<Result> results = new ArrayList<>();
         adapter.visit(cu, results);
+        finalize(results);
         return results;
     }
 
