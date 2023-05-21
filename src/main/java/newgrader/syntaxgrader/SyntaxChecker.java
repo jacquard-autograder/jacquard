@@ -16,13 +16,13 @@ public abstract class SyntaxChecker implements SyntaxGrader {
      * The message that appears in a successful {@link Result} if none is
      * provided.
      */
-    public static String SUCCESS_STRING = "SUCCESS";
+    public static final String SUCCESS_STRING = "SUCCESS";
 
     /**
      * The name of the checker, if none (or <pre>null</pre>) is provided
      * in the constructor.
      */
-    public static String DEFAULT_NAME = "Syntax Checker";
+    public static final String DEFAULT_NAME = "Syntax Checker";
 
     private final String name;
     protected final double maxScorePerInstance;
@@ -55,20 +55,16 @@ public abstract class SyntaxChecker implements SyntaxGrader {
      *
      * @param results the list of results, which may be mutated by this call
      */
-    public void finalize(List<Result> results) {
+    public void finalizeResults(List<Result> results) {
     }
 
     @Override
     public List<Result> grade(CompilationUnit cu) {
         initialize();
-        List<Result> results = new ArrayList<>();
+        final List<Result> results = new ArrayList<>();
         adapter.visit(cu, results);
-        finalize(results);
+        finalizeResults(results);
         return results;
-    }
-
-    String getName() {
-        return name;
     }
 
     protected Result makeFailingResult(String message) {
@@ -77,6 +73,10 @@ public abstract class SyntaxChecker implements SyntaxGrader {
 
     protected Result makeSuccessResult(String message) {
         return new Result(name, maxScorePerInstance, maxScorePerInstance, message);
+    }
+
+    protected Result makeSuccessResult() {
+        return new Result(name, maxScorePerInstance, maxScorePerInstance, SUCCESS_STRING);
     }
 
     // The remaining methods are helper methods for subclasses.

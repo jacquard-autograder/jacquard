@@ -58,7 +58,7 @@ public abstract class Counter implements SyntaxGrader {
      */
     @Override
     public List<Result> grade(CompilationUnit cu) {
-        MutableInteger mi = new MutableInteger();
+        final MutableInteger mi = new MutableInteger();
         adapter.visit(cu, mi);
         return List.of(getResult(mi));
     }
@@ -79,7 +79,7 @@ public abstract class Counter implements SyntaxGrader {
         return String.format("Code was required to have %d-%d %s", minCount, maxCount, countedName);
     }
 
-    public Result getResult(MutableInteger mi) {
+    private Result getResult(MutableInteger mi) {
         if (mi.getValue() < minCount) {
             return new Result(counterName, 0, maxScore,
                     String.format("%s but had only %d", getPrefix(), mi.getValue()));

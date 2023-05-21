@@ -11,7 +11,7 @@ import java.util.*;
  * A checker that ensures that the {@link Override} annotation is used
  * when overriding methods.
  */
-public class OverrideChecker extends SyntaxChecker {
+public final class OverrideChecker extends SyntaxChecker {
     private final List<Method> methodsToOverride;
     // Methods will be removed from this list as they are found.
     private List<Method> remainingMethodsToOverride;
@@ -21,7 +21,7 @@ public class OverrideChecker extends SyntaxChecker {
         super(name, maxScorePerMethod, null);
 
         // Check that no methods are static or final.
-        for (Method method : methodsToOverride) {
+        for (final Method method : methodsToOverride) {
             if ((method.getModifiers() & Modifier.FINAL) != 0) {
                 throw new IllegalArgumentException(
                         String.format(
@@ -69,8 +69,8 @@ public class OverrideChecker extends SyntaxChecker {
             int requiredModifiers,  // use &
             int forbiddenModifiers  // use |
     ) {
-        Method[] allMethods = supertype.isInterface() ? supertype.getMethods() : supertype.getDeclaredMethods();
-        List<Method> methods = Arrays.stream(allMethods)
+        final Method[] allMethods = supertype.isInterface() ? supertype.getMethods() : supertype.getDeclaredMethods();
+        final List<Method> methods = Arrays.stream(allMethods)
                 .filter(method -> (method.getModifiers() & requiredModifiers) == requiredModifiers
                         && (method.getModifiers() & forbiddenModifiers) == 0)
                 .toList();
@@ -132,16 +132,13 @@ public class OverrideChecker extends SyntaxChecker {
     }
 
     @Override
-    public void finalize(List<Result> results) {
-        for (Method method : remainingMethodsToOverride) {
+    public void finalizeResults(List<Result> results) {
+        for (final Method method : remainingMethodsToOverride) {
             results.add(makeFailingResult(String.format("Expected method '%s' not found", method.getName())));
         }
     }
 
     private class OverrideCheckerAdapter extends VoidVisitorAdapter<List<Result>> {
-        private OverrideCheckerAdapter() {
-        }
-
         private boolean parameterListsEquivalent(MethodDeclaration methodDecl, Method method) {
             if (methodDecl.getParameters().size() != method.getParameterTypes().length) {
                 return false;
@@ -164,9 +161,9 @@ public class OverrideChecker extends SyntaxChecker {
 
         @Override
         public void visit(MethodDeclaration methodDecl, List<Result> results) {
-            Optional<Method> expectedMethod = getMatchingMethod(methodDecl);
+            final Optional<Method> expectedMethod = getMatchingMethod(methodDecl);
             if (expectedMethod.isPresent()) {
-                String methodName = methodDecl.getNameAsString();
+                final String methodName = methodDecl.getNameAsString();
                 if (methodDecl.getAnnotationByClass(Override.class).isPresent()) {
                     results.add(makeSuccessResult("Override annotation used correctly for " + methodName));
                 } else {

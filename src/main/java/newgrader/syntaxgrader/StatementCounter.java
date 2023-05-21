@@ -8,6 +8,7 @@ import newgrader.Result;
  * A counter to test whether the number of occurrences of a given statement
  * type is within the specified range.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class StatementCounter extends Counter {
 
     /**
@@ -31,6 +32,7 @@ public class StatementCounter extends Counter {
         private final Class<? extends Statement> clazz;
 
         private StatementAdapter(Class<? extends Statement> clazz) {
+            super();
             this.clazz = clazz;
         }
 

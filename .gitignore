@@ -12,3 +12,4 @@ zips/
 *.iml
 *.puml
 doc/
+bin/

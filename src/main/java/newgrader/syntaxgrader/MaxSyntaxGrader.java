@@ -41,9 +41,9 @@ public class MaxSyntaxGrader implements SyntaxGrader {
     public List<Result> grade(CompilationUnit cu) {
         List<Result> bestResults = null;
         double bestScore = 0;
-        for (SyntaxGrader processor : processors) {
-            List<Result> results = processor.grade(cu);
-            double score = results.stream().mapToDouble(Result::score).sum();
+        for (final SyntaxGrader processor : processors) {
+            final List<Result> results = processor.grade(cu);
+            final double score = results.stream().mapToDouble(Result::score).sum();
             if (bestResults == null || score > bestScore) {
                 bestResults = results;
                 bestScore = score;

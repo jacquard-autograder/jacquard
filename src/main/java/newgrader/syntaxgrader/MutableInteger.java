@@ -3,19 +3,19 @@ package newgrader.syntaxgrader;
 /**
  * A wrapper around a mutable integer value.
  */
-class MutableInteger {
-    private int value = 0;
+/* default */ class MutableInteger {
+    private int value;
 
     /**
      * Constructs a mutable integer with an initial value of 0.
      */
-    MutableInteger() {
+    /* default */ MutableInteger() {
     }
 
     /**
      * Increments the value by 1.
      */
-    void increment() {
+    /* default */ void increment() {
         value++;
     }
 
@@ -24,7 +24,7 @@ class MutableInteger {
      *
      * @return the value
      */
-    int getValue() {
+    /* default */ int getValue() {
         return value;
     }
 }

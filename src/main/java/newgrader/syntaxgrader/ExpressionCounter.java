@@ -8,6 +8,7 @@ import newgrader.Result;
  * A counter to test whether the number of occurrences of a given expression
  * type is within the specified range.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class ExpressionCounter extends Counter {
 
     /**
@@ -31,6 +32,7 @@ public class ExpressionCounter extends Counter {
         private final Class<? extends Expression> clazz;
 
         private ExpressionAdapter(Class<? extends Expression> clazz) {
+            super();
             this.clazz = clazz;
         }
 

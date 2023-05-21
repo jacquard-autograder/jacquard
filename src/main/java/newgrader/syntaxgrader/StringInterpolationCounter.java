@@ -27,8 +27,8 @@ public class StringInterpolationCounter extends Counter {
         @Override
         public void visit(MethodCallExpr node, MutableInteger mi) {
             if (node.getScope().isPresent()) {
-                String fullMethodName = node.getScope().get() + "." + node.getNameAsString();
-                if ((fullMethodName.equals("System.out.printf") || fullMethodName.equals("String.format"))
+                final String fullMethodName = node.getScope().get() + "." + node.getNameAsString();
+                if (("System.out.printf".equals(fullMethodName) || "String.format".equals(fullMethodName))
                         && node.getArguments().size() > 1) {
                     mi.increment();
                 }

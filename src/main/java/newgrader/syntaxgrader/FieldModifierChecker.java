@@ -91,6 +91,7 @@ public class FieldModifierChecker extends SyntaxChecker {
         private final List<Modifier> optionalModifiers;
 
         private Adapter(List<Modifier> requiredModifiers, List<Modifier> optionalModifiers) {
+            super();
             this.requiredModifiers = new ArrayList<>(requiredModifiers);
             this.optionalModifiers = new ArrayList<>(optionalModifiers);
         }
@@ -99,13 +100,13 @@ public class FieldModifierChecker extends SyntaxChecker {
         public void visit(VariableDeclarator vd, List<Result> collector) {
             try {
                 if (isField(vd) && varNames.contains(vd.getNameAsString())) {
-                    FieldDeclaration fd = getFieldDeclaration(vd);
+                    final FieldDeclaration fd = getFieldDeclaration(vd);
 
                     // Make a copy of this instance variable's modifiers.
-                    List<Modifier> modifiers = new ArrayList<>(fd.getModifiers());
+                    final List<Modifier> modifiers = new ArrayList<>(fd.getModifiers());
 
                     // Ensure that all required modifiers are present, removing them.
-                    for (Modifier modifier : requiredModifiers) {
+                    for (final Modifier modifier : requiredModifiers) {
                         if (modifiers.contains(modifier)) {
                             modifiers.remove(modifier);
                         } else {
@@ -120,7 +121,7 @@ public class FieldModifierChecker extends SyntaxChecker {
                     }
 
                     // Ensure that any remaining modifiers are permitted.
-                    for (Modifier modifier : modifiers) {
+                    for (final Modifier modifier : modifiers) {
                         if (!optionalModifiers.contains(modifier)) {
                             collector.add(
                                     makeFailingResult(
