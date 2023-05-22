@@ -2,6 +2,7 @@ plugins {
     id 'application'
     id 'java'
     id 'jacoco'
+    id 'pmd'
 }
 
 group 'org.example'
@@ -16,6 +17,8 @@ dependencies {
     implementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     implementation 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation 'org.junit.platform:junit-platform-launcher:1.10.0-M1'
+    implementation 'net.sourceforge.pmd:pmd:6.55.0'
+    implementation 'net.sourceforge.pmd:pmd-java:6.55.0'
 }
 
 apply plugin: "java"
@@ -36,6 +39,11 @@ jacocoTestReport {
         html.required = false
         html.outputLocation = layout.buildDirectory.dir('reports/jacocoHtml')
     }
+}
+
+// Outputs html and xml to build/reports/pmd
+pmd {
+    ignoreFailures = true
 }
 
 test {
