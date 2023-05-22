@@ -9,7 +9,7 @@ import newgrader.Result;
 import java.util.*;
 
 /**
- * The base class for any checkers that make use of the linked Java parser.
+ * The base class for any boolean checkers.
  */
 public abstract class SyntaxChecker implements SyntaxGrader {
     /**

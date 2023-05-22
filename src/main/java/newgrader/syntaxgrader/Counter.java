@@ -7,8 +7,8 @@ import newgrader.Result;
 import java.util.List;
 
 /**
- * The base class for counters to test whether the number of occurrences of an
- * element is within the specified range.
+ * The base class for counters to test whether the number of occurrences of a
+ * syntactic element is within the specified range.
  */
 public abstract class Counter implements SyntaxGrader {
     private final String counterName;

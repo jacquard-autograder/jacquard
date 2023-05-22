@@ -6,8 +6,8 @@ import newgrader.Result;
 import java.util.List;
 
 /**
- * Graders that perform static analysis. In rare cases, such as {@link OverrideChecker},
- * these also perform additional types of analysis.
+ * Syntax-based graders that make use of the linked
+ * <a href="https://javaparser.org/">Java parser</a>.
  */
 public interface SyntaxGrader {
     /**
