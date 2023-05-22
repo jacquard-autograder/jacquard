@@ -23,7 +23,7 @@ ext {
 }
 
 application {
-    mainClassName = javaMainClass
+    mainClass.set(javaMainClass)
 }
 
 test {
