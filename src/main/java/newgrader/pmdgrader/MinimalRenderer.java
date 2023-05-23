@@ -2,7 +2,6 @@ package newgrader.pmdgrader;
 
 import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.renderers.AbstractIncrementingRenderer;
-import org.apache.commons.io.output.NullWriter;
 
 import java.io.*;
 import java.util.*;
@@ -14,7 +13,7 @@ public class MinimalRenderer extends AbstractIncrementingRenderer {
 
     public MinimalRenderer() {
         super(NAME, "minimal renderer for Java integration");
-        writer = NullWriter.nullWriter();
+        writer = Writer.nullWriter();
     }
 
     // Getters
