@@ -18,4 +18,8 @@ public record Result(String name, double score, double maxScore,
     public static Result makeResult(String name, double actualScore, double maxScore, String message) {
         return new Result(name, actualScore, maxScore, message);
     }
+
+    public static Result makeSuccess(String name, double score, String message) {
+        return new Result(name, score, score, message);
+    }
 }
