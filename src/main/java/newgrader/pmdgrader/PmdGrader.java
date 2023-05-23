@@ -20,38 +20,34 @@ public class PmdGrader {
     private final PMDConfiguration configuration;
     // private final PmdAnalysis analysis;
 
-    public PmdGrader(double penaltyPerViolation, double maxPenalty, Path path) {
+    public PmdGrader(double penaltyPerViolation, double maxPenalty) {
         this.penaltyPerViolation = penaltyPerViolation;
         this.maxPenalty = maxPenalty;
 
         // Set up configuration.
         configuration = new PMDConfiguration();
         configuration.setDefaultLanguageVersion(LanguageRegistry.findLanguageByTerseName("java").getVersion("17"));
-        configuration.setReportFormat("xml");
+       // configuration.setReportFormat("xml");
         configuration.addRuleSet("category/java/documentation.xml");
-    }
-
-    private static Renderer createRenderer(Writer writer) {
-        XMLRenderer xml = new XMLRenderer("UTF-8");
-        xml.setWriter(writer);
-        return xml;
+        configuration.setIgnoreIncrementalAnalysis(true);
     }
 
     public List<Result> grade(Path futPath) {
         // Set up output.
-        Writer rendererOutput = new StringWriter();
-        Renderer renderer = createRenderer(rendererOutput);
+        Renderer renderer = new MinimalRenderer();
 
         // Set up analysis.
-        PmdAnalysis analysis = PmdAnalysis.create(configuration);
-        analysis.files().addFile(futPath);
-        analysis.addRenderer(renderer);
+        try (PmdAnalysis analysis = PmdAnalysis.create(configuration)) {
+            analysis.files().addFile(futPath);
+            analysis.addRenderer(renderer);
 
-        // Perform analysis.
-        analysis.performAnalysis();
-        // System.out.println didn't work here but System.err.println did.
+            // Perform analysis.
+            analysis.performAnalysis();
+            // System.out.println didn't work here but System.err.println did.
 
-        return produceResults(rendererOutput.toString());
+            System.err.println(renderer);
+        }
+        return null;
     }
 
     private Document parseReport(String report) {
@@ -144,12 +140,12 @@ public class PmdGrader {
         return results;
     }
 
-    public static void main(String[] args) throws RuleSetNotFoundException, URISyntaxException {
+    public static void main(String[] args) throws URISyntaxException {
         // https://stackoverflow.com/a/45782699/631051
         URL fileURL = PmdGrader.class.getClassLoader().getResource("Main.java");
         // fileURL will be null if the file cannot be found.
         Path filePath = Paths.get(fileURL.toURI());
-        PmdGrader grader = new PmdGrader(.5, 2.0, filePath);
+        PmdGrader grader = new PmdGrader(.5, 2.0);
         grader.grade(filePath);
     }
 }
