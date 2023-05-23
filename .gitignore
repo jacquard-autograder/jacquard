@@ -13,3 +13,4 @@ zips/
 *.puml
 doc/
 bin/
+jacocohtml/
