@@ -35,16 +35,11 @@ public class PmdGrader {
 
         // Set up analysis.
         try (PmdAnalysis analysis = PmdAnalysis.create(configuration)) {
-            analysis.files().addFile(futPath);
-            analysis.addRenderer(renderer);
-
-            // Perform analysis.
-            analysis.performAnalysis();
+            analysis.files().addFileOrDirectory(path);
+            Report report = analysis.performAnalysisAndCollectReport();
             // System.out.println didn't work here but System.err.println did.
-
-            System.err.println(renderer);
+            return produceResults(report);
         }
-        return produceResults(renderer.getReport());
     }
 
     private String violationToString(RuleViolation violation) {
