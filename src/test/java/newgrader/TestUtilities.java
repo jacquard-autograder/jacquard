@@ -1,6 +1,9 @@
 package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
+
+import java.net.URISyntaxException;
+import java.nio.file.*;
 import java.util.List;
 
 public class TestUtilities {
@@ -22,5 +25,9 @@ public class TestUtilities {
 
     static double getTotalScore(List<Result> results) {
         return results.stream().mapToDouble(Result::score).sum();
+    }
+
+    static Path getPath(String filename) throws URISyntaxException {
+        return Paths.get(TestUtilities.class.getClassLoader().getResource(filename).toURI());
     }
 }

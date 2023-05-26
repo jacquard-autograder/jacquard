@@ -1,12 +1,11 @@
 package newgrader.pmdgrader;
 
 import net.sourceforge.pmd.*;
-import net.sourceforge.pmd.lang.LanguageRegistry;
+import net.sourceforge.pmd.lang.*;
 
 import newgrader.Result;
 
 import java.io.*;
-import java.net.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,24 +18,108 @@ public class PmdGrader {
     private final double penaltyPerViolation;
     private final double maxPenalty;
     private final PMDConfiguration configuration;
+    // These are used only if createFromRules() is used.
+    private String ruleSetPath;
+    private String[] ruleNames;
+
+    private static PMDConfiguration createConfiguration() {
+        PMDConfiguration config = new PMDConfiguration();
+        config.setDefaultLanguageVersion(LanguageRegistry.findLanguageByTerseName("java").getVersion("17"));
+        return config;
+    }
+
+    private PmdGrader(double penaltyPerViolation, double maxPenalty, String[] ruleSetPaths) {
+        this.penaltyPerViolation = penaltyPerViolation;
+        this.maxPenalty = maxPenalty;
+        configuration = createConfiguration();
+
+        // Build (and discard) analysis here to fail fast if any paths are invalid.
+        try (PmdAnalysis analysis = PmdAnalysis.create(configuration)) {
+            RuleSetLoader loader = analysis.newRuleSetLoader();
+            for (String ruleSetPath : ruleSetPaths) {
+                loader.loadFromResource(ruleSetPath);
+            }
+        } catch (RuleSetLoadException e) {
+            throw new RuntimeException("Unable to load rule set", e);
+        }
+
+        Arrays.stream(ruleSetPaths).forEach(configuration::addRuleSet);
+    }
+
+    private PmdGrader(double penaltyPerViolation, double maxPenalty, String ruleSetPath, String[] ruleNames) {
+        this.penaltyPerViolation = penaltyPerViolation;
+        this.maxPenalty = maxPenalty;
+        this.ruleSetPath = ruleSetPath;
+        this.ruleNames = ruleNames;
+        configuration = createConfiguration();
+
+        // Build List<RuleSet> here to fail fist if the rule set path or a rule
+        // name is invalid.
+        createAnalysisWithRuleNames();
+    }
+
+    private PmdAnalysis createAnalysis() {
+        if (ruleSetPath == null) {
+            return PmdAnalysis.create(configuration);
+        } else {
+            return createAnalysisWithRuleNames();
+        }
+    }
+
+    // It is the caller's responsibility to call close().
+    private PmdAnalysis createAnalysisWithRuleNames() {
+        try {
+            PmdAnalysis analysis = PmdAnalysis.create(configuration);
+            RuleSetLoader loader = analysis.newRuleSetLoader();
+            RuleSet ruleSet = loader.loadFromResource(ruleSetPath);
+            for (String ruleName : ruleNames) {
+                Rule rule = ruleSet.getRuleByName(ruleName);
+                if (rule == null) {
+                    throw new RuntimeException(String.format(
+                            "Did not find rule %s in %s",
+                            rule, ruleSetPath));
+                }
+                analysis.addRuleSet(RuleSet.forSingleRule(rule));
+            }
+            return analysis;
+        } catch (RuleSetLoadException e) {
+            throw new RuntimeException("Unable to load rule set", e);
+        }
+    }
 
     /**
-     * Creates a PMD-based grader.
+     * Creates a PMD-based grader for the specified rule sets. The ruleSetPaths
+     * argument should be one or more paths to rule sets in <a
+     * href="https://github.com/pmd/pmd/tree/master/pmd-java/src/main/resources">
+     * the PMD resource directory</a> (such as "category/java/documentation.xml")
+     * or in one of the client project's resource directories.
      *
-     * @param ruleSet             the name of a rule set
      * @param penaltyPerViolation the penalty per violation, which should be a
      *                            positive number
      * @param maxPenalty          the maximum penalty
+     * @param ruleSetPaths        the path to one or more rule sets
+     * @throws RuntimeException if any rule set path is invalid
      */
-    public PmdGrader(String ruleSet, double penaltyPerViolation, double maxPenalty) {
-        this.penaltyPerViolation = penaltyPerViolation;
-        this.maxPenalty = maxPenalty;
+    public static PmdGrader createFromRuleSetPaths(double penaltyPerViolation, double maxPenalty, String... ruleSetPaths) {
+        return new PmdGrader(penaltyPerViolation, maxPenalty, ruleSetPaths);
+    }
 
-        // Set up configuration.
-        configuration = new PMDConfiguration();
-        configuration.setDefaultLanguageVersion(LanguageRegistry.findLanguageByTerseName("java").getVersion("17"));
-        configuration.addRuleSet(ruleSet);
-        configuration.setIgnoreIncrementalAnalysis(true);
+    /**
+     * Creates a PMD-based grader for the specified rules. The ruleSetPath
+     * argument should be the path to a rule set in <a
+     * href="https://github.com/pmd/pmd/tree/master/pmd-java/src/main/resources">
+     * the PMD resource directory</a> (such as "category/java/documentation.xml")
+     * or in one of the client project's resource directories.
+     *
+     * @param penaltyPerViolation the penalty per violation, which should be a
+     *                            positive number
+     * @param maxPenalty          the maximum penalty
+     * @param ruleSetPath         the path to a rule sets
+     * @param ruleNames           the names of the rules in the rule set to use
+     * @throws RuntimeException if any rule set path is invalid
+     */
+    public static PmdGrader createFromRules(double penaltyPerViolation, double maxPenalty, String ruleSetPath, String... ruleNames) {
+        return new PmdGrader(penaltyPerViolation, maxPenalty, ruleSetPath, ruleNames);
     }
 
     /**
@@ -48,9 +131,11 @@ public class PmdGrader {
      * @see net.sourceforge.pmd.lang.document.FileCollector#addFileOrDirectory(Path)
      */
     public List<Result> grade(Path path) throws IOException {
-        try (PmdAnalysis analysis = PmdAnalysis.create(configuration)) {
+        try (PmdAnalysis analysis = createAnalysis()) {
             analysis.files().addFileOrDirectory(path);
+            // The below line throws an exception: Collector was closed!
             Report report = analysis.performAnalysisAndCollectReport();
+            analysis.close();
             // System.out.println didn't work here but System.err.println did.
             return produceResults(report);
         }
@@ -94,14 +179,5 @@ public class PmdGrader {
         }
 
         return results;
-    }
-
-    public static void main(String[] args) throws URISyntaxException, IOException {
-        URL fileURL = PmdGrader.class.getClassLoader().getResource("Main.java");
-        // fileURL will be null if the file cannot be found.
-        Path dirPath = Paths.get(fileURL.toURI()).getParent();
-        PmdGrader grader = new PmdGrader("category/java/documentation.xml", .5, 2.0);
-        List<Result> results = grader.grade(dirPath);
-        System.out.println(results.get(0));
     }
 }
