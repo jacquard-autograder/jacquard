@@ -5,35 +5,49 @@ import net.sourceforge.pmd.lang.LanguageRegistry;
 
 import newgrader.Result;
 
+import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-// https://docs.pmd-code.org/latest/pmd_userdocs_tools_java_api.html
+/**
+ * A grader that makes use of the linked <a href="https://docs.pmd-code.org/latest/index.html">
+ * PMD Source Code Analyzer Project</a>.
+ */
 public class PmdGrader {
     private final double penaltyPerViolation;
     private final double maxPenalty;
     private final PMDConfiguration configuration;
-    // private final PmdAnalysis analysis;
 
-    public PmdGrader(double penaltyPerViolation, double maxPenalty) {
+    /**
+     * Creates a PMD-based grader.
+     *
+     * @param ruleSet             the name of a rule set
+     * @param penaltyPerViolation the penalty per violation, which should be a
+     *                            positive number
+     * @param maxPenalty          the maximum penalty
+     */
+    public PmdGrader(String ruleSet, double penaltyPerViolation, double maxPenalty) {
         this.penaltyPerViolation = penaltyPerViolation;
         this.maxPenalty = maxPenalty;
 
         // Set up configuration.
         configuration = new PMDConfiguration();
         configuration.setDefaultLanguageVersion(LanguageRegistry.findLanguageByTerseName("java").getVersion("17"));
-        // configuration.setReportFormat("xml");
-        configuration.addRuleSet("category/java/documentation.xml");
+        configuration.addRuleSet(ruleSet);
         configuration.setIgnoreIncrementalAnalysis(true);
     }
 
-    public List<Result> grade(Path futPath) {
-        // Set up output.
-        MinimalRenderer renderer = new MinimalRenderer();
-
-        // Set up analysis.
+    /**
+     * Grades any files at the specified path.
+     *
+     * @param path a path to a file or directory
+     * @return a single result
+     * @throws java.io.IOException if an I/O exception occurs
+     * @see net.sourceforge.pmd.lang.document.FileCollector#addFileOrDirectory(Path)
+     */
+    public List<Result> grade(Path path) throws IOException {
         try (PmdAnalysis analysis = PmdAnalysis.create(configuration)) {
             analysis.files().addFileOrDirectory(path);
             Report report = analysis.performAnalysisAndCollectReport();
@@ -82,13 +96,12 @@ public class PmdGrader {
         return results;
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        // https://stackoverflow.com/a/45782699/631051
+    public static void main(String[] args) throws URISyntaxException, IOException {
         URL fileURL = PmdGrader.class.getClassLoader().getResource("Main.java");
         // fileURL will be null if the file cannot be found.
-        Path filePath = Paths.get(fileURL.toURI());
-        PmdGrader grader = new PmdGrader(.5, 2.0);
-        List<Result> results = grader.grade(filePath);
+        Path dirPath = Paths.get(fileURL.toURI()).getParent();
+        PmdGrader grader = new PmdGrader("category/java/documentation.xml", .5, 2.0);
+        List<Result> results = grader.grade(dirPath);
         System.out.println(results.get(0));
     }
 }
