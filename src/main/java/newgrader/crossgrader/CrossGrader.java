@@ -47,17 +47,18 @@ public class CrossGrader {
      * report bugs (fail) on instructor-provided code that has a deliberate
      * but in the `add()` method:
      * <pre>
-     *         , correct.Flist, buggy.Flist
+     *         , correct.Flist, buggy.Flist#1
      *      add,           2.5,    -5
      *     size,           1.5,     0
      * </pre>
-     * The test class would be instantiated first with the string "correct.Flist".
+     * The test class would be instantiated first with the class "correct.Flist".
      * If all tests whose names begin with "add" pass, the result would be 2.5/2.5
      * points. If any tests beginning with "add" failed or if there were none,
      * the result would be 0/2.5. The results would be similar (except for
      * maxing out at 1.5) for tests starting with "size".
      * <p>
-     * Next, the test class would be instantiated with the string "buggy.Flist".
+     * Next, the test class would be instantiated with the class "buggy.Flist"
+     * and the integer argument 1 (specified after the hash sign).
      * If any test whose name begins with "add" _fails_, the result would be 5/5.
      * If all tests beginning with "add" passed or if there were none, the
      * result would be 0/5. No results would be produced for test methods
@@ -121,12 +122,17 @@ public class CrossGrader {
     }
 
     private List<Result> grade(int cutIndex) {
+        DependencyInjector.reset(); // clear previous injected values
         DependencyInjector.setGeneralizedTestClass(generalizedTestClass);
-        final String cutName = cutNames[cutIndex];
+        final String cutField = cutNames[cutIndex];
         final List<TestResult> testResults = new ArrayList<>();
         try {
-            Class<?> classUnderTest = Class.forName(cutName);
+            String[] cutFields = cutField.split("#");
+            Class<?> classUnderTest = Class.forName(cutFields[0]);
             DependencyInjector.setClassToInject(classUnderTest);
+            if (cutFields.length > 1) {
+                DependencyInjector.setIntToInject(Integer.parseInt(cutFields[1]));
+            }
             Launcher launcher = LauncherFactory.create();
             launcher.registerTestExecutionListeners(new TestExecutionListener() {
                 @Override
@@ -154,7 +160,6 @@ public class CrossGrader {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        DependencyInjector.setClassToInject(null);
         return generateResults(cutIndex, testResults);
     }
 
@@ -192,9 +197,9 @@ public class CrossGrader {
         double maxPoints = points[mutIndex][cutIndex];
         double points;
         if (failures > 0) {
-            points = -maxPoints;
+            points = maxPoints > 0 ? 0 : -maxPoints;
         } else if (successes > 0) {
-            points = maxPoints;
+            points = maxPoints > 0 ? maxPoints : 0;
         } else {
             points = 0;
             sb.append("No tests found");
