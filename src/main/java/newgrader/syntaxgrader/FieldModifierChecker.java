@@ -134,9 +134,9 @@ public class FieldModifierChecker extends SyntaxChecker {
                     }
                     collector.add(makeSuccessResult(
                             String.format(
-                                    "%s is correct.",
-                                    getDeclarationDescription(fd, vd),
-                                    getEnclosingClassName(fd))));
+                                    "%s.%s is declared correctly.",
+                                    getEnclosingClassName(fd),
+                                    getDeclarationDescription(fd, vd))));
                 }
             } finally {
                 super.visit(vd, collector);

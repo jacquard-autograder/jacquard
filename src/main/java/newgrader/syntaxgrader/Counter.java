@@ -3,6 +3,7 @@ package newgrader.syntaxgrader;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import newgrader.Result;
+import newgrader.exceptions.ClientException;
 
 import java.util.List;
 
@@ -28,18 +29,25 @@ public abstract class Counter implements SyntaxGrader {
      * @param minCount    the minimum number of occurrences
      * @param maxCount    the maximum number of occurrences, or {@link Integer#MAX_VALUE}
      *                    if there is no limit.
-     * @throws IllegalArgumentException if minCount &lt; 0, maxCount &lt; minCount,
-     *                                  or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
+     * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
+     *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public Counter(String counterName, String countedName, double maxScore, int minCount, int maxCount, VoidVisitorAdapter<MutableInteger> adapter) {
+    public Counter(
+            String counterName,
+            String countedName,
+            double maxScore,
+            int minCount,
+            int maxCount,
+            VoidVisitorAdapter<MutableInteger> adapter
+    ) throws ClientException {
         if (minCount < 0) {
-            throw new IllegalArgumentException("minCount must be >= 0");
+            throw new ClientException("minCount must be >= 0");
         }
         if (maxCount < minCount) {
-            throw new IllegalArgumentException("maxCount must be >= minCount");
+            throw new ClientException("maxCount must be >= minCount");
         }
         if (minCount == 0 && maxCount == Integer.MAX_VALUE) {
-            throw new IllegalArgumentException(
+            throw new ClientException(
                     "There is no reason to create a Counter of 0 or more elements");
         }
 

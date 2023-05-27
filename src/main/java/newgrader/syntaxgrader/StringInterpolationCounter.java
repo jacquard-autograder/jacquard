@@ -3,6 +3,7 @@ package newgrader.syntaxgrader;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import newgrader.Result;
+import newgrader.exceptions.ClientException;
 
 /**
  * Counter of number of occurrences of string interpolation.
@@ -16,10 +17,11 @@ public class StringInterpolationCounter extends Counter {
      * @param minCount the minimum number of occurrences
      * @param maxCount the maximum number of occurrences, or {@link Integer#MAX_VALUE}
      *                 if there is no limit
-     * @throws IllegalArgumentException if minCount &lt; 0, maxCount &lt; minCount,
-     *                                  or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
+     * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
+     *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public StringInterpolationCounter(String name, int maxScore, int minCount, int maxCount) {
+    public StringInterpolationCounter(String name, int maxScore, int minCount, int maxCount)
+            throws ClientException {
         super(name, "string interpolations", maxScore, minCount, maxCount, new StringInterpolationAdapter());
     }
 

@@ -1,5 +1,6 @@
 package newgrader;
 
+import newgrader.exceptions.ClientException;
 import newgrader.syntaxgrader.OverrideChecker;
 import org.junit.jupiter.api.Test;
 
@@ -69,7 +70,7 @@ public class OverrideCheckerTest {
     }
 
     @Test
-    public void makeOverrideCheckerFromMethodListWithInterface() {
+    public void makeOverrideCheckerFromMethodListWithInterface() throws ClientException {
         OverrideChecker checker = OverrideChecker.makeOverrideCheckerFromMethodList(
                 "Override checker",
                 SCORE_PER_OVERRIDE,
@@ -78,7 +79,7 @@ public class OverrideCheckerTest {
     }
 
     @Test
-    public void makeOverrideCheckerFromMethodListWithClass() throws NoSuchMethodException {
+    public void makeOverrideCheckerFromMethodListWithClass() throws NoSuchMethodException, ClientException {
         OverrideChecker checker = OverrideChecker.makeOverrideCheckerFromMethodList(
                 "Override checker",
                 SCORE_PER_OVERRIDE,
@@ -88,14 +89,14 @@ public class OverrideCheckerTest {
         testAllCombinations(checker);
 
         // static method
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ClientException.class,
                 () -> OverrideChecker.makeOverrideCheckerFromMethodList(
                         "Override checker",
                         SCORE_PER_OVERRIDE,
                         List.of(Class.class.getDeclaredMethod("notMeEither", char.class))));
 
         // final method
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ClientException.class,
                 () -> OverrideChecker.makeOverrideCheckerFromMethodList(
                         "Override checker",
                         SCORE_PER_OVERRIDE,

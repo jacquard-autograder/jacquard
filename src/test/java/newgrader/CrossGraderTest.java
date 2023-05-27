@@ -1,6 +1,7 @@
 package newgrader;
 
 import newgrader.crossgrader.*;
+import newgrader.exceptions.ClientException;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -19,14 +20,14 @@ public class CrossGraderTest {
             addZero, -1, -2, -3, -4
             """, "newgrader.crossgrader.ParameterizedBuggyAdder");
 
-    private List<Result> getResults(String csv) {
+    private List<Result> getResults(String csv) throws ClientException {
         CrossGrader grader = new CrossGrader(GeneralizedAdderTest.class,
                 new ByteArrayInputStream(csv.getBytes()));
         return grader.gradeAll();
     }
 
     @Test
-    public void testClassesWithoutIntParameters() {
+    public void testClassesWithoutIntParameters() throws ClientException {
         List<Result> results = getResults(CSV_FILE);
         assertEquals(2, results.size());
         testResult(results.get(0), 2, 2);
@@ -40,7 +41,7 @@ public class CrossGraderTest {
     }
 
     @Test
-    public void testClassesWithIntParameters() {
+    public void testClassesWithIntParameters() throws ClientException {
         CrossGrader grader = new CrossGrader(GeneralizedAdderTest.class,
                 new ByteArrayInputStream(CSV_FILE_WITH_INT_PARAMS.getBytes()));
         List<Result> results = grader.gradeAll();

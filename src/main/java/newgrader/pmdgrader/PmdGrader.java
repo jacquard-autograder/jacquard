@@ -4,6 +4,7 @@ import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.lang.*;
 
 import newgrader.Result;
+import newgrader.exceptions.*;
 
 import java.io.*;
 import java.nio.file.*;
@@ -15,9 +16,11 @@ import java.util.stream.Collectors;
  * PMD Source Code Analyzer Project</a>.
  */
 public class PmdGrader {
+    private static final String JAVA_VERSION = "17";
     private final double penaltyPerViolation;
     private final double maxPenalty;
     private final PMDConfiguration configuration;
+
     // These are used only if createFromRules() is used.
     private String ruleSetPath;
     private String[] ruleNames;
@@ -26,11 +29,12 @@ public class PmdGrader {
         PMDConfiguration config = new PMDConfiguration();
         PMDConfiguration configuration = new PMDConfiguration();
         LanguagePropertyBundle properties = configuration.getLanguageProperties(LanguageRegistry.PMD.getLanguageById("java"));
-        properties.setLanguageVersion("17");
+        properties.setLanguageVersion(JAVA_VERSION);
         return config;
     }
 
-    private PmdGrader(double penaltyPerViolation, double maxPenalty, String[] ruleSetPaths) {
+    private PmdGrader(double penaltyPerViolation, double maxPenalty, String[] ruleSetPaths)
+            throws ClientException {
         this.penaltyPerViolation = penaltyPerViolation;
         this.maxPenalty = maxPenalty;
         configuration = createConfiguration();
@@ -39,28 +43,30 @@ public class PmdGrader {
         try (PmdAnalysis analysis = PmdAnalysis.create(configuration)) {
             RuleSetLoader loader = analysis.newRuleSetLoader();
             for (String ruleSetPath : ruleSetPaths) {
-                loader.loadFromResource(ruleSetPath);
+                try {
+                    loader.loadFromResource(ruleSetPath);
+                } catch (RuleSetLoadException e) {
+                    throw new ClientException("Unable to load rule set " + ruleSetPath, e);
+                }
+                Arrays.stream(ruleSetPaths).forEach(configuration::addRuleSet);
             }
-        } catch (RuleSetLoadException e) {
-            throw new RuntimeException("Unable to load rule set", e);
         }
-
-        Arrays.stream(ruleSetPaths).forEach(configuration::addRuleSet);
     }
 
-    private PmdGrader(double penaltyPerViolation, double maxPenalty, String ruleSetPath, String[] ruleNames) {
+    private PmdGrader(double penaltyPerViolation, double maxPenalty, String
+            ruleSetPath, String[] ruleNames) throws ClientException {
         this.penaltyPerViolation = penaltyPerViolation;
         this.maxPenalty = maxPenalty;
         this.ruleSetPath = ruleSetPath;
         this.ruleNames = ruleNames;
         configuration = createConfiguration();
 
-        // Build List<RuleSet> here to fail fist if the rule set path or a rule
+        // Build List<RuleSet> here to fail fast if the rule set path or a rule
         // name is invalid.
-        createAnalysisWithRuleNames();
+        createAnalysisWithRuleNames().close();
     }
 
-    private PmdAnalysis createAnalysis() {
+    private PmdAnalysis createAnalysis() throws ClientException {
         if (ruleSetPath == null) {
             return PmdAnalysis.create(configuration);
         } else {
@@ -69,7 +75,7 @@ public class PmdGrader {
     }
 
     // It is the caller's responsibility to call close().
-    private PmdAnalysis createAnalysisWithRuleNames() {
+    private PmdAnalysis createAnalysisWithRuleNames() throws ClientException {
         try {
             PmdAnalysis analysis = PmdAnalysis.create(configuration);
             RuleSetLoader loader = analysis.newRuleSetLoader();
@@ -77,7 +83,7 @@ public class PmdGrader {
             for (String ruleName : ruleNames) {
                 Rule rule = ruleSet.getRuleByName(ruleName);
                 if (rule == null) {
-                    throw new RuntimeException(String.format(
+                    throw new ClientException(String.format(
                             "Did not find rule %s in %s",
                             rule, ruleSetPath));
                 }
@@ -85,7 +91,8 @@ public class PmdGrader {
             }
             return analysis;
         } catch (RuleSetLoadException e) {
-            throw new RuntimeException("Unable to load rule set", e);
+            // can be thrown by RuleSetLoader.loadFromResource()
+            throw new ClientException("Unable to load rule set " + ruleSetPath, e);
         }
     }
 
@@ -100,9 +107,11 @@ public class PmdGrader {
      *                            positive number
      * @param maxPenalty          the maximum penalty
      * @param ruleSetPaths        the path to one or more rule sets
-     * @throws RuntimeException if any rule set path is invalid
+     * @throws ClientException if any rule set path is invalid
      */
-    public static PmdGrader createFromRuleSetPaths(double penaltyPerViolation, double maxPenalty, String... ruleSetPaths) {
+    public static PmdGrader createFromRuleSetPaths(
+            double penaltyPerViolation, double maxPenalty, String... ruleSetPaths)
+            throws ClientException {
         return new PmdGrader(penaltyPerViolation, maxPenalty, ruleSetPaths);
     }
 
@@ -118,9 +127,11 @@ public class PmdGrader {
      * @param maxPenalty          the maximum penalty
      * @param ruleSetPath         the path to a rule sets
      * @param ruleNames           the names of the rules in the rule set to use
-     * @throws RuntimeException if any rule set path is invalid
+     * @throws ClientException if any rule set path is invalid or a rule cannot be found
      */
-    public static PmdGrader createFromRules(double penaltyPerViolation, double maxPenalty, String ruleSetPath, String... ruleNames) {
+    public static PmdGrader createFromRules(
+            double penaltyPerViolation, double maxPenalty, String
+            ruleSetPath, String... ruleNames) throws ClientException {
         return new PmdGrader(penaltyPerViolation, maxPenalty, ruleSetPath, ruleNames);
     }
 
@@ -135,11 +146,12 @@ public class PmdGrader {
     public List<Result> grade(Path path) throws IOException {
         try (PmdAnalysis analysis = createAnalysis()) {
             analysis.files().addFileOrDirectory(path);
-            // The below line throws an exception: Collector was closed!
             Report report = analysis.performAnalysisAndCollectReport();
-            analysis.close();
-            // System.out.println didn't work here but System.err.println did.
             return produceResults(report);
+        } catch (ClientException e) {
+            throw new InternalException(
+                    "ClientException was not caught during construction and was thrown during grade()",
+                    e);
         }
     }
 

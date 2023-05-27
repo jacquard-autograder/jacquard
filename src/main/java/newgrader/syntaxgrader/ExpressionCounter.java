@@ -3,6 +3,7 @@ package newgrader.syntaxgrader;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import newgrader.Result;
+import newgrader.exceptions.ClientException;
 
 /**
  * A counter to test whether the number of occurrences of a given expression
@@ -21,10 +22,11 @@ public class ExpressionCounter extends Counter {
      * @param maxCount the maximum number of occurrences, or {@link Integer#MAX_VALUE}
      *                 if there is no limit
      * @param clazz    the expression class
-     * @throws IllegalArgumentException if minCount &lt; 0, maxCount &lt; minCount,
-     *                                  or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
+     * @throws newgrader.exceptions.ClientException if minCount &lt; 0, maxCount &lt; minCount,
+     *                                              or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public ExpressionCounter(String name, double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz) {
+    public ExpressionCounter(String name, double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz)
+            throws ClientException {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount, new ExpressionAdapter(clazz));
     }
 

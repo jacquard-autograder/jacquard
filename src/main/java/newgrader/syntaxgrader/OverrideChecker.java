@@ -3,6 +3,7 @@ package newgrader.syntaxgrader;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import newgrader.Result;
+import newgrader.exceptions.*;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -16,19 +17,21 @@ public final class OverrideChecker extends SyntaxChecker {
     // Methods will be removed from this list as they are found.
     private List<Method> remainingMethodsToOverride;
 
-    private OverrideChecker(String name, double maxScorePerMethod, List<Method> methodsToOverride) {
+    // Throws ClientException if any of the methods are final or static.
+    private OverrideChecker(String name, double maxScorePerMethod, List<Method> methodsToOverride)
+            throws ClientException {
         // We can't create the adapter until the superclass constructor has completed.
         super(name, maxScorePerMethod, null);
 
         // Check that no methods are static or final.
         for (final Method method : methodsToOverride) {
             if ((method.getModifiers() & Modifier.FINAL) != 0) {
-                throw new IllegalArgumentException(
+                throw new ClientException(
                         String.format(
                                 "Method %s is final and cannot be overridden.", method.getName()));
             }
             if ((method.getModifiers() & Modifier.STATIC) != 0) {
-                throw new IllegalArgumentException(
+                throw new ClientException(
                         String.format(
                                 "Method %s is static and cannot be overridden.", method.getName()));
             }
@@ -47,13 +50,13 @@ public final class OverrideChecker extends SyntaxChecker {
      * @param maxScorePerMethod the per-method score
      * @param methodsToOverride methods to override
      * @return a new override checker
-     * @throws IllegalArgumentException if any of the methods are final
+     * @throws ClientException if any of the methods are static or final (cannot be overridden)
      */
     public static OverrideChecker makeOverrideCheckerFromMethodList(
             String name,
             double maxScorePerMethod,
             List<Method> methodsToOverride
-    ) {
+    ) throws ClientException {
         return new OverrideChecker(
                 name,
                 maxScorePerMethod,
@@ -68,7 +71,7 @@ public final class OverrideChecker extends SyntaxChecker {
             Class<?> supertype,
             int requiredModifiers,  // use &
             int forbiddenModifiers  // use |
-    ) {
+    ) throws ClientException {
         final Method[] allMethods = supertype.isInterface() ? supertype.getMethods() : supertype.getDeclaredMethods();
         final List<Method> methods = Arrays.stream(allMethods)
                 .filter(method -> (method.getModifiers() & requiredModifiers) == requiredModifiers
@@ -93,7 +96,12 @@ public final class OverrideChecker extends SyntaxChecker {
             double maxScorePerMethod,
             Class<?> supertype
     ) {
-        return makeOverrideChecker(name, maxScorePerMethod, supertype, 0, Modifier.FINAL | Modifier.STATIC);
+        try {
+            return makeOverrideChecker(name, maxScorePerMethod, supertype, 0, Modifier.FINAL | Modifier.STATIC);
+        } catch (ClientException e) {
+            // Should not happen because all methods are allowable
+            throw new InternalException(e);
+        }
     }
 
     /**
@@ -112,13 +120,18 @@ public final class OverrideChecker extends SyntaxChecker {
             double maxScorePerMethod,
             Class<?> supertype
     ) {
-        return makeOverrideChecker(
-                name,
-                maxScorePerMethod,
-                supertype,
-                Modifier.ABSTRACT,
-                Modifier.FINAL
-        );
+        try {
+            return makeOverrideChecker(
+                    name,
+                    maxScorePerMethod,
+                    supertype,
+                    Modifier.ABSTRACT,
+                    Modifier.FINAL
+            );
+        } catch (ClientException e) {
+            // Should not happen because all methods are abstract
+            throw new InternalException(e);
+        }
     }
 
     @Override

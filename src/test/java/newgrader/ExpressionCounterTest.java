@@ -2,6 +2,7 @@ package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.expr.*;
+import newgrader.exceptions.ClientException;
 import newgrader.syntaxgrader.ExpressionCounter;
 import org.junit.jupiter.api.*;
 
@@ -17,26 +18,32 @@ public class ExpressionCounterTest {
     private ExpressionCounter counter;
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws ClientException {
         counter = new ExpressionCounter(NAME, MAX_SCORE, 1, 2, InstanceOfExpr.class);
     }
 
     @Test
     public void constructorThrowsExceptions() {
         // minimum is too low
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ClientException.class,
                 () -> new ExpressionCounter(NAME, MAX_SCORE, -1, 2, SwitchExpr.class));
 
         // maximum is lower than minimum
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ClientException.class,
                 () -> new ExpressionCounter(NAME, MAX_SCORE, 3, 2, SwitchExpr.class));
 
         // any count is allowed
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ClientException.class,
                 () -> new ExpressionCounter(NAME, MAX_SCORE, 0, Integer.MAX_VALUE, SwitchExpr.class));
     }
 
-    private void testHelper(CompilationUnit cu, int actualCount, int minCount, int maxCount, Class<? extends Expression> expressionType) {
+    private void testHelper(
+            CompilationUnit cu,
+            int actualCount,
+            int minCount,
+            int maxCount,
+            Class<? extends Expression> expressionType
+    ) throws ClientException {
         ExpressionCounter counter = new ExpressionCounter(
                 expressionType.getSimpleName() + " counter",
                 MAX_SCORE, minCount, maxCount, expressionType);
@@ -45,29 +52,29 @@ public class ExpressionCounterTest {
         assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).score());
     }
 
-    private void testTooFew(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) {
+    private void testTooFew(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) throws ClientException {
         testHelper(cu, actualCount, actualCount + 1, actualCount + 10, expressionType);
         testHelper(cu, actualCount, actualCount + 1, Integer.MAX_VALUE, expressionType);
     }
 
     // actualCount must be > 0
-    private void testTooMany(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) {
+    private void testTooMany(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) throws ClientException {
         testHelper(cu, actualCount, 0, actualCount - 1, expressionType);
     }
 
-    private void testRightNumber(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) {
+    private void testRightNumber(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) throws ClientException {
         testHelper(cu, actualCount, 0, actualCount, expressionType);
         testHelper(cu, actualCount, actualCount, Integer.MAX_VALUE, expressionType);
     }
 
-    private void testAllPossibilities(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) {
+    private void testAllPossibilities(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) throws ClientException {
         testTooFew(cu, actualCount, expressionType);
         testTooMany(cu, actualCount, expressionType);
         testRightNumber(cu, actualCount, expressionType);
     }
 
     @Test
-    public void testInstanceOfExprCounter() {
+    public void testInstanceOfExprCounter() throws ClientException {
         CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
                 if (x instanceof String) {
                     System.out.println(x);
@@ -77,7 +84,7 @@ public class ExpressionCounterTest {
     }
 
     @Test
-    public void testBinaryExprCounter() {
+    public void testBinaryExprCounter() throws ClientException {
         CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
                 System.out.println(x + y + 1 + 2);
                 """);
@@ -85,7 +92,7 @@ public class ExpressionCounterTest {
     }
 
     @Test
-    public void testUnaryExprCounter() {
+    public void testUnaryExprCounter() throws ClientException {
         CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
                 System.out.println(-(-x));
                 """);

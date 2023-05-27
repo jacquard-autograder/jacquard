@@ -1,6 +1,7 @@
 package newgrader.crossgrader;
 
 import newgrader.Result;
+import newgrader.exceptions.ClientException;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.*;
@@ -112,8 +113,9 @@ public class CrossGrader {
      * Run all the tests as specified in the constructor.
      *
      * @return the results of the tests
+     * @throws ClientException if an error occurs due to misconfiguration
      */
-    public List<Result> gradeAll() {
+    public List<Result> gradeAll() throws ClientException{
         List<Result> results = new ArrayList<>();
         for (int i = 0; i < cutNames.length; i++) {
             results.addAll(grade(i));
@@ -121,13 +123,13 @@ public class CrossGrader {
         return results;
     }
 
-    private List<Result> grade(int cutIndex) {
+    private List<Result> grade(int cutIndex) throws ClientException {
         DependencyInjector.reset(); // clear previous injected values
         DependencyInjector.setGeneralizedTestClass(generalizedTestClass);
         final String cutField = cutNames[cutIndex];
         final List<TestResult> testResults = new ArrayList<>();
+        String[] cutFields = cutField.split("#");
         try {
-            String[] cutFields = cutField.split("#");
             Class<?> classUnderTest = Class.forName(cutFields[0]);
             DependencyInjector.setClassToInject(classUnderTest);
             if (cutFields.length > 1) {
@@ -157,10 +159,14 @@ public class CrossGrader {
                 }
             });
             launcher.execute(request().selectors(DiscoverySelectors.selectClass(generalizedTestClass)).build());
+            return generateResults(cutIndex, testResults);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new ClientException(
+                    String.format(
+                            "Crossgrader execution failed because class '%s' specified in the CSV file could not be loaded.",
+                            cutFields[0]),
+                    e);
         }
-        return generateResults(cutIndex, testResults);
     }
 
     private List<Result> generateResults(int cutIndex, List<TestResult> testResults) {
@@ -194,6 +200,8 @@ public class CrossGrader {
                 failures++;
             }
         }
+        // If maxPoints is positive, full credit is earned for success.
+        // If maxPoints is negative, full credit is earned for failure.
         double maxPoints = points[mutIndex][cutIndex];
         double points;
         if (failures > 0) {

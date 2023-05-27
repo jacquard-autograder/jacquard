@@ -1,5 +1,6 @@
 package newgrader;
 
+import newgrader.exceptions.ClientException;
 import newgrader.pmdgrader.PmdGrader;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ public class PmdGraderTest {
     private static double MAX_PENALTY = 2.5;
 
     @Test
-    public void testSingleRule() throws IOException, URISyntaxException {
+    public void testSingleRule() throws IOException, URISyntaxException, ClientException {
         PmdGrader pmdGrader = PmdGrader.createFromRules(
                 PENALTY_PER_VIOLATION,
                 MAX_PENALTY,
@@ -27,7 +28,7 @@ public class PmdGraderTest {
     }
 
     @Test
-    public void testTwoRules() throws IOException, URISyntaxException {
+    public void testTwoRules() throws IOException, URISyntaxException, ClientException {
         PmdGrader pmdGrader = PmdGrader.createFromRules(
                 PENALTY_PER_VIOLATION,
                 MAX_PENALTY,
@@ -40,13 +41,13 @@ public class PmdGraderTest {
 
     @Test
     public void testBadRuleset() {
-        assertThrows(RuntimeException.class,
+        assertThrows(ClientException.class,
                 () -> PmdGrader.createFromRuleSetPaths(
                         PENALTY_PER_VIOLATION,
                         MAX_PENALTY,
                         "category/java/documentation.xml",
                         "BADPATH/java/documentation.xml"));
-        assertThrows(RuntimeException.class,
+        assertThrows(ClientException.class,
                 () -> PmdGrader.createFromRules(
                         PENALTY_PER_VIOLATION,
                         MAX_PENALTY,
@@ -56,7 +57,7 @@ public class PmdGraderTest {
 
     @Test
     public void testBadRulename() {
-        assertThrows(RuntimeException.class,
+        assertThrows(ClientException.class,
                 () -> PmdGrader.createFromRules(
                         PENALTY_PER_VIOLATION,
                         MAX_PENALTY,
@@ -65,7 +66,7 @@ public class PmdGraderTest {
     }
 
     @Test
-    public void testSingleRuleSet() throws IOException, URISyntaxException {
+    public void testSingleRuleSet() throws IOException, URISyntaxException, ClientException {
         PmdGrader pmdGrader = PmdGrader.createFromRuleSetPaths(
                 PENALTY_PER_VIOLATION,
                 MAX_PENALTY,
@@ -76,7 +77,7 @@ public class PmdGraderTest {
     }
 
     @Test
-    public void testTwoRuleSets() throws IOException, URISyntaxException {
+    public void testTwoRuleSets() throws IOException, URISyntaxException, ClientException {
         PmdGrader pmdGrader = PmdGrader.createFromRuleSetPaths(
                 PENALTY_PER_VIOLATION,
                 MAX_PENALTY,

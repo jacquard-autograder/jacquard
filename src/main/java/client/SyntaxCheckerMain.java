@@ -5,12 +5,14 @@ import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.expr.SwitchExpr;
 import com.github.javaparser.ast.stmt.SwitchStmt;
 import newgrader.*;
+import newgrader.exceptions.ClientException;
 import newgrader.syntaxgrader.*;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.List;
 
 public class SyntaxCheckerMain {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClientException {
         Autograder autograder = new Autograder(ParserConfiguration.LanguageLevel.JAVA_17);
         autograder.addProcessor(
                 new FieldModifierChecker("Private/final check", 1.0,

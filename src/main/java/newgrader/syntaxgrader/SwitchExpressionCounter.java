@@ -2,6 +2,7 @@ package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.expr.SwitchExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import newgrader.exceptions.ClientException;
 
 /**
  * Counter of number of occurrences of switch expressions.
@@ -17,10 +18,11 @@ public class SwitchExpressionCounter extends Counter {
      * @param minCount the minimum number of occurrences
      * @param maxCount the maximum number of occurrences, or {@link Integer#MAX_VALUE}
      *                 if there is no limit
-     * @throws IllegalArgumentException if minCount &lt; 0, maxCount &lt; minCount,
-     *                                  or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
+     * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
+     *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public SwitchExpressionCounter(double maxScore, int minCount, int maxCount) {
+    public SwitchExpressionCounter(double maxScore, int minCount, int maxCount)
+            throws ClientException {
         super("switch expression counter", "switch expression", maxScore, minCount, maxCount,
                 new VoidVisitorAdapter<>() {
                     @Override

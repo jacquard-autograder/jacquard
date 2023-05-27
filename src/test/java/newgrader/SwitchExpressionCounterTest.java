@@ -1,6 +1,7 @@
 package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
+import newgrader.exceptions.ClientException;
 import newgrader.syntaxgrader.SwitchExpressionCounter;
 import org.junit.jupiter.api.*;
 
@@ -14,7 +15,7 @@ public class SwitchExpressionCounterTest {
     private SwitchExpressionCounter counter;
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws ClientException {
         counter = new SwitchExpressionCounter(MAX_SCORE, 1, 2);
     }
 
