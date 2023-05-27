@@ -1,10 +1,15 @@
 package newgrader.crossgrader;
 
 import newgrader.Result;
+import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.launcher.*;
+import org.junit.platform.launcher.core.LauncherFactory;
 
 import java.io.InputStream;
-import java.lang.reflect.*;
 import java.util.*;
+
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 /**
  * A grader for running student-provided tests against multiple implementations.
@@ -13,9 +18,8 @@ import java.util.*;
  */
 public class CrossGrader {
     private static final String DELIM = "\\s*,\\s*";
-    private final Constructor<?> testClassConstructor;
-    // The next four instance variables are initialized in processFile.
-    private JUnit5TestRunner runner;
+    private final Class<?> generalizedTestClass;
+    // The next four instance variables are initialized in processCsvFile().
     private String[] methodNames;
     private String[] cutNames; // classes under test
     private double[][] points;
@@ -62,17 +66,15 @@ public class CrossGrader {
      * @param testClass   the test class to be instantiated with each class under test
      * @param scoringData a source of CSV data with the names of classes under
      *                    test, methods under tests, and scoring information
-     * @throws NoSuchMethodException if the test class does not have a constructor
-     *                               that takes a single string argument
      */
-    public CrossGrader(Class<?> testClass, InputStream scoringData) throws NoSuchMethodException {
-        testClassConstructor = testClass.getConstructor(String.class);
-        processFile(scoringData);
+    public CrossGrader(Class<?> testClass, InputStream scoringData) {
+        generalizedTestClass = testClass;
+        processCsvFile(scoringData);
     }
 
     // helper method for initialization
-    private void processFile(InputStream is) {
-        // Read in file so we know size.
+    private void processCsvFile(InputStream is) {
+        // Read in file so we know size (number of methods).
         List<String[]> rows = new ArrayList<>();
         try (Scanner scanner = new Scanner(is)) {
             if (scanner.hasNextLine()) {
@@ -103,9 +105,6 @@ public class CrossGrader {
                 points[i][j - 1] = Double.parseDouble(row[j]);
             }
         }
-
-        // Create test runner.
-        runner = new JUnit5TestRunner(methodNames);
     }
 
     /**
@@ -122,18 +121,41 @@ public class CrossGrader {
     }
 
     private List<Result> grade(int cutIndex) {
-        String cutName = cutNames[cutIndex];
+        DependencyInjector.setGeneralizedTestClass(generalizedTestClass);
+        final String cutName = cutNames[cutIndex];
+        final List<TestResult> testResults = new ArrayList<>();
         try {
-            Object testInstance = testClassConstructor.newInstance(cutName);
-            List<TestResult> testResults = runner.runAutograder(testInstance);
-            System.out.println(testResults);
-            return generateResults(cutIndex, testResults);
-        } catch (InstantiationException | IllegalAccessException |
-                 InvocationTargetException e) {
-            throw new RuntimeException(
-                    "Unable to instantiate class " + cutName,
-                    e);
+            Class<?> classUnderTest = Class.forName(cutName);
+            DependencyInjector.setClassToInject(classUnderTest);
+            Launcher launcher = LauncherFactory.create();
+            launcher.registerTestExecutionListeners(new TestExecutionListener() {
+                @Override
+                public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+                    final String mutName =
+                            Arrays.stream(methodNames)
+                                    .filter((String name) -> testIdentifier.getDisplayName().startsWith(name))
+                                    .findFirst()
+                                    .orElse("Method name not found");
+                    testResults.add(switch (testExecutionResult.getStatus()) {
+                        case SUCCESSFUL -> TestResult.makeSuccess(
+                                testIdentifier.getDisplayName(),
+                                mutName);
+                        case FAILED, ABORTED -> TestResult.makeFailure(
+                                testIdentifier.getDisplayName(),
+                                mutName,
+                                testExecutionResult.getThrowable().isPresent() ?
+                                        testExecutionResult.getThrowable().get().getMessage() :
+                                        "no information");
+                    });
+                    TestExecutionListener.super.executionFinished(testIdentifier, testExecutionResult);
+                }
+            });
+            launcher.execute(request().selectors(DiscoverySelectors.selectClass(generalizedTestClass)).build());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
+        DependencyInjector.setClassToInject(null);
+        return generateResults(cutIndex, testResults);
     }
 
     private List<Result> generateResults(int cutIndex, List<TestResult> testResults) {
@@ -168,7 +190,7 @@ public class CrossGrader {
             }
         }
         double maxPoints = points[mutIndex][cutIndex];
-        double points = 0;
+        double points;
         if (failures > 0) {
             points = -maxPoints;
         } else if (successes > 0) {

@@ -24,7 +24,9 @@ public class PmdGrader {
 
     private static PMDConfiguration createConfiguration() {
         PMDConfiguration config = new PMDConfiguration();
-        config.setDefaultLanguageVersion(LanguageRegistry.findLanguageByTerseName("java").getVersion("17"));
+        PMDConfiguration configuration = new PMDConfiguration();
+        LanguagePropertyBundle properties = configuration.getLanguageProperties(LanguageRegistry.PMD.getLanguageById("java"));
+        properties.setLanguageVersion("17");
         return config;
     }
 
