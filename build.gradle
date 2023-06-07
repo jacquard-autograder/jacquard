@@ -1,8 +1,8 @@
 plugins {
     id 'application'
-    id 'java'
     id 'jacoco'
     id 'pmd'
+    //   id 'com.bmuschko.docker-remote-api' version '9.3.1'
 }
 
 group 'org.example'
@@ -24,13 +24,11 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0-M1'
 }
 
-apply plugin: "java"
-ext {
-    javaMainClass = "newgrader.Main"
-}
+//apply plugin: 'com.bmuschko.docker-remote-api'
+
 
 application {
-    mainClass.set(javaMainClass)
+    mainClass.set("newgrader.Main")
 }
 
 jacocoTestReport {
@@ -38,7 +36,6 @@ jacocoTestReport {
         // Only one of xml or csv should be required because csv > xml
         xml.required = false
         csv.required = true
-        xml.destination file("${buildDir}/reports/jacoco.xml")
         html.required = false
         html.outputLocation = layout.buildDirectory.dir('reports/jacocoHtml')
     }
