@@ -2,7 +2,6 @@ plugins {
     id 'application'
     id 'jacoco'
     id 'pmd'
-    //   id 'com.bmuschko.docker-remote-api' version '9.3.1'
 }
 
 group 'org.example'

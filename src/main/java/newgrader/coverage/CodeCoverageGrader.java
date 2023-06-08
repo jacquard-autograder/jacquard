@@ -11,6 +11,16 @@ public class CodeCoverageGrader {
     private static String CLASS_UNDER_TEST = "newgrader.coverage.PrimeChecker";
     private static String TEST_CLASS = "newgrader.coverage.PrimeCheckerTest";
 
+    private final String packageName;
+    private final String className;
+    private final Scorer scorer;
+
+    public CodeCoverageGrader(String packageName, String className, Scorer scorer) {
+        this.packageName = packageName;
+        this.className = className;
+        this.scorer = scorer;
+    }
+
     public void execute() throws Exception {
         final String targetName = CLASS_UNDER_TEST;
 

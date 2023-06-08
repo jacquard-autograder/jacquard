@@ -30,8 +30,8 @@
         </dependency>
     </dependencies>
     <build>
-        <sourceDirectory>src/client/java</sourceDirectory>
-        <testSourceDirectory>src/client/java</testSourceDirectory>
+        <sourceDirectory>src/submission/java</sourceDirectory>
+        <testSourceDirectory>src/submission/java</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.jacoco</groupId>
