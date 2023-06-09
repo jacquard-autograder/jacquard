@@ -22,4 +22,8 @@ public record Result(String name, double score, double maxScore,
     public static Result makeSuccess(String name, double score, String message) {
         return new Result(name, score, score, message);
     }
+
+    public static Result makeException(String name, double maxScore, String message) {
+        return makeResult(name, 0, maxScore, message);
+    }
 }

@@ -3,9 +3,9 @@ package newgrader.exceptions;
 /**
  * Signals that an error occurred within the autograder due to misconfiguration.
  */
-public class ClientException extends Exception {
+public class ClientException extends AutograderException {
     /**
-     * Constructs an {@code ClientException} with the specified
+     * Constructs a {@code ClientException} with the specified
      * message and cause.
      *
      * @param message an explanation
@@ -16,7 +16,7 @@ public class ClientException extends Exception {
     }
 
     /**
-     * Constructs an {@code ClientException} with the specified
+     * Constructs a {@code ClientException} with the specified
      * message and cause.
      *
      * @param message an explanation

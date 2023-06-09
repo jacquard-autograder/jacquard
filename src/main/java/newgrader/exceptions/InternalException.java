@@ -3,7 +3,7 @@ package newgrader.exceptions;
 /**
  * Signals that an internal error occurred within the autograder.
  */
-public class InternalException extends RuntimeException {
+public class InternalException extends AutograderException {
     /**
      * Constructs an {@code InternalException} with the specified
      * message.
@@ -31,6 +31,6 @@ public class InternalException extends RuntimeException {
      * @param cause the underlying cause
      */
     public InternalException(Throwable cause) {
-        super("An internal autorader error occurred.", cause);
+        super("An internal autograder error occurred.", cause);
     }
 }

@@ -1,15 +1,18 @@
 package newgrader.coverage;
 
-import org.jacoco.core.analysis.*;
-import org.jacoco.core.data.*;
-import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.runtime.*;
+import newgrader.Result;
+import newgrader.exceptions.*;
 
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.*;
+import java.util.List;
 
 public class CodeCoverageGrader {
-    private static String CLASS_UNDER_TEST = "newgrader.coverage.PrimeChecker";
-    private static String TEST_CLASS = "newgrader.coverage.PrimeCheckerTest";
+    public static final String PATH_TO_JACOCO_CSV = "target/site/jacoco/jacoco.csv";
+    // Jacoco CSV file
+    private static final int PACKAGE_FIELD = 1;
+    private static final int CLASS_FIELD = 2;
+    private static final int NUM_FIELDS = 13;
 
     private final String packageName;
     private final String className;
@@ -21,65 +24,49 @@ public class CodeCoverageGrader {
         this.scorer = scorer;
     }
 
-    public void execute() throws Exception {
-        final String targetName = CLASS_UNDER_TEST;
+    private ClassInfo getClassInfo() throws AutograderException {
+        try {
+            Path path = Paths.get(PATH_TO_JACOCO_CSV);
 
-        // For instrumentation and runtime we need a IRuntime instance
-        // to collect execution data:
-        final IRuntime runtime = new LoggerRuntime();
+            // It is not really necessary to read in all lines,
+            // so performance could be improved here.
+            List<String> lines = Files.readAllLines(path);
+            for (String line : lines) {
+                String[] fields = line.split(",");
+                if (fields.length == NUM_FIELDS) {
+                    if (fields[PACKAGE_FIELD].equals(packageName) && fields[CLASS_FIELD].equals(className)) {
+                        return new ClassInfo(fields);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new DependencyException("Jacoco output not found", e);
+        }
+        throw new ClientException(
+                String.format("No class info found for %s.%s", packageName, className));
+    }
 
-        // The Instrumenter creates a modified version of our test target class
-        // that contains additional probes for execution data recording:
-        final Instrumenter instr = new Instrumenter(runtime);
-        InputStream original = getTargetClass(targetName);
-        final byte[] instrumented = instr.instrument(original, targetName);
-        original.close();
-
-        // Now we're ready to run our instrumented class and need to startup the
-        // runtime first:
-        final RuntimeData data = new RuntimeData();
-        runtime.startup(data);
-
-        // In this tutorial we use a special class loader to directly load the
-        // instrumented class definition from a byte[] instances.
-        final MemoryClassLoader memoryClassLoader = new MemoryClassLoader();
-        memoryClassLoader.addDefinition(targetName, instrumented);
-        final Class<?> targetClass = memoryClassLoader.loadClass(targetName);
-
-        memoryClassLoader.addDefinition(TEST_CLASS, instrumented);
-      //  final Class<? extends Runnable> testClass = (Class<? extends Runnable>) memoryClassLoader.loadClass(getTargetClass(TEST_CLASS);
-
-        // Here we execute our test target class through its Runnable interface:
-      //  final Runnable testInstance = testClass.newInstance();
-     //   testInstance.run();
-
-        // At the end of test execution we collect execution data and shutdown
-        // the runtime:
-        final ExecutionDataStore executionData = new ExecutionDataStore();
-        final SessionInfoStore sessionInfos = new SessionInfoStore();
-        data.collect(executionData, sessionInfos, false);
-        runtime.shutdown();
-
-        // Together with the original class definition we can calculate coverage
-        // information:
-        final CoverageBuilder coverageBuilder = new CoverageBuilder();
-        final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
-        original = getTargetClass(targetName);
-        analyzer.analyzeClass(original, targetName);
-        original.close();
-
-        // Let's dump some metrics and line coverage information:
-        for (IClassCoverage cc : coverageBuilder.getClasses()) {
-            System.out.println(cc);
+    public Result grade() {
+        ProcessBuilder pb = new ProcessBuilder(
+                "C:/Program Files/apache-maven-3.6.3/bin/mvn.cmd",
+                "clean",
+                "test");
+        try {
+            Process p = pb.start();
+            // String result = new String(p.getInputStream().readAllBytes());
+            p.waitFor();
+            ClassInfo info = getClassInfo();
+            return scorer.getResult(info);
+        } catch (AutograderException | IOException | InterruptedException e) {
+            return Result.makeException(
+                    "Exception was thrown when running autograder", 0, e.getMessage());
         }
     }
 
-    private InputStream getTargetClass(final String name) {
-        final String resource = '/' + name.replace('.', '/') + ".class";
-        return getClass().getResourceAsStream(resource);
-    }
+    public static void main(String[] args) {
+        Scorer scorer = new LinearScorer(.5, 10);
+        CodeCoverageGrader grader = new CodeCoverageGrader("student", "PrimeChecker", scorer);
+        System.out.println(grader.grade());
 
-    public static void main(String[] args) throws Exception {
-        new CodeCoverageGrader().execute();
     }
 }
