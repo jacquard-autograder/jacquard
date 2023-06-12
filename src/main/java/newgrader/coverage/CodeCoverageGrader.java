@@ -5,10 +5,16 @@ import newgrader.exceptions.*;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.List;
+import java.util.*;
 
 public class CodeCoverageGrader {
-    public static final String PATH_TO_JACOCO_CSV = "target/site/jacoco/jacoco.csv";
+    private static final String PATH_TO_MAVEN_WINDOWS = "C:/Program Files/apache-maven-3.6.3/bin/mvn.cmd";
+    private static final String PATH_TO_MAVEN_LINUX = "mvn";
+    private static final List<String> JACOCO_COMMAND_LINE_ARGS = List.of(
+            "-f pom-jacoco.xml",
+            "clean",
+            "test");
+    private static final String PATH_TO_JACOCO_CSV = "target/site/jacoco/jacoco.csv";
     // Jacoco CSV file
     private static final int PACKAGE_FIELD = 1;
     private static final int CLASS_FIELD = 2;
@@ -47,10 +53,18 @@ public class CodeCoverageGrader {
     }
 
     public Result grade() {
+        /*
         ProcessBuilder pb = new ProcessBuilder(
                 "C:/Program Files/apache-maven-3.6.3/bin/mvn.cmd",
+                "-f pom-jacoco.xml",
                 "clean",
                 "test");
+
+         */
+        List<String> command = new ArrayList<>(JACOCO_COMMAND_LINE_ARGS.size() + 1);
+        command.add(System.getProperty("os.name").startsWith("Windows") ? PATH_TO_MAVEN_WINDOWS : PATH_TO_MAVEN_LINUX);
+        command.addAll(JACOCO_COMMAND_LINE_ARGS);
+        ProcessBuilder pb = new ProcessBuilder(command);
         try {
             Process p = pb.start();
             // String result = new String(p.getInputStream().readAllBytes());
