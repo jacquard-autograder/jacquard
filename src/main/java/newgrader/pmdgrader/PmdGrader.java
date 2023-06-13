@@ -172,7 +172,7 @@ public class PmdGrader {
         if (!errors.isEmpty()) {
             // For now, just print information about the first error.
             Report.ProcessingError error = errors.get(0);
-            results.add(Result.makeFailure(
+            results.add(Result.makeTotalFailure(
                     "Error during static analysis",
                     maxPenalty,
                     error.getMsg() + ": " + error.getError().getCause().getMessage()));

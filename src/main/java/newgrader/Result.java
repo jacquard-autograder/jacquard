@@ -11,8 +11,12 @@ package newgrader;
 public record Result(String name, double score, double maxScore,
                      String message) {
 
-    public static Result makeFailure(String name, double maxScore, String message) {
+    public static Result makeTotalFailure(String name, double maxScore, String message) {
         return new Result(name, 0, maxScore, message);
+    }
+
+    public static Result makeError(String name, Exception e) {
+        return new Result(name, 0, 0, e.getMessage());
     }
 
     public static Result makeResult(String name, double actualScore, double maxScore, String message) {

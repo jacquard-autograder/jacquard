@@ -1,6 +1,6 @@
 package newgrader.coverage;
 
-import newgrader.Result;
+import newgrader.*;
 import newgrader.exceptions.*;
 
 import java.io.*;
@@ -8,8 +8,6 @@ import java.nio.file.*;
 import java.util.*;
 
 public class CodeCoverageGrader {
-    private static final String PATH_TO_MAVEN_WINDOWS = "C:/Program Files/apache-maven-3.6.3/bin/mvn.cmd";
-    private static final String PATH_TO_MAVEN_LINUX = "mvn";
     private static final String PATH_TO_JACOCO_POM = "pom-jacoco.xml";
     private static final List<String> JACOCO_COMMAND_LINE_ARGS = List.of(
             "-f",
@@ -48,29 +46,18 @@ public class CodeCoverageGrader {
                 }
             }
         } catch (IOException e) {
-            throw new DependencyException("Jacoco output not found with base dir " +  System.getProperty("user.dir"), e);
+            throw new DependencyException("Jacoco output not found with base dir " + System.getProperty("user.dir"), e);
         }
         throw new ClientException(
                 String.format("No class info found for %s.%s", packageName, className));
     }
 
     public Result grade() {
-        List<String> command = new ArrayList<>(JACOCO_COMMAND_LINE_ARGS.size() + 1);
-        command.add(System.getProperty("os.name").startsWith("Windows") ? PATH_TO_MAVEN_WINDOWS : PATH_TO_MAVEN_LINUX);
-        command.addAll(JACOCO_COMMAND_LINE_ARGS);
-        ProcessBuilder pb = new ProcessBuilder(command);
-        // pb.inheritIO();
         try {
-            Process p = pb.start();
-            p.waitFor();
-            /*
-            int exitCode = p.waitFor();
-            System.out.println("command: " + command);
-            System.out.println("exitCode: " + exitCode);
-             */
-            ClassInfo info = getClassInfo();
-            return scorer.getResult(info);
-        } catch (AutograderException | IOException | InterruptedException e) {
+            MavenInterface.runMavenProcess(JACOCO_COMMAND_LINE_ARGS);
+            ClassInfo classInfo = getClassInfo();
+            return scorer.getResult(classInfo);
+        } catch (DependencyException e) {
             return Result.makeException(
                     "Exception was thrown when running autograder", 0, e.getMessage());
         }

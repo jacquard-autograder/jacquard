@@ -58,7 +58,7 @@ public class Autograder {
             ParseResult<CompilationUnit> parseResult = parser.parse(path);
             return process(parseResult);
         } catch (IOException e) {
-            return List.of(Result.makeFailure("Parse Error", maxScore, e.getMessage()));
+            return List.of(Result.makeTotalFailure("Parse Error", maxScore, e.getMessage()));
         }
     }
 
@@ -81,7 +81,7 @@ public class Autograder {
             }
             return results;
         } else {
-            return List.of(Result.makeFailure("Fatal error", maxScore, "Internal error processing code"));
+            return List.of(Result.makeTotalFailure("Fatal error", maxScore, "Internal error processing code"));
         }
     }
 }

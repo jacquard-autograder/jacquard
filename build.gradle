@@ -19,11 +19,8 @@ dependencies {
     implementation 'net.sourceforge.pmd:pmd:7.0.0-rc2'
     implementation 'net.sourceforge.pmd:pmd-java:7.0.0-rc2'
     implementation 'org.jacoco:org.jacoco.core:0.8.10'
-
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0-M1'
 }
-
-//apply plugin: 'com.bmuschko.docker-remote-api'
 
 
 application {
