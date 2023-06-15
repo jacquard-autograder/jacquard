@@ -1,7 +1,7 @@
 package newgrader.checkstylegrader;
 
 import newgrader.*;
-import newgrader.exceptions.DependencyException;
+import newgrader.exceptions.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -9,17 +9,17 @@ import javax.xml.parsers.*;
 import java.io.*;
 import java.util.*;
 
-// Is there any benefit of running through Maven rather than directly?
 public class CheckstyleGrader {
-    private static final String PATH_TO_POM = "pom-checkstyle.xml";
-    private static final List<String> FIRST_ARGUMENTS = List.of(
-            "-f",
-            PATH_TO_POM,
-            "checkstyle:checkstyle"
-    );
-    private static final String LAST_ARGUMENT_TEMPLATE =
-            "-Dcheckstyle.includes=\"%s\"";
-    private static final String PATH_TO_OUTPUT = "target/checkstyle-result.xml";
+    private static final String RESULT_FILE_NAME = "checkstyle-results.xml";
+    private static final List<String> FIRST_COMMAND_PARTS = List.of(
+            "java",
+            "-cp",
+            "\"lib/*\"",
+            "com.puppycrawl.tools.checkstyle.Main",
+            "-f=xml",
+            "-o",
+            RESULT_FILE_NAME);
+    private static final String CONFIG_TEMPLATE = "-c=%s";
 
     private final String ruleFile;
     private final String pathToCheck;
@@ -50,19 +50,6 @@ public class CheckstyleGrader {
             Node columnAttribute = attributes.getNamedItem("column");
             Node messageAttribute = attributes.getNamedItem("message");
             String errorTypeAttribute = getAttributeValue(attributes.getNamedItem("source"));
-            /*
-            if (errorTypeAttribute.contains(".")) {
-                String[] split = errorTypeAttribute.split("\\.");
-                errorTypeAttribute = split[split.length - 1];
-                if (!this.errorTypes.containsKey(errorTypeAttribute)) {
-                    this.errorTypes.put(errorTypeAttribute, 1);
-                } else {
-                    this.errorTypes.put(errorTypeAttribute, (Integer)this.errorTypes.get(errorTypeAttribute) + 1);
-                }
-            }
-
-             */
-
             return String.format("\t%-20s - %s [%s]\n", getAttributeValue("line: ", lineAttribute) + getAttributeValue(", column", columnAttribute), getAttributeValue(messageAttribute), errorTypeAttribute);
         }
     }
@@ -72,7 +59,7 @@ public class CheckstyleGrader {
         String fileName = fullPath.substring(fullPath.lastIndexOf(System.getProperty("file.separator")) + 1, fullPath.length() - 1);
         NodeList errorNodes = ((Element) elementNode).getElementsByTagName("error");
         if (errorNodes.getLength() > 0) {
-            sb.append(fileName + ":\n");
+            sb.append(fileName).append(":\n");
         }
 
         for (int i = 0; i < errorNodes.getLength(); ++i) {
@@ -82,43 +69,53 @@ public class CheckstyleGrader {
         return errorNodes.getLength();
     }
 
-    // Code modeled after JGrade:CheckstyleGrader
-    public Result grade() {
-        List<String> arguments = new ArrayList<>();
-        arguments.addAll(FIRST_ARGUMENTS);
-        arguments.add(String.format(LAST_ARGUMENT_TEMPLATE, pathToCheck));
-        MavenInterface.runMavenProcess(arguments);
+    private void runCheckstyle() {
+        List<String> arguments = new ArrayList<>(FIRST_COMMAND_PARTS);
+        arguments.add(String.format(CONFIG_TEMPLATE, ruleFile));
+        arguments.add(pathToCheck);
+        ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            File file = new File(PATH_TO_OUTPUT);
-            Document doc = builder.parse(file);
-            NodeList filesWithErrors = doc.getElementsByTagName("file");
-            int numErrors = 0;
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < filesWithErrors.getLength(); i++) {
-                Node fileNode = filesWithErrors.item(i);
-                numErrors += addOutputForFileNode(sb, fileNode);
+            Process p = pb.start();
+            int result = p.waitFor();
+            // Positive exit codes mean that checkstyle found problems, not that it failed.
+            if (result < 0) {
+                throw new DependencyException("Exit code indicated checkstyle failure");
             }
-            if (numErrors == 0) {
-                return Result.makeSuccess("Checkstyle", maxPoints, "No violations");
-            } else {
-                double score = Math.min(0.0, maxPoints - numErrors * penalty);
-                return Result.makeResult("Checkstyle", score, maxPoints, sb.toString());
-            }
+        } catch (InterruptedException | IOException e) {
+            throw new DependencyException("Error running checkstyle ", e);
+        }
+    }
+
+    private Result interpretOutput() throws IOException, SAXException, ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        File file = new File(RESULT_FILE_NAME);
+        Document doc = builder.parse(file);
+        NodeList filesWithErrors = doc.getElementsByTagName("file");
+        int numErrors = 0;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < filesWithErrors.getLength(); i++) {
+            Node fileNode = filesWithErrors.item(i);
+            numErrors += addOutputForFileNode(sb, fileNode);
+        }
+        if (numErrors == 0) {
+            return Result.makeSuccess("Checkstyle", maxPoints, "No violations");
+        } else {
+            double score = Math.min(0.0, maxPoints - numErrors * penalty);
+            return Result.makeResult("Checkstyle", score, maxPoints, sb.toString());
+        }
+    }
+
+    public Result grade() {
+        try {
+            runCheckstyle();
+            return interpretOutput();
         } catch (IOException | ParserConfigurationException | SAXException e) {
             return Result.makeError("Internal error when running Checkstyle", e);
         }
     }
 
     public static void main(String[] args) {
-        // I have not found a way to specify a single file, either here or
-        // at the git bash command line.
-        //    Result result = new CheckstyleGrader("ignored", "C:\\Users\\ellen\\IdeaProjects\\GroovyNewGrader\\src\\main\\java\\client\\buggy\\ArrayFlist.java", 0, 0).grade();
-        //     Result result = new CheckstyleGrader("ignored", "/c/Users/ellen/IdeaProjects/GroovyNewGrader/src/main/java/client/buggy/ArrayFlist.java", 0, 0).grade();
-        //     Result result = new CheckstyleGrader("ignored", "src/main/java/client/buggy/ArrayFlist.java", 0, 0).grade();
-        //      Result result = new CheckstyleGrader("ignored", "src\\main\\java\\client\\buggy\\ArrayFlist.java", 0, 0).grade();
-        Result result = new CheckstyleGrader("ignored", "foo.java", 0, 0).grade();
-
+        Result result = new CheckstyleGrader("sun_checks.xml", "foo.java", 0, 5).grade();
         System.out.println(result);
     }
 }

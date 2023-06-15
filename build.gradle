@@ -68,3 +68,19 @@ pmd {
 test {
     useJUnitPlatform()
 }
+
+// https://stackoverflow.com/questions/32402541/how-can-i-use-gradle-to-just-download-jars
+apply plugin: 'base'
+
+configurations {
+    toCopy
+}
+
+dependencies {
+    toCopy 'com.puppycrawl.tools:checkstyle:10.12.0'
+}
+
+tasks.register('download', Copy) {
+    from configurations.toCopy
+    into 'lib'
+}
