@@ -2,6 +2,7 @@ package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.stmt.*;
+import newgrader.common.Result;
 import newgrader.exceptions.ClientException;
 import newgrader.syntaxgrader.StatementCounter;
 import org.junit.jupiter.api.*;

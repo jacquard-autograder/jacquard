@@ -4,7 +4,7 @@ import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.google.common.base.Preconditions;
-import newgrader.Result;
+import newgrader.common.Result;
 
 import java.util.*;
 

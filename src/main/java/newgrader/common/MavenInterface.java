@@ -1,4 +1,4 @@
-package newgrader;
+package newgrader.common;
 
 import newgrader.exceptions.*;
 

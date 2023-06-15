@@ -1,6 +1,7 @@
 package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
+import newgrader.common.Result;
 
 import java.net.URISyntaxException;
 import java.nio.file.*;

@@ -1,7 +1,7 @@
 package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
-import newgrader.Result;
+import newgrader.common.Result;
 
 import java.util.List;
 

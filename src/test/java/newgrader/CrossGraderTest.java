@@ -1,5 +1,6 @@
 package newgrader;
 
+import newgrader.common.Result;
 import newgrader.crossgrader.*;
 import newgrader.exceptions.ClientException;
 import org.junit.jupiter.api.*;

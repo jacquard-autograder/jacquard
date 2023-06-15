@@ -2,7 +2,7 @@ package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import newgrader.Result;
+import newgrader.common.Result;
 import newgrader.exceptions.*;
 
 import java.lang.reflect.*;

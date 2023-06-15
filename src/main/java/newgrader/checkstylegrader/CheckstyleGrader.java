@@ -1,6 +1,6 @@
 package newgrader.checkstylegrader;
 
-import newgrader.*;
+import newgrader.common.Result;
 import newgrader.exceptions.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;

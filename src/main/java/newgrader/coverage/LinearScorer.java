@@ -1,6 +1,6 @@
 package newgrader.coverage;
 
-import newgrader.Result;
+import newgrader.common.Result;
 import newgrader.exceptions.*;
 
 public class LinearScorer extends Scorer {

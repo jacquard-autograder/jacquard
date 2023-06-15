@@ -1,4 +1,4 @@
-package newgrader;
+package newgrader.common;
 
 /**
  * The result of a checker.
@@ -15,7 +15,7 @@ public record Result(String name, double score, double maxScore,
         return new Result(name, 0, maxScore, message);
     }
 
-    public static Result makeError(String name, Exception e) {
+    public static Result makeError(String name, Throwable e) {
         return new Result(name, 0, 0, e.getMessage());
     }
 

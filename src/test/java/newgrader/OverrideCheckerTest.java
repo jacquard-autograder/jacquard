@@ -1,5 +1,6 @@
 package newgrader;
 
+import newgrader.common.Result;
 import newgrader.exceptions.ClientException;
 import newgrader.syntaxgrader.OverrideChecker;
 import org.junit.jupiter.api.Test;

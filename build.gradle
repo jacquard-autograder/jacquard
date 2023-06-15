@@ -77,6 +77,10 @@ configurations {
 }
 
 dependencies {
+
+
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     toCopy 'com.puppycrawl.tools:checkstyle:10.12.0'
 }
 

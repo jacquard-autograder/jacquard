@@ -1,6 +1,6 @@
 package newgrader.crossgrader;
 
-import newgrader.Result;
+import newgrader.common.Result;
 import newgrader.exceptions.ClientException;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.discovery.DiscoverySelectors;

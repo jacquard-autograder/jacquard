@@ -3,7 +3,7 @@ package newgrader.syntaxgrader;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import newgrader.Result;
+import newgrader.common.Result;
 
 import java.util.*;
 

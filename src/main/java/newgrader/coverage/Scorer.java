@@ -1,6 +1,6 @@
 package newgrader.coverage;
 
-import newgrader.Result;
+import newgrader.common.Result;
 
 /**
  * A way of converting branch coverage and line coverage information

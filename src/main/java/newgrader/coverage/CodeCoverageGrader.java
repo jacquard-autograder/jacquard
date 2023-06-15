@@ -1,6 +1,6 @@
 package newgrader.coverage;
 
-import newgrader.*;
+import newgrader.common.*;
 import newgrader.exceptions.*;
 
 import java.io.*;

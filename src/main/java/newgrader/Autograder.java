@@ -3,6 +3,7 @@ package newgrader;
 import com.github.javaparser.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.google.common.annotations.VisibleForTesting;
+import newgrader.common.Result;
 import newgrader.syntaxgrader.SyntaxGrader;
 
 import java.io.*;

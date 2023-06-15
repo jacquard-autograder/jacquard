@@ -3,7 +3,7 @@ package newgrader.pmdgrader;
 import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.lang.*;
 
-import newgrader.Result;
+import newgrader.common.Result;
 import newgrader.exceptions.*;
 
 import java.io.*;
