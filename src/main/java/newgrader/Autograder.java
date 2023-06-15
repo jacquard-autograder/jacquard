@@ -4,6 +4,7 @@ import com.github.javaparser.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.google.common.annotations.VisibleForTesting;
 import newgrader.common.Result;
+import newgrader.exceptions.ClientException;
 import newgrader.syntaxgrader.SyntaxGrader;
 
 import java.io.*;
@@ -33,6 +34,19 @@ public class Autograder {
             return parseResult.getResult().get();
         }
         throw new AssertionError(parseResult.getProblem(0));
+    }
+
+    public static CompilationUnit parse(File file) {
+        Autograder autograder = new Autograder(DEFAULT_LANGUAGE_LEVEL);
+        try {
+            ParseResult<CompilationUnit> parseResult = autograder.parser.parse(file);
+            if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
+                return parseResult.getResult().get();
+            }
+            throw new AssertionError(parseResult.getProblem(0));
+        } catch (FileNotFoundException e) {
+            throw new ClientException(e.getMessage());
+        }
     }
 
     public void addProcessor(SyntaxGrader processor) {

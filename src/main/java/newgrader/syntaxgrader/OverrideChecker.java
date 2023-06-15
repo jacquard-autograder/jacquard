@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * A checker that ensures that the {@link Override} annotation is used
- * when overriding methods.
+ * when overriding specified methods.
  */
 public final class OverrideChecker extends SyntaxChecker {
     private final List<Method> methodsToOverride;
