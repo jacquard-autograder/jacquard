@@ -10,7 +10,7 @@ import newgrader.exceptions.ClientException;
  * type is within the specified range.
  */
 @SuppressWarnings("PMD.TooManyMethods")
-public class ExpressionCounter extends Counter {
+public class ExpressionCounter extends SyntaxCounter {
 
     /**
      * Creates a new counter to test whether the number of occurrences of an

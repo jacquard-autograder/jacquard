@@ -5,12 +5,12 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import newgrader.exceptions.ClientException;
 
 /**
- * Counter of number of occurrences of switch expressions.
+ * SyntaxCounter of number of occurrences of switch expressions.
  * <p>
  * This class is not really necessary, since {@link ExpressionCounter}
  * could provide the same functionality.
  */
-public class SwitchExpressionCounter extends Counter {
+public class SwitchExpressionCounter extends SyntaxCounter {
     /**
      * Create a new switch expression counter.
      *

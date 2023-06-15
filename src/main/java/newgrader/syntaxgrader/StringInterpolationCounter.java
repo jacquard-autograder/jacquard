@@ -6,9 +6,9 @@ import newgrader.common.Result;
 import newgrader.exceptions.ClientException;
 
 /**
- * Counter of number of occurrences of string interpolation.
+ * SyntaxCounter of number of occurrences of string interpolation.
  */
-public class StringInterpolationCounter extends Counter {
+public class StringInterpolationCounter extends SyntaxCounter {
     /**
      * Create a new string interpolation counter.
      *

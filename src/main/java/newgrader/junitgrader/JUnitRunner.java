@@ -1,4 +1,4 @@
-package newgrader.junit5integration;
+package newgrader.junitgrader;
 
 import newgrader.common.*;
 import org.junit.platform.engine.*;

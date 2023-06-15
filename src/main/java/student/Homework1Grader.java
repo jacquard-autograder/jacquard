@@ -3,7 +3,7 @@ package student;
 import com.github.javaparser.ast.CompilationUnit;
 import newgrader.Autograder;
 import newgrader.common.Result;
-import newgrader.junit5integration.JUnitRunner;
+import newgrader.junitgrader.JUnitRunner;
 import newgrader.syntaxgrader.ImportChecker;
 
 import java.io.File;
