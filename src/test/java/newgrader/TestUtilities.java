@@ -1,7 +1,7 @@
 package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
-import newgrader.common.Result;
+import newgrader.common.*;
 
 import java.net.URISyntaxException;
 import java.nio.file.*;
@@ -30,5 +30,9 @@ public class TestUtilities {
 
     static Path getPath(String filename) throws URISyntaxException {
         return Paths.get(TestUtilities.class.getClassLoader().getResource(filename).toURI());
+    }
+
+    static Target getTargetFromPath(String filename) throws URISyntaxException {
+        return Target.fromPath(getPath(filename));
     }
 }

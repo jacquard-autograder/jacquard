@@ -13,7 +13,16 @@ public abstract class Target {
     private String packageName; // lazy initialization
     private String className; // lazy initialization
 
-    public static Target fromPathString(String s) {
+    public static Target fromPath(Path path) {
+        return fromAbsolutePathString(path.toAbsolutePath().toString());
+    }
+
+    public static Target fromRelativePathString(String s) {
+        String absPath = FileSystems.getDefault().getPath(s).normalize().toAbsolutePath().toString();
+        return fromAbsolutePathString(absPath);
+    }
+
+    public static Target fromAbsolutePathString(String s) {
         return new PathStringTarget(s);
     }
 

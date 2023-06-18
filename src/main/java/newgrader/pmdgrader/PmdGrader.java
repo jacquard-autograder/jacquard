@@ -3,7 +3,7 @@ package newgrader.pmdgrader;
 import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.lang.*;
 
-import newgrader.common.Result;
+import newgrader.common.*;
 import newgrader.exceptions.*;
 
 import java.io.*;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * PMD Source Code Analyzer Project</a>.
  */
 public class PmdGrader {
+    private static final String GRADER_NAME = "PMD Grader";
     private static final String JAVA_VERSION = "17";
     private final double penaltyPerViolation;
     private final double maxPenalty;
@@ -138,20 +139,20 @@ public class PmdGrader {
     /**
      * Grades any files at the specified path.
      *
-     * @param path a path to a file or directory
+     * @param target the file or directory to analyze
      * @return a single result
-     * @throws java.io.IOException if an I/O exception occurs
      * @see net.sourceforge.pmd.lang.document.FileCollector#addFileOrDirectory(Path)
      */
-    public List<Result> grade(Path path) throws IOException {
+    public List<Result> grade(Target target) {
         try (PmdAnalysis analysis = createAnalysis()) {
-            analysis.files().addFileOrDirectory(path);
+            boolean added = analysis.files().addFileOrDirectory(target.toPath());
+            if (!added) {
+                throw new ClientException("File or directory cannot be found: " + target.toPathString());
+            }
             Report report = analysis.performAnalysisAndCollectReport();
             return produceResults(report);
-        } catch (ClientException e) {
-            throw new InternalException(
-                    "ClientException was not caught during construction and was thrown during grade()",
-                    e);
+        } catch (IOException e) {
+            throw new ClientException("File or directory cannot be found: " + target.toPathString());
         }
     }
 
