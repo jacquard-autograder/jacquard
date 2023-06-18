@@ -123,11 +123,11 @@ public class CheckstyleGrader {
     public static void main(String[] args) {
         CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 0, 5);
         Target target = Target.fromPathString("src/main/java/student");
-       // Result result = grader.grade(List.of(new PathStringTarget("foo.java"), new DirectoryTarget("src/main/java/student"));
+        // Result result = grader.grade(List.of(new PathStringTarget("foo.java"), new DirectoryTarget("src/main/java/student"));
         List<Result> results = grader.grade(List.of(
-     //           new PathStringTarget("foo.java"),
-            //    new PathStringTarget("src/main/java/student")
-                new StudentPathStringTarget(".")
+                Target.fromPathString("foo.java"),
+                //    new PathStringTarget("src/main/java/student")
+                Target.fromStudentPathString(".")
         ));
 
         System.out.println(results);

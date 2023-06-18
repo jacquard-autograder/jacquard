@@ -6,7 +6,7 @@ import newgrader.Autograder;
 public class PathStringTarget extends Target {
     private final String pathString;
 
-    public PathStringTarget(String pathString) {
+    protected PathStringTarget(String pathString) {
         this.pathString = pathString;
     }
 

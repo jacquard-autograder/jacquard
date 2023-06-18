@@ -21,19 +21,17 @@ public class CodeCoverageGrader {
     private static final int CLASS_FIELD = 2;
     private static final int NUM_FIELDS = 13;
 
-    private final String packageName;
-    private final String className;
     private final Scorer scorer;
 
-    public CodeCoverageGrader(String packageName, String className, Scorer scorer) {
-        this.packageName = packageName;
-        this.className = className;
+    public CodeCoverageGrader(Scorer scorer) {
         this.scorer = scorer;
     }
 
-    private ClassInfo getClassInfo() throws AutograderException {
+    private ClassInfo getClassInfo(Target target) throws AutograderException {
         try {
             Path path = Paths.get(PATH_TO_JACOCO_CSV);
+            String packageName = target.toPackageName();
+            String className = target.toClassName();
 
             // It is not really necessary to read in all lines,
             // so performance could be improved here.
@@ -50,15 +48,16 @@ public class CodeCoverageGrader {
             throw new DependencyException("Jacoco output not found with base dir " + System.getProperty("user.dir"), e);
         }
         throw new ClientException(
-                String.format("No class info found for %s.%s", packageName, className));
+                String.format("No class info found for %s", target.toPathString().toString()));
     }
 
-    public Result grade() {
+    public Result grade(Target target) {
         try {
             List<String> args = new ArrayList<>(JACOCO_COMMAND_LINE_ARGS);
+            // Whether run on Windows or Unix, Maven uses Unix-style paths.
             args.add("-Dstudent.srcdir=" + STUDENT_SRC_ROOT.toString());
-            MavenInterface.runMavenProcess(JACOCO_COMMAND_LINE_ARGS);
-            ClassInfo classInfo = getClassInfo();
+            MavenInterface.runMavenProcess(args);
+            ClassInfo classInfo = getClassInfo(target);
             return scorer.getResult(classInfo);
         } catch (DependencyException e) {
             return Result.makeException(
@@ -68,8 +67,8 @@ public class CodeCoverageGrader {
 
     public static void main(String[] args) {
         Scorer scorer = new LinearScorer(.5, 10);
-        CodeCoverageGrader grader = new CodeCoverageGrader("student", "PrimeChecker", scorer);
-        System.out.println(grader.grade());
+        CodeCoverageGrader grader = new CodeCoverageGrader(scorer);
+        System.out.println(grader.grade(Target.fromStudentPathString("student/PrimeChecker.java")));
 
     }
 }

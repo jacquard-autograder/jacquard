@@ -10,10 +10,15 @@ import java.util.regex.Pattern;
 
 // could be a class, package, path to either, string representation
 public abstract class Target {
-    private String packageName;
+    private String packageName; // lazy initialization
+    private String className; // lazy initialization
 
     public static Target fromPathString(String s) {
         return new PathStringTarget(s);
+    }
+
+    public static Target fromStudentPathString(String s) {
+        return new StudentPathStringTarget(s);
     }
 
     public abstract CompilationUnit toCompilationUnit();
@@ -59,6 +64,22 @@ public abstract class Target {
             packageName = pd.isPresent() ? pd.get().getName().toString() : ""; // default package
         }
         return packageName;
+    }
+
+    public String toClassName() {
+        if (className == null) {
+            File file = toFile();
+            if (file.isDirectory()) {
+                throw new IllegalArgumentException("Found directory where file name was expected: " + toPathString());
+            }
+            String fileName = file.getName();
+            if (fileName.endsWith(".java")) {
+                className = fileName.substring(0, fileName.indexOf(".java"));
+            } else {
+                throw new IllegalArgumentException("Specified file is not java source code: " + fileName);
+            }
+        }
+        return className;
     }
 
 }
