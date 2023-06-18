@@ -8,12 +8,13 @@ import java.nio.file.*;
 import java.util.*;
 
 public class CodeCoverageGrader {
+    private static final Path STUDENT_SRC_ROOT = StudentPathStringTarget.STUDENT_SRC_ROOT; // for now
     private static final String PATH_TO_JACOCO_POM = "pom-jacoco.xml";
     private static final List<String> JACOCO_COMMAND_LINE_ARGS = List.of(
             "-f",
             PATH_TO_JACOCO_POM,
             "clean",
-            "test");
+            "verify");
     private static final String PATH_TO_JACOCO_CSV = "target/site/jacoco/jacoco.csv";
     // Jacoco CSV file
     private static final int PACKAGE_FIELD = 1;
@@ -54,6 +55,8 @@ public class CodeCoverageGrader {
 
     public Result grade() {
         try {
+            List<String> args = new ArrayList<>(JACOCO_COMMAND_LINE_ARGS);
+            args.add("-Dstudent.srcdir=" + STUDENT_SRC_ROOT.toString());
             MavenInterface.runMavenProcess(JACOCO_COMMAND_LINE_ARGS);
             ClassInfo classInfo = getClassInfo();
             return scorer.getResult(classInfo);

@@ -70,7 +70,7 @@ public class CheckstyleGrader {
     private void runCheckstyle(Target target) {
         List<String> arguments = new ArrayList<>(FIRST_COMMAND_PARTS);
         arguments.add(String.format(CONFIG_TEMPLATE, ruleFile));
-        arguments.addAll(Arrays.asList(target.toPathParts()));
+        arguments.add(target.toPathString());
         ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
             Process p = pb.start();
@@ -122,10 +122,12 @@ public class CheckstyleGrader {
 
     public static void main(String[] args) {
         CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 0, 5);
+        Target target = Target.fromPathString("src/main/java/student");
        // Result result = grader.grade(List.of(new PathStringTarget("foo.java"), new DirectoryTarget("src/main/java/student"));
         List<Result> results = grader.grade(List.of(
-                new PathStringTarget("foo.java"),
-                new PathStringTarget("src/main/java/student")
+     //           new PathStringTarget("foo.java"),
+            //    new PathStringTarget("src/main/java/student")
+                new StudentPathStringTarget(".")
         ));
 
         System.out.println(results);

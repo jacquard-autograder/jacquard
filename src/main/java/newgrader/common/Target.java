@@ -1,14 +1,16 @@
 package newgrader.common;
 
-import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.*;
+import newgrader.Autograder;
 
 import java.io.File;
 import java.nio.file.*;
-import java.util.Arrays;
+import java.util.*;
 import java.util.regex.Pattern;
 
 // could be a class, package, path to either, string representation
 public abstract class Target {
+    private String packageName;
 
     public static Target fromPathString(String s) {
         return new PathStringTarget(s);
@@ -41,6 +43,22 @@ public abstract class Target {
 
     public Class<?> toClass() {
         throw new UnsupportedOperationException();
+    }
+
+    public String toPackageName() {
+        // While we could infer the package name from the directory hierarchy,
+        // it is probably better to actually get the package statement.
+        if (packageName == null) {
+            // This may be overkill...
+            File file = toFile();
+            if (file.isDirectory()) {
+                throw new IllegalArgumentException("Found directory where file name was expected: " + toPathString());
+            }
+            CompilationUnit cu = Autograder.parse(toFile());
+            Optional<PackageDeclaration> pd = cu.getPackageDeclaration();
+            packageName = pd.isPresent() ? pd.get().getName().toString() : ""; // default package
+        }
+        return packageName;
     }
 
 }

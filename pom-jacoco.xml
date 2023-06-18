@@ -13,6 +13,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.0-M1</junit.version>
+      <!--  <student.srcdir>src/submission/java</student.srcdir> -->
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
@@ -31,8 +32,8 @@
         </dependency>
     </dependencies>
     <build>
-        <sourceDirectory>src/submission/java</sourceDirectory>
-        <testSourceDirectory>src/submission/java</testSourceDirectory>
+        <sourceDirectory>${student.srcdir}</sourceDirectory>
+        <testSourceDirectory>${student.srcdir}</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.jacoco</groupId>

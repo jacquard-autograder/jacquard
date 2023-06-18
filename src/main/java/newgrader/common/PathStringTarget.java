@@ -3,11 +3,6 @@ package newgrader.common;
 import com.github.javaparser.ast.CompilationUnit;
 import newgrader.Autograder;
 
-import java.io.File;
-import java.nio.file.*;
-import java.util.Arrays;
-import java.util.regex.Pattern;
-
 public class PathStringTarget extends Target {
     private final String pathString;
 
@@ -23,11 +18,6 @@ public class PathStringTarget extends Target {
     @Override
     public String toPathString() {
         return pathString;
-    }
-
-    @Override
-    public File toFile() {
-        return new File(pathString);
     }
 
     @Override
