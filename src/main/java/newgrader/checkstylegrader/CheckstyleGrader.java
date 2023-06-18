@@ -1,6 +1,6 @@
 package newgrader.checkstylegrader;
 
-import newgrader.common.Result;
+import newgrader.common.*;
 import newgrader.exceptions.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -22,13 +22,11 @@ public class CheckstyleGrader {
     private static final String CONFIG_TEMPLATE = "-c=%s";
 
     private final String ruleFile;
-    private final String pathToCheck;
     private final double penalty;
     private final double maxPoints;
 
-    public CheckstyleGrader(String ruleFile, String pathToCheck, double penalty, double maxPoints) {
+    public CheckstyleGrader(String ruleFile, double penalty, double maxPoints) {
         this.ruleFile = ruleFile;
-        this.pathToCheck = pathToCheck;
         this.penalty = penalty;
         this.maxPoints = maxPoints;
     }
@@ -69,10 +67,10 @@ public class CheckstyleGrader {
         return errorNodes.getLength();
     }
 
-    private void runCheckstyle() {
+    private void runCheckstyle(Target target) {
         List<String> arguments = new ArrayList<>(FIRST_COMMAND_PARTS);
         arguments.add(String.format(CONFIG_TEMPLATE, ruleFile));
-        arguments.add(pathToCheck);
+        arguments.addAll(Arrays.asList(target.toPathParts()));
         ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
             Process p = pb.start();
@@ -105,9 +103,17 @@ public class CheckstyleGrader {
         }
     }
 
-    public Result grade() {
+    public List<Result> grade(List<Target> targets) {
+        List<Result> results = new ArrayList<>();
+        for (Target target : targets) {
+            results.add(grade(target));
+        }
+        return results;
+    }
+
+    private Result grade(Target target) {
         try {
-            runCheckstyle();
+            runCheckstyle(target);
             return interpretOutput();
         } catch (IOException | ParserConfigurationException | SAXException e) {
             return Result.makeError("Internal error when running Checkstyle", e);
@@ -115,7 +121,13 @@ public class CheckstyleGrader {
     }
 
     public static void main(String[] args) {
-        Result result = new CheckstyleGrader("sun_checks.xml", "foo.java", 0, 5).grade();
-        System.out.println(result);
+        CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 0, 5);
+       // Result result = grader.grade(List.of(new PathStringTarget("foo.java"), new DirectoryTarget("src/main/java/student"));
+        List<Result> results = grader.grade(List.of(
+                new PathStringTarget("foo.java"),
+                new PathStringTarget("src/main/java/student")
+        ));
+
+        System.out.println(results);
     }
 }

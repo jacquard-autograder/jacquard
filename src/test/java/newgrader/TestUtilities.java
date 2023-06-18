@@ -17,11 +17,11 @@ public class TestUtilities {
             """;
 
     static CompilationUnit parseProgramFromStatements(String statements) {
-        return Autograder.parse(String.format(CODE_TEMPLATE, statements));
+        return Autograder.parseCode(String.format(CODE_TEMPLATE, statements));
     }
 
     static CompilationUnit parseProgramFromClass(String statements) {
-        return Autograder.parse(statements);
+        return Autograder.parseCode(statements);
     }
 
     static double getTotalScore(List<Result> results) {

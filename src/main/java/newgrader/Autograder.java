@@ -27,7 +27,7 @@ public class Autograder {
     }
 
     @VisibleForTesting
-    public static CompilationUnit parse(String program) {
+    public static CompilationUnit parseCode(String program) {
         Autograder autograder = new Autograder(DEFAULT_LANGUAGE_LEVEL);
         ParseResult<CompilationUnit> parseResult = autograder.parser.parse(program);
         if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
