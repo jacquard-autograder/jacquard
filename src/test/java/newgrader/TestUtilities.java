@@ -2,6 +2,7 @@ package newgrader;
 
 import com.github.javaparser.ast.CompilationUnit;
 import newgrader.common.*;
+import newgrader.syntaxgrader.Parser;
 
 import java.net.URISyntaxException;
 import java.nio.file.*;
@@ -17,11 +18,11 @@ public class TestUtilities {
             """;
 
     static CompilationUnit parseProgramFromStatements(String statements) {
-        return Autograder.parseCode(String.format(CODE_TEMPLATE, statements));
+        return Parser.parseCode(String.format(CODE_TEMPLATE, statements));
     }
 
     static CompilationUnit parseProgramFromClass(String statements) {
-        return Autograder.parseCode(statements);
+        return Parser.parseCode(statements);
     }
 
     static double getTotalScore(List<Result> results) {

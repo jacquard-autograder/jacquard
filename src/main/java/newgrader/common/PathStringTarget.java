@@ -1,7 +1,7 @@
 package newgrader.common;
 
 import com.github.javaparser.ast.CompilationUnit;
-import newgrader.Autograder;
+import newgrader.syntaxgrader.Parser;
 
 public class PathStringTarget extends Target {
     private final String pathString;
@@ -12,7 +12,7 @@ public class PathStringTarget extends Target {
 
     @Override
     public CompilationUnit toCompilationUnit() {
-        return Autograder.parse(toFile());
+        return Parser.parse(toFile());
     }
 
     @Override

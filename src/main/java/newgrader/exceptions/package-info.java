@@ -1,4 +1,4 @@
 /**
- * Autograder exceptions, all of which are checked.
+ * Parser exceptions, all of which are checked.
  */
 package newgrader.exceptions;

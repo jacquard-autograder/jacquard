@@ -9,7 +9,8 @@ import java.util.*;
  * A meta-processor that returns the highest-scoring results of its constituent
  * processors.
  */
-public class MaxSyntaxGrader implements SyntaxGrader {
+@Deprecated
+public class MaxSyntaxGrader extends SyntaxGrader {
     private final List<SyntaxGrader> processors = new ArrayList<>();
     private final double totalMaxScore;
 

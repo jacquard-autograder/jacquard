@@ -1,7 +1,7 @@
 package newgrader.common;
 
 import com.github.javaparser.ast.*;
-import newgrader.Autograder;
+import newgrader.syntaxgrader.Parser;
 
 import java.io.File;
 import java.nio.file.*;
@@ -29,8 +29,6 @@ public abstract class Target {
     public static Target fromStudentPathString(String s) {
         return new StudentPathStringTarget(s);
     }
-
-    public abstract CompilationUnit toCompilationUnit();
 
     public abstract String toPathString();
 
@@ -68,7 +66,7 @@ public abstract class Target {
             if (file.isDirectory()) {
                 throw new IllegalArgumentException("Found directory where file name was expected: " + toPathString());
             }
-            CompilationUnit cu = Autograder.parse(toFile());
+            CompilationUnit cu = Parser.parse(toFile());
             Optional<PackageDeclaration> pd = cu.getPackageDeclaration();
             packageName = pd.isPresent() ? pd.get().getName().toString() : ""; // default package
         }
@@ -89,6 +87,10 @@ public abstract class Target {
             }
         }
         return className;
+    }
+
+    public CompilationUnit toCompilationUnit() {
+        return Parser.parse(toFile());
     }
 
 }

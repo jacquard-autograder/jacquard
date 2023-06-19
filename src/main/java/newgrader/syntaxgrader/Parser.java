@@ -1,17 +1,16 @@
-package newgrader;
+package newgrader.syntaxgrader;
 
 import com.github.javaparser.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.google.common.annotations.VisibleForTesting;
 import newgrader.common.Result;
 import newgrader.exceptions.ClientException;
-import newgrader.syntaxgrader.SyntaxGrader;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.util.*;
 
-public class Autograder {
+public class Parser {
     private static final ParserConfiguration.LanguageLevel DEFAULT_LANGUAGE_LEVEL =
             ParserConfiguration.LanguageLevel.JAVA_17;
     private final JavaParser parser;
@@ -20,7 +19,7 @@ public class Autograder {
     private final List<Class<?>> supertypes = new ArrayList<>();
     private double maxScore = 0.0;
 
-    public Autograder(ParserConfiguration.LanguageLevel languageLevel) {
+    public Parser(ParserConfiguration.LanguageLevel languageLevel) {
         ParserConfiguration config = new ParserConfiguration();
         config.setLanguageLevel(languageLevel);
         parser = new JavaParser(config);
@@ -28,8 +27,8 @@ public class Autograder {
 
     @VisibleForTesting
     public static CompilationUnit parseCode(String program) {
-        Autograder autograder = new Autograder(DEFAULT_LANGUAGE_LEVEL);
-        ParseResult<CompilationUnit> parseResult = autograder.parser.parse(program);
+        Parser parser = new Parser(DEFAULT_LANGUAGE_LEVEL);
+        ParseResult<CompilationUnit> parseResult = parser.parser.parse(program);
         if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
             return parseResult.getResult().get();
         }
@@ -37,9 +36,9 @@ public class Autograder {
     }
 
     public static CompilationUnit parse(File file) {
-        Autograder autograder = new Autograder(DEFAULT_LANGUAGE_LEVEL);
+        Parser parser = new Parser(DEFAULT_LANGUAGE_LEVEL);
         try {
-            ParseResult<CompilationUnit> parseResult = autograder.parser.parse(file);
+            ParseResult<CompilationUnit> parseResult = parser.parser.parse(file);
             if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
                 return parseResult.getResult().get();
             }

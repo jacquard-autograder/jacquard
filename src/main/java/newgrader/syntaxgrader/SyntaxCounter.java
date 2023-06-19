@@ -11,7 +11,7 @@ import java.util.List;
  * The base class for counters to test whether the number of occurrences of a
  * syntactic element is within the specified range.
  */
-public abstract class SyntaxCounter implements SyntaxGrader {
+public abstract class SyntaxCounter extends SyntaxGrader {
     private final String counterName;
     private final String countedName;
     private final double maxScore;
@@ -40,6 +40,7 @@ public abstract class SyntaxCounter implements SyntaxGrader {
             int maxCount,
             VoidVisitorAdapter<MutableInteger> adapter
     ) throws ClientException {
+        super();
         if (minCount < 0) {
             throw new ClientException("minCount must be >= 0");
         }

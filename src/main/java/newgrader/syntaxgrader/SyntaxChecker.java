@@ -4,14 +4,14 @@ import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.google.common.base.Preconditions;
-import newgrader.common.Result;
+import newgrader.common.*;
 
 import java.util.*;
 
 /**
  * The base class for any parser-based checkers.
  */
-public abstract class SyntaxChecker implements SyntaxGrader {
+public abstract class SyntaxChecker extends SyntaxGrader {
     /**
      * The message that appears in a successful {@link Result} if none is
      * provided.
@@ -39,6 +39,7 @@ public abstract class SyntaxChecker implements SyntaxGrader {
      * @param adapter             the adapter
      */
     protected SyntaxChecker(String name, double maxScorePerInstance, VoidVisitorAdapter<List<Result>> adapter) {
+        super();
         this.name = name == null ? DEFAULT_NAME : name;
         this.maxScorePerInstance = maxScorePerInstance;
         this.adapter = adapter;
