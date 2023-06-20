@@ -1,4 +1,4 @@
-package newgrader.crossgrader;
+package newgrader.crosstester;
 
 record TestResult(String testName, boolean passed,
                   String methodUnderTestName, String message) {

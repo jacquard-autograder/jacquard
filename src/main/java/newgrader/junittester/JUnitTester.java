@@ -1,4 +1,4 @@
-package newgrader.junitgrader;
+package newgrader.junittester;
 
 import newgrader.common.*;
 import org.junit.platform.engine.*;
@@ -13,15 +13,34 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-// not threadsafe
-public class JUnitRunner {
-    List<Result> results;
+public class JUnitTester {
+    private final List<? extends DiscoverySelector> selectors;
 
-    public JUnitRunner() {
-
+    public JUnitTester(Class<?> clazz) {
+        selectors = List.of(selectClass(clazz));
     }
 
-    private class Listener implements TestExecutionListener {
+    public JUnitTester(Class<?>... classes) {
+        selectors = Arrays.stream(classes)
+                .map(DiscoverySelectors::selectClass)
+                .toList();
+    }
+
+    public JUnitTester(String packageName) {
+        selectors = List.of(selectPackage(packageName));
+    }
+
+    public List<Result> run() {
+        Launcher launcher = LauncherFactory.create();
+        JUnitTester.Listener listener = new Listener();
+        launcher.registerTestExecutionListeners(listener);
+        launcher.execute(request().selectors(selectors).build());
+        return listener.results;
+    }
+
+    private static class Listener implements TestExecutionListener {
+        private final List<Result> results = new ArrayList<>();
+
         @Override
         public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
             if (testIdentifier.getSource().isPresent()) {
@@ -45,29 +64,5 @@ public class JUnitRunner {
                 }
             }
         }
-    }
-
-    private List<Result> run(List<? extends DiscoverySelector> sel) {
-        results = new ArrayList<>();
-        Launcher launcher = LauncherFactory.create();
-        TestExecutionListener listener = new Listener();
-        launcher.registerTestExecutionListeners(listener);
-        launcher.execute(request().selectors(sel).build());
-        return results;
-    }
-
-    public List<Result> runTestClass(Class<?> clazz) {
-        return run(List.of(selectClass(clazz)));
-    }
-
-    public List<Result> runTestClasses(Class<?>... classes) {
-        List<? extends DiscoverySelector> classSelectors = Arrays.stream(classes)
-                .map(DiscoverySelectors::selectClass)
-                .toList();
-        return run(classSelectors);
-    }
-
-    public List<Result> runTestPackage(String packageName) {
-        return run(List.of(selectPackage(packageName)));
     }
 }

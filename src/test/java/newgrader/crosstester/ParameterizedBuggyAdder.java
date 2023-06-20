@@ -1,4 +1,4 @@
-package newgrader.crossgrader;
+package newgrader.crosstester;
 
 public class ParameterizedBuggyAdder extends AbstractAdder {
     private int variant;

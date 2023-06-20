@@ -1,4 +1,4 @@
-package newgrader.crossgrader;
+package newgrader.crosstester;
 
 public class BuggyAdder extends AbstractAdder {
     @Override

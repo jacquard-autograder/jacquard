@@ -1,4 +1,4 @@
-package newgrader.crossgrader;
+package newgrader.crosstester;
 
 import org.junit.jupiter.api.extension.*;
 

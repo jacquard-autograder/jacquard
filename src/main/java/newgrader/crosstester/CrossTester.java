@@ -1,4 +1,4 @@
-package newgrader.crossgrader;
+package newgrader.crosstester;
 
 import newgrader.common.Result;
 import newgrader.exceptions.ClientException;
@@ -17,7 +17,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
  * This can be used to test whether student tests fail intentionally buggy
  * code (which is good) or pass correct code.
  */
-public class CrossGrader {
+public class CrossTester {
     private static final String DELIM = "\\s*,\\s*";
     private final Class<?> generalizedTestClass;
     // The next four instance variables are initialized in processCsvFile().
@@ -69,7 +69,7 @@ public class CrossGrader {
      * @param scoringData a source of CSV data with the names of classes under
      *                    test, methods under tests, and scoring information
      */
-    public CrossGrader(Class<?> testClass, InputStream scoringData) {
+    public CrossTester(Class<?> testClass, InputStream scoringData) {
         generalizedTestClass = testClass;
         processCsvFile(scoringData);
     }
@@ -115,7 +115,7 @@ public class CrossGrader {
      * @return the results of the tests
      * @throws ClientException if an error occurs due to misconfiguration
      */
-    public List<Result> gradeAll() throws ClientException{
+    public List<Result> run() throws ClientException{
         List<Result> results = new ArrayList<>();
         for (int i = 0; i < cutNames.length; i++) {
             results.addAll(grade(i));
