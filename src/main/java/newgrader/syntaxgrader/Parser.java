@@ -15,8 +15,6 @@ public class Parser {
             ParserConfiguration.LanguageLevel.JAVA_17;
     private final JavaParser parser;
     private final List<SyntaxGrader> processors = new ArrayList<>();
-    // classes or interfaces that the student is expected to subtype
-    private final List<Class<?>> supertypes = new ArrayList<>();
     private double maxScore = 0.0;
 
     public Parser(ParserConfiguration.LanguageLevel languageLevel) {
@@ -51,10 +49,6 @@ public class Parser {
     public void addProcessor(SyntaxGrader processor) {
         processors.add(processor);
         maxScore += processor.getTotalMaxScore();
-    }
-
-    public void addSupertype(Class<?> clazz) {
-        supertypes.add(clazz);
     }
 
     public List<Result> grade(File file) throws FileNotFoundException {
