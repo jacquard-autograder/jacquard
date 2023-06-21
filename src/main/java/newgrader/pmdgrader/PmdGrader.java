@@ -156,7 +156,7 @@ public class PmdGrader extends Grader {
         return String.format("Problem: %s (%s)\n%s: lines %s-%s\n",
                 violation.getRule().getMessage(),
                 violation.getRule().getExternalInfoUrl(),
-                violation.getFilename(),
+                violation.getFileId(),
                 violation.getBeginLine(),
                 violation.getEndLine());
     }
