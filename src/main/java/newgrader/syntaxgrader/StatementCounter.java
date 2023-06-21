@@ -1,7 +1,6 @@
 package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.stmt.*;
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import newgrader.common.Result;
 import newgrader.exceptions.ClientException;
 
@@ -11,7 +10,6 @@ import java.util.List;
  * A counter to test whether the number of occurrences of a given statement
  * type is within the specified range.
  */
-@SuppressWarnings("PMD.TooManyMethods")
 public class StatementCounter extends ExpressionStatementCounter {
 
     /**
