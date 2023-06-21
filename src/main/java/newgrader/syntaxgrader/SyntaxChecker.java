@@ -12,20 +12,8 @@ import java.util.*;
  * The base class for any parser-based checkers.
  */
 public abstract class SyntaxChecker extends SyntaxGrader {
-    /**
-     * The message that appears in a successful {@link Result} if none is
-     * provided.
-     */
-    public static final String SUCCESS_STRING = "SUCCESS";
-
-    /**
-     * The name of the checker, if none (or <pre>null</pre>) is provided
-     * in the constructor.
-     */
-    public static final String DEFAULT_NAME = "Syntax Checker";
-
-    private final String name;
     protected final double maxScorePerInstance;
+    // must be set in child's constructor
     protected VoidVisitorAdapter<List<Result>> adapter;
 
     /**
@@ -39,8 +27,7 @@ public abstract class SyntaxChecker extends SyntaxGrader {
      * @param adapter             the adapter
      */
     protected SyntaxChecker(String name, double maxScorePerInstance, VoidVisitorAdapter<List<Result>> adapter) {
-        super();
-        this.name = name == null ? DEFAULT_NAME : name;
+        super(name);
         this.maxScorePerInstance = maxScorePerInstance;
         this.adapter = adapter;
     }
@@ -69,15 +56,11 @@ public abstract class SyntaxChecker extends SyntaxGrader {
     }
 
     protected Result makeFailingResult(String message) {
-        return new Result(name, 0, maxScorePerInstance, message);
+        return makeFailureResult(maxScorePerInstance, message);
     }
 
     protected Result makeSuccessResult(String message) {
-        return new Result(name, maxScorePerInstance, maxScorePerInstance, message);
-    }
-
-    protected Result makeSuccessResult() {
-        return new Result(name, maxScorePerInstance, maxScorePerInstance, SUCCESS_STRING);
+        return makeSuccessResult(maxScorePerInstance, message);
     }
 
     // The remaining methods are helper methods for subclasses.

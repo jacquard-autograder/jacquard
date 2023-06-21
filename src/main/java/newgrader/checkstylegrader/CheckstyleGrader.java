@@ -9,7 +9,8 @@ import javax.xml.parsers.*;
 import java.io.*;
 import java.util.*;
 
-public class CheckstyleGrader {
+public class CheckstyleGrader extends Grader {
+    private static final String GRADER_NAME = "Checkstyle";
     private static final String RESULT_FILE_NAME = "checkstyle-results.xml";
     private static final List<String> FIRST_COMMAND_PARTS = List.of(
             "java",
@@ -25,10 +26,15 @@ public class CheckstyleGrader {
     private final double penalty;
     private final double maxPoints;
 
-    public CheckstyleGrader(String ruleFile, double penalty, double maxPoints) {
+    public CheckstyleGrader(String name, String ruleFile, double penalty, double maxPoints) {
+        super(name);
         this.ruleFile = ruleFile;
         this.penalty = penalty;
         this.maxPoints = maxPoints;
+    }
+
+    public CheckstyleGrader(String ruleFile, double penalty, double maxPoints) {
+        this(GRADER_NAME, ruleFile, penalty, maxPoints);
     }
 
     // Taken from JGrade:CheckstyleGrader and modified
@@ -96,33 +102,28 @@ public class CheckstyleGrader {
             numErrors += addOutputForFileNode(sb, fileNode);
         }
         if (numErrors == 0) {
-            return Result.makeSuccess("Checkstyle", maxPoints, "No violations");
+            return makeSuccessResult(maxPoints, "No violations");
         } else {
             double score = Math.min(0.0, maxPoints - numErrors * penalty);
-            return Result.makeResult("Checkstyle", score, maxPoints, sb.toString());
+            return makePartialCreditResult(score, maxPoints, sb.toString());
         }
     }
 
-    public List<Result> grade(List<Target> targets) {
-        List<Result> results = new ArrayList<>();
-        for (Target target : targets) {
-            results.add(grade(target));
-        }
-        return results;
-    }
-
-    private Result grade(Target target) {
+    @Override
+    public List<Result> grade(Target target) {
         try {
             runCheckstyle(target);
-            return interpretOutput();
+            return List.of(interpretOutput());
         } catch (IOException | ParserConfigurationException | SAXException e) {
-            return Result.makeError("Internal error when running Checkstyle", e);
+            return makeExceptionResultList(
+                    new InternalException("Internal error when running Checkstyle", e)
+            );
         }
     }
 
     public static void main(String[] args) {
         CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 0, 5);
-        Target target = Target.fromRelativePathString("src/main/java/student");
+      //  Target target = Target.fromRelativePathString("src/main/java/student");
         // Result result = grader.grade(List.of(new PathStringTarget("foo.java"), new DirectoryTarget("src/main/java/student"));
         List<Result> results = grader.grade(List.of(
                 Target.fromRelativePathString("foo.java"),

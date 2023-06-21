@@ -7,7 +7,8 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-public class CodeCoverageGrader {
+public class CodeCoverageGrader extends Grader {
+    private static final String GRADER_NAME = "Code Coverage Grader";
     private static final Path STUDENT_SRC_ROOT = StudentPathStringTarget.STUDENT_SRC_ROOT; // for now
     private static final String PATH_TO_JACOCO_POM = "pom-jacoco.xml";
     private static final List<String> JACOCO_COMMAND_LINE_ARGS = List.of(
@@ -15,6 +16,7 @@ public class CodeCoverageGrader {
             PATH_TO_JACOCO_POM,
             "clean",
             "verify");
+
     private static final String PATH_TO_JACOCO_CSV = "target/site/jacoco/jacoco.csv";
     // Jacoco CSV file
     private static final int PACKAGE_FIELD = 1;
@@ -24,6 +26,11 @@ public class CodeCoverageGrader {
     private final Scorer scorer;
 
     public CodeCoverageGrader(Scorer scorer) {
+        this(GRADER_NAME, scorer);
+    }
+
+    public CodeCoverageGrader(String name, Scorer scorer) {
+        super(name);
         this.scorer = scorer;
     }
 
@@ -51,17 +58,19 @@ public class CodeCoverageGrader {
                 String.format("No class info found for %s", target.toPathString().toString()));
     }
 
-    public Result grade(Target target) {
+    @Override
+    public List<Result> grade(Target target) {
         try {
             List<String> args = new ArrayList<>(JACOCO_COMMAND_LINE_ARGS);
             // Whether run on Windows or Unix, Maven uses Unix-style paths.
             args.add("-Dstudent.srcdir=" + STUDENT_SRC_ROOT.toString());
             MavenInterface.runMavenProcess(args);
             ClassInfo classInfo = getClassInfo(target);
-            return scorer.getResult(classInfo);
+            return List.of(scorer.getResult(classInfo));
         } catch (DependencyException e) {
-            return Result.makeException(
-                    "Exception was thrown when running autograder", 0, e.getMessage());
+            return makeExceptionResultList(
+                    new InternalException(
+                            "Exception was thrown when running autograder", e));
         }
     }
 

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * A grader that makes use of the linked <a href="https://docs.pmd-code.org/latest/index.html">
  * PMD Source Code Analyzer Project</a>.
  */
-public class PmdGrader {
+public class PmdGrader extends Grader {
     private static final String GRADER_NAME = "PMD Grader";
     private static final String JAVA_VERSION = "17";
     private final double penaltyPerViolation;
@@ -36,6 +36,7 @@ public class PmdGrader {
 
     private PmdGrader(double penaltyPerViolation, double maxPenalty, String[] ruleSetPaths)
             throws ClientException {
+        super(GRADER_NAME);
         this.penaltyPerViolation = penaltyPerViolation;
         this.maxPenalty = maxPenalty;
         configuration = createConfiguration();
@@ -56,6 +57,7 @@ public class PmdGrader {
 
     private PmdGrader(double penaltyPerViolation, double maxPenalty, String
             ruleSetPath, String[] ruleNames) throws ClientException {
+        super(GRADER_NAME);
         this.penaltyPerViolation = penaltyPerViolation;
         this.maxPenalty = maxPenalty;
         this.ruleSetPath = ruleSetPath;
@@ -136,13 +138,7 @@ public class PmdGrader {
         return new PmdGrader(penaltyPerViolation, maxPenalty, ruleSetPath, ruleNames);
     }
 
-    /**
-     * Grades any files at the specified path.
-     *
-     * @param target the file or directory to analyze
-     * @return a single result
-     * @see net.sourceforge.pmd.lang.document.FileCollector#addFileOrDirectory(Path)
-     */
+    @Override
     public List<Result> grade(Target target) {
         try (PmdAnalysis analysis = createAnalysis()) {
             boolean added = analysis.files().addFileOrDirectory(target.toPath());

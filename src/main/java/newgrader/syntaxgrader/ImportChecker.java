@@ -47,9 +47,9 @@ public class ImportChecker extends SyntaxChecker {
         }
         results.add(
                 required ?
-                        Result.makeTotalFailure(name, maxPoints, "Required import not found")
+                        makeFailureResult(maxPoints, "Required import not found")
                         :
-                        Result.makeSuccess(name, maxPoints, "Forbidden import not found"));
+                        makeSuccessResult(maxPoints, "Forbidden import not found"));
     }
 
     private class ImportCheckerAdapter extends VoidVisitorAdapter<List<Result>> {
@@ -60,9 +60,9 @@ public class ImportChecker extends SyntaxChecker {
             }
             if (importDecl.getName().toString().contains(substring)) {
                 if (required) {
-                    results.add(Result.makeSuccess(name, maxPoints, "required import found"));
+                    results.add(makeSuccessResult(maxPoints, "required import found"));
                 } else {
-                    results.add(Result.makeTotalFailure(name, maxPoints, "Forbidden import found"));
+                    results.add(makeFailureResult(maxPoints, "Forbidden import found"));
                 }
             }
         }

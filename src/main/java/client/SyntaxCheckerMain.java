@@ -19,12 +19,6 @@ public class SyntaxCheckerMain {
                         List.of(Modifier.finalModifier(), Modifier.privateModifier()),
                         List.of()));
         parser.addProcessor(
-                new MaxSyntaxGrader(List.of(
-                        new ExpressionCounter(
-                                "Switch expression check", 1, 1, Integer.MAX_VALUE, SwitchExpr.class),
-                        new StatementCounter(
-                                "Switch statement check", 1, 1, Integer.MAX_VALUE, SwitchStmt.class))));
-        parser.addProcessor(
                 new StringInterpolationCounter("String interpolation counter", 1, 2, Integer.MAX_VALUE));
         List<Result> results = parser.grade(SyntaxCheckerMain.class.getClassLoader().getResourceAsStream("Mob.java"));
         for (Result result : results) {

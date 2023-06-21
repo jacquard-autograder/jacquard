@@ -12,7 +12,6 @@ import java.util.List;
  * syntactic element is within the specified range.
  */
 public abstract class SyntaxCounter extends SyntaxGrader {
-    private final String counterName;
     private final String countedName;
     private final double maxScore;
     private final int minCount;
@@ -23,7 +22,7 @@ public abstract class SyntaxCounter extends SyntaxGrader {
      * Creates a new counter to test whether the number of occurrences of an
      * element is within the specified range.
      *
-     * @param counterName the name of this processor (for the {@link Result})
+     * @param name        the name of this processor (for the {@link Result})
      * @param countedName the name of the element (for the {@link Result})
      * @param maxScore    the score if the condition holds
      * @param minCount    the minimum number of occurrences
@@ -33,14 +32,14 @@ public abstract class SyntaxCounter extends SyntaxGrader {
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public SyntaxCounter(
-            String counterName,
+            String name,
             String countedName,
             double maxScore,
             int minCount,
             int maxCount,
             VoidVisitorAdapter<MutableInteger> adapter
     ) throws ClientException {
-        super();
+        super(name);
         if (minCount < 0) {
             throw new ClientException("minCount must be >= 0");
         }
@@ -52,7 +51,6 @@ public abstract class SyntaxCounter extends SyntaxGrader {
                     "There is no reason to create a SyntaxCounter of 0 or more elements");
         }
 
-        this.counterName = counterName;
         this.countedName = countedName;
         this.maxScore = maxScore;
         this.minCount = minCount;
@@ -90,13 +88,13 @@ public abstract class SyntaxCounter extends SyntaxGrader {
 
     private Result getResult(MutableInteger mi) {
         if (mi.getValue() < minCount) {
-            return new Result(counterName, 0, maxScore,
+            return makeFailureResult(maxScore,
                     String.format("%s but had only %d", getPrefix(), mi.getValue()));
         } else if (mi.getValue() > maxCount) {
-            return new Result(counterName, 0, maxScore,
+            return makeFailureResult(maxScore,
                     String.format("%s but had %d", getPrefix(), mi.getValue()));
         } else {
-            return new Result(counterName, maxScore, maxScore,
+            return makeSuccessResult(maxScore,
                     String.format("%s and had %d.", getPrefix(), mi.getValue()));
         }
     }
