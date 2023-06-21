@@ -19,7 +19,7 @@ public class Gradescope {
                     .put("name", result.name())
                     .put("score", result.score())
                     .put("max_score", result.maxScore())
-                    .put("output", result.message());
+                    .put("output", result.output());
         } catch (JSONException e) {
             throw new InternalError(e);
         }

@@ -7,6 +7,8 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.*;
 import org.junit.platform.launcher.core.LauncherFactory;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -15,6 +17,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 public class JUnitTester {
     private final List<? extends DiscoverySelector> selectors;
+    private PrintStream stdoutCapture;
 
     public JUnitTester(Class<?> clazz) {
         selectors = List.of(selectClass(clazz));
@@ -34,12 +37,41 @@ public class JUnitTester {
         Launcher launcher = LauncherFactory.create();
         JUnitTester.Listener listener = new Listener();
         launcher.registerTestExecutionListeners(listener);
+        PrintStream originalOut = System.out;
         launcher.execute(request().selectors(selectors).build());
+        System.setOut(originalOut);
         return listener.results;
     }
 
     private static class Listener implements TestExecutionListener {
         private final List<Result> results = new ArrayList<>();
+        // These get set in executionStarted and used/closed in executionFinished.
+        private PrintStream ps;
+        private ByteArrayOutputStream baos;
+
+        @Override
+        public void executionStarted(TestIdentifier testIdentifier) {
+            baos = new ByteArrayOutputStream();
+            if (ps != null) {
+                ps.close();
+            }
+            ps = new PrintStream(baos, true, StandardCharsets.UTF_8);
+            System.setOut(ps);
+        }
+
+        private String makeOutput(TestExecutionResult teResult) {
+            Optional<Throwable> throwable = teResult.getThrowable();
+            String s = baos.toString();
+            if (throwable.isEmpty()) {
+                return s;
+            }
+            else if (s.isEmpty()) {
+                return throwable.get().toString();
+            }
+            else {
+                return s + "\n" + throwable.get();
+            }
+        }
 
         @Override
         public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
@@ -51,12 +83,11 @@ public class JUnitTester {
                         try {
                             results.add(switch (testExecutionResult.getStatus()) {
                                 case SUCCESSFUL ->
-                                        Result.makeSuccess(gt.name(), gt.points(), "SUCCESS");
-                                case FAILED ->
-                                        Result.makeTotalFailure(gt.name(), gt.points(), testExecutionResult.getThrowable().get().toString());
-                                case ABORTED ->
-                                        Result.makeTotalFailure(gt.name(), gt.points(), testExecutionResult.getThrowable().get().getMessage());
+                                        Result.makeSuccess(gt.name(), gt.points(), baos.toString());
+                                case FAILED, ABORTED ->
+                                        Result.makeTotalFailure(gt.name(), gt.points(), makeOutput(testExecutionResult));
                             });
+                            ps.close();
                         } catch (NoSuchElementException e) { // if get() failed
                             results.add(Result.makeTotalFailure(gt.name(), gt.points(), "Test failed with no additional information"));
                         }
