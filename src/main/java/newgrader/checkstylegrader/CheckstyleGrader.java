@@ -123,8 +123,6 @@ public class CheckstyleGrader extends Grader {
 
     public static void main(String[] args) {
         CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 0, 5);
-      //  Target target = Target.fromRelativePathString("src/main/java/student");
-        // Result result = grader.grade(List.of(new PathStringTarget("foo.java"), new DirectoryTarget("src/main/java/student"));
         List<Result> results = grader.grade(List.of(
                 Target.fromRelativePathString("src/submission/java/student")
         ));

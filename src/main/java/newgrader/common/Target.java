@@ -17,7 +17,15 @@ public abstract class Target {
         return fromAbsolutePathString(path.toAbsolutePath().toString());
     }
 
+    /**
+     * Creates a target from a relative path string. It does not matter whether
+     * forward slashes or backslashes are used as separators.
+     *
+     * @param s a relative path string
+     * @return the target
+     */
     public static Target fromRelativePathString(String s) {
+        // https://stackoverflow.com/a/40163941/631051
         String absPath = FileSystems.getDefault().getPath(s).normalize().toAbsolutePath().toString();
         return fromAbsolutePathString(absPath);
     }
