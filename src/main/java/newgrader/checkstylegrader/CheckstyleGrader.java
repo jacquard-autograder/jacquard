@@ -126,9 +126,7 @@ public class CheckstyleGrader extends Grader {
       //  Target target = Target.fromRelativePathString("src/main/java/student");
         // Result result = grader.grade(List.of(new PathStringTarget("foo.java"), new DirectoryTarget("src/main/java/student"));
         List<Result> results = grader.grade(List.of(
-                Target.fromRelativePathString("foo.java"),
-                //    new PathStringTarget("src/main/java/student")
-                Target.fromStudentPathString(".")
+                Target.fromRelativePathString("src/submission/java/student")
         ));
 
         System.out.println(results);

@@ -26,10 +26,6 @@ public abstract class Target {
         return new PathStringTarget(s);
     }
 
-    public static Target fromStudentPathString(String s) {
-        return new StudentPathStringTarget(s);
-    }
-
     public abstract String toPathString();
 
     public Path toPath() {
@@ -89,6 +85,15 @@ public abstract class Target {
         return className;
     }
 
+    public Path toDirectory() {
+        File file = toFile();
+        if (file.isDirectory()) {
+            return file.toPath();
+        } else {
+            return file.getParentFile().toPath();
+        }
+
+    }
     public CompilationUnit toCompilationUnit() {
         return Parser.parse(toFile());
     }

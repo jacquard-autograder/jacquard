@@ -9,7 +9,6 @@ import java.util.*;
 
 public class CodeCoverageGrader extends Grader {
     private static final String GRADER_NAME = "Code Coverage Grader";
-    private static final Path STUDENT_SRC_ROOT = StudentPathStringTarget.STUDENT_SRC_ROOT; // for now
     private static final String PATH_TO_JACOCO_POM = "pom-jacoco.xml";
     private static final List<String> JACOCO_COMMAND_LINE_ARGS = List.of(
             "-f",
@@ -62,8 +61,7 @@ public class CodeCoverageGrader extends Grader {
     public List<Result> grade(Target target) {
         try {
             List<String> args = new ArrayList<>(JACOCO_COMMAND_LINE_ARGS);
-            // Whether run on Windows or Unix, Maven uses Unix-style paths.
-            args.add("-Dstudent.srcdir=" + STUDENT_SRC_ROOT.toString());
+            args.add("-Dstudent.srcdir=" + target.toDirectory());
             MavenInterface.runMavenProcess(args);
             ClassInfo classInfo = getClassInfo(target);
             return List.of(scorer.getResult(classInfo));
@@ -77,7 +75,7 @@ public class CodeCoverageGrader extends Grader {
     public static void main(String[] args) {
         Scorer scorer = new LinearScorer(.5, 10);
         CodeCoverageGrader grader = new CodeCoverageGrader(scorer);
-        System.out.println(grader.grade(Target.fromStudentPathString("student/PrimeChecker.java")));
+        System.out.println(grader.grade(Target.fromRelativePathString("src/submission/java/student/PrimeChecker.java")));
 
     }
 }
