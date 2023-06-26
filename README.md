@@ -1,6 +1,6 @@
-# Autograder
+# Jacquard
 
-This is a pre-release Java autograder that I am planning to release
+This is a Java autograder with a planned release of
 late summer 2023. While most of it is platform-independent, it will
 include Gradescope integration. I would be happy to get collaborators
 familiar with other systems this could hook into.
