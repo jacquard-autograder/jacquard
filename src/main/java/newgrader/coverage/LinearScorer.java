@@ -40,7 +40,7 @@ public class LinearScorer extends Scorer {
 
     // Like the public constructor, but the caller guarantees that the weight
     // is in the range [0-100].
-    protected LinearScorer(double branchWeight, double maxPoints) {
+    public LinearScorer(double branchWeight, double maxPoints) {
         super(maxPoints);
         if (branchWeight < 0 || branchWeight > 1) {
             throw new InternalException("Argument to LinearScore(double) is not in range [0-1].");

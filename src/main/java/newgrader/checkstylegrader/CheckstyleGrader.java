@@ -120,13 +120,4 @@ public class CheckstyleGrader extends Grader {
             );
         }
     }
-
-    public static void main(String[] args) {
-        CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 0, 5);
-        List<Result> results = grader.grade(List.of(
-                Target.fromRelativePathString("src/submission/java/student")
-        ));
-
-        System.out.println(results);
-    }
 }

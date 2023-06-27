@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * The GradedTest annotation is primarily based off of capturing the data for
  * a test object in the Gradescope JSON output. They are used to create
- * corresponding {@link GradedTestResult} objects.
+ * corresponding {@link Result} objects.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})

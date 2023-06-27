@@ -1,3 +1,3 @@
 public class BadFormatting {
-    public                   foo() { return      1+3;}
+    public     int              foo() { return      1+3;}
 }

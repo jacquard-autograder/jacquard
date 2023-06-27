@@ -71,11 +71,4 @@ public class CodeCoverageGrader extends Grader {
                             "Exception was thrown when running autograder", e));
         }
     }
-
-    public static void main(String[] args) {
-        Scorer scorer = new LinearScorer(.5, 10);
-        CodeCoverageGrader grader = new CodeCoverageGrader(scorer);
-        System.out.println(grader.grade(Target.fromRelativePathString("src/submission/java/student/PrimeChecker.java")));
-
-    }
 }

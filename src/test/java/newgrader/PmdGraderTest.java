@@ -19,7 +19,7 @@ public class PmdGraderTest {
 
     @BeforeEach
     public void setup() throws URISyntaxException {
-        missingCommentsTarget = TestUtilities.getTargetFromPath("MissingComments.java");
+        missingCommentsTarget = TestUtilities.getTargetFromResource("MissingComments.java");
     }
 
     @Test

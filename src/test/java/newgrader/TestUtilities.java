@@ -10,8 +10,8 @@ import java.util.List;
 
 public class TestUtilities {
     private static final String CODE_TEMPLATE = """
-            public class Main {
-                public static void main(String[] args) {
+            public class MyClass {
+                public static void foo(String[] args) {
                 %s
                 }
             }
@@ -33,7 +33,7 @@ public class TestUtilities {
         return Paths.get(TestUtilities.class.getClassLoader().getResource(filename).toURI());
     }
 
-    static Target getTargetFromPath(String filename) throws URISyntaxException {
+    static Target getTargetFromResource(String filename) throws URISyntaxException {
         return Target.fromPath(getPath(filename));
     }
 }

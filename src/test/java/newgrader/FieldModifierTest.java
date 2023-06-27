@@ -17,7 +17,7 @@ public class FieldModifierTest {
                 List.of("behavior", "maxHearts", "maxDamage", "minDamage", "type"),
                 List.of(Modifier.finalModifier(), Modifier.privateModifier()),
                 List.of());
-        Target target = TestUtilities.getTargetFromPath("Mob.java");
+        Target target = TestUtilities.getTargetFromResource("Mob.java");
         List<Result> results = checker.grade(target);
         assertEquals(5, results.size());
         assertEquals(4.0, TestUtilities.getTotalScore(results));

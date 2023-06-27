@@ -17,3 +17,4 @@ jacocohtml/
 target/
 lib/
 checkstyle-results.xml
+gradle.properties

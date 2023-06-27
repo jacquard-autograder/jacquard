@@ -1,11 +1,8 @@
 plugins {
-    id 'application'
-    id 'jacoco'
-    id 'pmd'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
 }
-
-group 'edu.northeastern.khoury.jaquard'
-version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -23,7 +20,65 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0-M1'
 }
 
+group = 'com.spertus'
+version = '0.1-SNAPSHOT'
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+// https://docs.gradle.org/current/userguide/publishing_maven.html
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'jacquard'
+            from components.java
+
+            pom {
+                name = 'Jacquard'
+                description = 'Java autograder with Gradescope integration'
+                url = 'https://github.com/espertus/jacquard'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id ='espertus'
+                        name = 'Ellen Spertus'
+                        email = 'ellen.spertus@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/espertus/jacquard.git'
+                    developerConnection = 'scm:git:ssh://github.com:espertus/jacquard.git'
+                    url = 'http://github.com/espertus/jacquard'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = 's01.oss.sonatype.org'
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+/*
 application {
     mainClass.set("newgrader.Main")
 }
@@ -66,9 +121,6 @@ pmd {
     ignoreFailures = true
 }
 
-test {
-    useJUnitPlatform()
-}
 
 // https://stackoverflow.com/questions/32402541/how-can-i-use-gradle-to-just-download-jars
 apply plugin: 'base'
@@ -86,4 +138,9 @@ dependencies {
 tasks.register('download', Copy) {
     from configurations.toCopy
     into 'lib'
+}
+*/
+
+test {
+    useJUnitPlatform()
 }

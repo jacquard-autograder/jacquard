@@ -14,7 +14,7 @@ public class StringInterpolationCounterTest {
     @Test
     public void counterTest() throws URISyntaxException {
         SyntaxCounter counter = new StringInterpolationCounter("String interpolation counter", 1, 2, Integer.MAX_VALUE);
-        Target target = TestUtilities.getTargetFromPath("Mob.java");
+        Target target = TestUtilities.getTargetFromResource("Mob.java");
         List<Result> results = counter.grade(target);
         assertEquals(1, results.size());
         assertEquals(1.0, TestUtilities.getTotalScore(results));
