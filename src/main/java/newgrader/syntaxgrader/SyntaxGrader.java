@@ -10,6 +10,11 @@ import java.util.List;
  * <a href="https://javaparser.org/">Java parser</a>.
  */
 public abstract class SyntaxGrader extends Grader {
+    /**
+     * Constructs a syntax-based grader.
+     *
+     * @param name the name
+     */
     public SyntaxGrader(String name) {
         super(name);
     }
@@ -19,7 +24,13 @@ public abstract class SyntaxGrader extends Grader {
         return grade(target.toCompilationUnit());
     }
 
-    public abstract List<Result> grade(CompilationUnit cu);
+    /**
+     * Grades the parsed compilation unit.
+     *
+     * @param cu the parsed compilation unit
+     * @return the results
+     */
+    protected abstract List<Result> grade(CompilationUnit cu);
 
     /**
      * The maximum possible score achievable with this grader.

@@ -7,6 +7,9 @@ import newgrader.common.Result;
  * into a single score.
  */
 public abstract class Scorer {
+    /**
+     * The maximum score that can be earned.
+     */
     protected double maxScore;
 
     /**

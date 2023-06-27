@@ -1,9 +1,7 @@
 package newgrader.syntaxgrader;
 
 import com.github.javaparser.ast.*;
-import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.google.common.base.Preconditions;
 import newgrader.common.*;
 
 import java.util.*;
@@ -12,8 +10,16 @@ import java.util.*;
  * The base class for any parser-based checkers.
  */
 public abstract class SyntaxChecker extends SyntaxGrader {
+    /**
+     * The maximum score per instance checked.
+     */
     protected final double maxScorePerInstance;
-    // must be set in child's constructor
+
+    /**
+     * The adapter that visits the nodes of the parse tree. If this is not
+     * passed to this class's constructor, it must be set in the child class's
+     * constructor.
+     */
     protected VoidVisitorAdapter<List<Result>> adapter;
 
     /**
@@ -24,7 +30,7 @@ public abstract class SyntaxChecker extends SyntaxGrader {
      *
      * @param name                the name of the syntax checker
      * @param maxScorePerInstance the maximum score per application
-     * @param adapter             the adapter
+     * @param adapter             the adapter or {@code null}
      */
     protected SyntaxChecker(String name, double maxScorePerInstance, VoidVisitorAdapter<List<Result>> adapter) {
         super(name);
@@ -55,41 +61,23 @@ public abstract class SyntaxChecker extends SyntaxGrader {
         return results;
     }
 
+    /**
+     * Creates a result indicating total failure.
+     *
+     * @param message an accompanying message
+     * @return the result
+     */
     protected Result makeFailingResult(String message) {
         return makeFailureResult(maxScorePerInstance, message);
     }
 
+    /**
+     * Creates a result indicating total success.
+     *
+     * @param message an accompanying message
+     * @return the result
+     */
     protected Result makeSuccessResult(String message) {
         return makeSuccessResult(maxScorePerInstance, message);
-    }
-
-    // The remaining methods are helper methods for subclasses.
-    protected String getEnclosingClassName(FieldDeclaration fd) {
-        if (fd.getParentNode().isPresent() &&
-                fd.getParentNode().get() instanceof ClassOrInterfaceDeclaration classOrInterface) {
-            return classOrInterface.getNameAsString();
-        } else {
-            return "CLASS UNKNOWN";
-        }
-    }
-
-    protected boolean isField(VariableDeclarator vd) {
-        return vd.getParentNode().isPresent()
-                && vd.getParentNode().get() instanceof FieldDeclaration;
-    }
-
-    // This should be called only if isField() is true.
-    protected FieldDeclaration getFieldDeclaration(VariableDeclarator vd) {
-        Preconditions.checkState(isField(vd));
-        // The precondition guarantees the safety of the get() and cast.
-        return (FieldDeclaration) vd.getParentNode().get();
-    }
-
-    protected String getDeclarationDescription(FieldDeclaration fd, VariableDeclarator vd) {
-        return String.format(
-                "Declaration of %s variable %s in class %s",
-                fd.getModifiers().contains(Modifier.staticModifier()) ? "static" : "instance",
-                vd.getNameAsString(),
-                getEnclosingClassName(fd));
     }
 }

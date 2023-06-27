@@ -3,6 +3,7 @@ package newgrader.syntaxgrader;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import com.google.common.base.Preconditions;
 import newgrader.common.Result;
 
 import java.util.*;
@@ -143,5 +144,34 @@ public class FieldModifierChecker extends SyntaxChecker {
                 super.visit(vd, collector);
             }
         }
+    }
+
+    private String getDeclarationDescription(FieldDeclaration fd, VariableDeclarator vd) {
+        return String.format(
+                "Declaration of %s variable %s in class %s",
+                fd.getModifiers().contains(Modifier.staticModifier()) ? "static" : "instance",
+                vd.getNameAsString(),
+                getEnclosingClassName(fd));
+    }
+
+    private String getEnclosingClassName(FieldDeclaration fd) {
+        if (fd.getParentNode().isPresent() &&
+                fd.getParentNode().get() instanceof ClassOrInterfaceDeclaration classOrInterface) {
+            return classOrInterface.getNameAsString();
+        } else {
+            return "CLASS UNKNOWN";
+        }
+    }
+
+    private boolean isField(VariableDeclarator vd) {
+        return vd.getParentNode().isPresent()
+                && vd.getParentNode().get() instanceof FieldDeclaration;
+    }
+
+    // This should be called only if isField() is true.
+    private FieldDeclaration getFieldDeclaration(VariableDeclarator vd) {
+        Preconditions.checkState(isField(vd));
+        // The precondition guarantees the safety of the get() and cast.
+        return (FieldDeclaration) vd.getParentNode().get();
     }
 }

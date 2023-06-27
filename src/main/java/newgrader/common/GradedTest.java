@@ -1,7 +1,5 @@
 package newgrader.common;
 
-// This is based on tkutcher/jgrade
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

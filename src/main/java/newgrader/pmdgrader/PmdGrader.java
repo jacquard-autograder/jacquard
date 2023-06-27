@@ -110,6 +110,7 @@ public class PmdGrader extends Grader {
      *                            positive number
      * @param maxPenalty          the maximum penalty
      * @param ruleSetPaths        the path to one or more rule sets
+     * @return new PMD grader
      * @throws ClientException if any rule set path is invalid
      */
     public static PmdGrader createFromRuleSetPaths(
@@ -130,6 +131,7 @@ public class PmdGrader extends Grader {
      * @param maxPenalty          the maximum penalty
      * @param ruleSetPath         the path to a rule sets
      * @param ruleNames           the names of the rules in the rule set to use
+     * @return new PMD grader
      * @throws ClientException if any rule set path is invalid or a rule cannot be found
      */
     public static PmdGrader createFromRules(

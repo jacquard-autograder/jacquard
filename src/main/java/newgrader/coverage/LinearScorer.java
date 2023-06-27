@@ -3,6 +3,10 @@ package newgrader.coverage;
 import newgrader.common.Result;
 import newgrader.exceptions.*;
 
+/**
+ * A code coverage scorer that uses a linear equation to weight the branch
+ * coverage and line coverage.
+ */
 public class LinearScorer extends Scorer {
     private final double branchWeight;
 
@@ -69,6 +73,12 @@ public class LinearScorer extends Scorer {
                 getMessage(info));
     }
 
+    /**
+     * Gets a message summarizing information about the coverage being tested.
+     *
+     * @param info information about the class being tested
+     * @return a message
+     */
     protected String getMessage(ClassInfo info) {
         return String.format("Branch coverage is %.0f%% and line coverage is %.0f%%",
                 100 * info.branchCoverage(), 100 * info.lineCoverage());

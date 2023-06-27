@@ -10,6 +10,8 @@ public class LinearLineScorer extends LinearScorer {
     /**
      * Creates a linear scorer that considers only line coverage, not
      * branch coverage.
+     *
+     * @param maxPoints the maximum number of points
      */
     public LinearLineScorer(double maxPoints) {
        super(0, maxPoints);

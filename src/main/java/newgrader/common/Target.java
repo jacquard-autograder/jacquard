@@ -118,6 +118,12 @@ public class Target {
         return className;
     }
 
+    /**
+     * Gets this target's directory. This is the target itself if it is a
+     * directory; otherwise, it is the parent directory of the file.
+     *
+     * @return the directory
+     */
     public Path toDirectory() {
         File file = toFile();
         if (file.isDirectory()) {
@@ -125,10 +131,18 @@ public class Target {
         } else {
             return file.getParentFile().toPath();
         }
-
     }
 
+    /**
+     * Parses this target, if it is a file.
+     *
+     * @return the parsed file
+     * @throws ClientException if this target is a directory
+     */
     public CompilationUnit toCompilationUnit() {
+        if (toFile().isDirectory()) {
+            throw new ClientException("Cannot parse directory " + toPathString());
+        }
         return Parser.parse(toFile());
     }
 
