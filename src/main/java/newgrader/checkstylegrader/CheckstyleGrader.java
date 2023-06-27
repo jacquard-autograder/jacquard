@@ -9,6 +9,11 @@ import javax.xml.parsers.*;
 import java.io.*;
 import java.util.*;
 
+/**
+ * A grader that runs checkstyle.
+ *
+ * @see <a href="https://checkstyle.sourceforge.io/cmdline.html">checkstyle</a>
+ */
 public class CheckstyleGrader extends Grader {
     private static final String GRADER_NAME = "Checkstyle";
     private static final String RESULT_FILE_NAME = "checkstyle-results.xml";
@@ -26,6 +31,14 @@ public class CheckstyleGrader extends Grader {
     private final double penalty;
     private final double maxPoints;
 
+    /**
+     * Creates a checkstyle grader.
+     *
+     * @param name the name of the grader
+     * @param ruleFile the path to the rule file
+     * @param penalty the penalty per violation
+     * @param maxPoints the maximum number of points if no violations occur
+     */
     public CheckstyleGrader(String name, String ruleFile, double penalty, double maxPoints) {
         super(name);
         this.ruleFile = ruleFile;
@@ -33,6 +46,13 @@ public class CheckstyleGrader extends Grader {
         this.maxPoints = maxPoints;
     }
 
+    /**
+     * Creates a checkstyle grader.
+     *
+     * @param ruleFile the path to the rule file
+     * @param penalty the penalty per violation
+     * @param maxPoints the maximum number of points if no violations occur
+     */
     public CheckstyleGrader(String ruleFile, double penalty, double maxPoints) {
         this(GRADER_NAME, ruleFile, penalty, maxPoints);
     }

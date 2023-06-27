@@ -141,6 +141,12 @@ tasks.register('download', Copy) {
 }
 */
 
+sourceSets {
+    test {
+        resources { srcDirs = ['src/test/resources2', 'src/test/resources'] }
+    }
+}
+
 test {
     useJUnitPlatform()
 }

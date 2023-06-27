@@ -7,6 +7,9 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
+/**
+ * A grader that uses Jacoco to measure code coverage of tests.
+ */
 public class CodeCoverageGrader extends Grader {
     private static final String GRADER_NAME = "Code Coverage Grader";
     private static final String PATH_TO_JACOCO_POM = "pom-jacoco.xml";
@@ -24,13 +27,24 @@ public class CodeCoverageGrader extends Grader {
 
     private final Scorer scorer;
 
-    public CodeCoverageGrader(Scorer scorer) {
-        this(GRADER_NAME, scorer);
-    }
-
+    /**
+     * Creates a code coverage grader with the given name and scorer.
+     *
+     * @param name the name
+     * @param scorer a scorer, which converts the outcome to a point value
+     */
     public CodeCoverageGrader(String name, Scorer scorer) {
         super(name);
         this.scorer = scorer;
+    }
+
+    /**
+     * Creates a code coverage grader with the given scorer.
+     *
+     * @param scorer a scorer, which converts the outcome to a point value
+     */
+    public CodeCoverageGrader(Scorer scorer) {
+        this(GRADER_NAME, scorer);
     }
 
     private ClassInfo getClassInfo(Target target) throws AutograderException {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- mvn clean test -->
+<!-- mvn -f pom-jacoco.xml clean test -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -13,7 +13,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.0-M1</junit.version>
-      <!--  <student.srcdir>src/submission/java</student.srcdir> -->
+        <!--  <student.srcdir>src/submission/java</student.srcdir> -->
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
@@ -41,6 +41,9 @@
                 <version>0.8.10</version>
                 <configuration>
                     <formats>CSV</formats>
+                    <excludes>
+                        <exclude>**/Foo.class</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>

@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Checks whether the correct modifiers are used for fields (instance and
  * static variables/constants). For example, this could be used to verify
- * that certain instance variables are declared {@link private} or {@link final}.
+ * that certain instance variables are declared {@code private} or {@code final}.
  */
 public class FieldModifierChecker extends SyntaxChecker {
     private final List<String> varNames;

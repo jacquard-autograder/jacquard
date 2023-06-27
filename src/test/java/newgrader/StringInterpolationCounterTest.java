@@ -1,6 +1,5 @@
 package newgrader;
 
-import com.github.javaparser.ast.Modifier;
 import newgrader.common.*;
 import newgrader.syntaxgrader.*;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,7 @@ public class StringInterpolationCounterTest {
     @Test
     public void counterTest() throws URISyntaxException {
         SyntaxCounter counter = new StringInterpolationCounter("String interpolation counter", 1, 2, Integer.MAX_VALUE);
-        Target target = TestUtilities.getTargetFromResource("Mob.java");
+        Target target = TestUtilities.getTargetFromResource("good/Mob.java");
         List<Result> results = counter.grade(target);
         assertEquals(1, results.size());
         assertEquals(1.0, TestUtilities.getTotalScore(results));

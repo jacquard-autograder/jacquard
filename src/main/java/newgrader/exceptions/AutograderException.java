@@ -1,5 +1,8 @@
 package newgrader.exceptions;
 
+/**
+ * Signals an exceptional circumstance within the autograder library.
+ */
 public abstract class AutograderException extends RuntimeException {
     /**
      * Constructs an {@code AutograderException} with the specified

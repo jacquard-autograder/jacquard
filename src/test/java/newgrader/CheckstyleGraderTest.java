@@ -15,7 +15,7 @@ public class CheckstyleGraderTest {
     public void testCheckstyleSingleFile() throws URISyntaxException {
         CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 0, 5);
         List<Result> results = grader.grade(List.of(
-                TestUtilities.getTargetFromResource("BadFormatting.java")
+                TestUtilities.getTargetFromResource("good/BadFormatting.java")
         ));
         assertEquals(1, results.size());
         assertEquals(0, results.get(0).score()); // lots of errors

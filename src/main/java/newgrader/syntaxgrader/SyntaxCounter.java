@@ -5,7 +5,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import newgrader.common.Result;
 import newgrader.exceptions.ClientException;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * The base class for counters to test whether the number of occurrences of a
@@ -28,6 +28,7 @@ public abstract class SyntaxCounter extends SyntaxGrader {
      * @param minCount    the minimum number of occurrences
      * @param maxCount    the maximum number of occurrences, or {@link Integer#MAX_VALUE}
      *                    if there is no limit.
+     * @param adapter     an adapter for visiting nodes in parse tree
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
@@ -55,14 +56,10 @@ public abstract class SyntaxCounter extends SyntaxGrader {
         this.maxScore = maxScore;
         this.minCount = minCount;
         this.maxCount = maxCount;
+        Objects.requireNonNull(adapter);
         this.adapter = adapter;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * The returned list will always have a single element.
-     */
     @Override
     public List<Result> grade(CompilationUnit cu) {
         final MutableInteger mi = new MutableInteger();

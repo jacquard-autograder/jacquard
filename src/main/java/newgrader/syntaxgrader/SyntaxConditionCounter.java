@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 /**
  * A counter to test whether the number of parse nodes satisfying a given
- * predicate in the specified range.
+ * predicate is in the specified range.
  *
  * @see com.github.javaparser.ast.Node
  */
@@ -24,7 +24,8 @@ public class SyntaxConditionCounter extends SyntaxCounter {
      * Creates a new counter to test whether the number of parse nodes
      * satisfying the predicate is within the specified range.
      *
-     * @param name     the name of this processor (for the {@link Result})
+     * @param name     the name of this grader
+     * @param countedName the name of the element(s) being counted
      * @param maxScore the score if the condition holds
      * @param minCount the minimum number of occurrences, which must be non-negative
      * @param maxCount the maximum number of occurrences, or {@link Integer#MAX_VALUE}

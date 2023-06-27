@@ -14,7 +14,7 @@ public class CodeCoverageGraderTest {
     public void testLinearScorer() throws URISyntaxException {
         Scorer scorer = new LinearScorer(.5, 10);
         CodeCoverageGrader grader = new CodeCoverageGrader(scorer);
-        List<Result> results = grader.grade(TestUtilities.getTargetFromResource("PrimeChecker.java"));
+        List<Result> results = grader.grade(TestUtilities.getTargetFromResource("good/PrimeChecker.java"));
         assertEquals(1, results.size());
         assertEquals(7.75, results.get(0).score());
         assertEquals(10.0, results.get(0).maxScore());

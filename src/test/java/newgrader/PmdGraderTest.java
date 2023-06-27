@@ -19,7 +19,7 @@ public class PmdGraderTest {
 
     @BeforeEach
     public void setup() throws URISyntaxException {
-        missingCommentsTarget = TestUtilities.getTargetFromResource("MissingComments.java");
+        missingCommentsTarget = TestUtilities.getTargetFromResource("good/MissingComments.java");
     }
 
     @Test
@@ -102,7 +102,7 @@ public class PmdGraderTest {
                 MAX_PENALTY,
                 "category/java/documentation.xml",
                 "category/java/codestyle.xml");
-        Target target = Target.fromRelativePathString("src/test/resources/");
+        Target target = Target.fromPathString("src/test/resources/good/");
         List<Result> results = pmdGrader.grade(target);
         assertEquals(1, results.size());
         assertEquals(0, results.get(0).score()); // lots of errors

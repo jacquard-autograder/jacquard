@@ -4,11 +4,22 @@ package newgrader.exceptions;
  * Signals that an application that this depends on failed.
  */
 public class DependencyException extends AutograderException {
-    public DependencyException(String msg, Throwable cause) {
-        super(msg, cause);
+    /**
+     * Creates an exception indicating child application failure.
+     *
+     * @param message a message
+     * @param cause the underlying cause
+     */
+    public DependencyException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public DependencyException(String msg) {
-        super(msg);
+    /**
+     * Creates an exception indicating child application failure.
+     *
+     * @param message a message
+     */
+    public DependencyException(String message) {
+        super(message);
     }
 }

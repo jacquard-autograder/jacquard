@@ -15,24 +15,37 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-public class JUnitTester {
+/**
+ * A tester that runs JUnit tests having the {@link GradedTest} annotation.
+ */
+public class JUnitTester extends Tester {
+    private static final String TESTER_NAME = "JUnit Tester";
     private final List<? extends DiscoverySelector> selectors;
     private PrintStream stdoutCapture;
 
-    public JUnitTester(Class<?> clazz) {
-        selectors = List.of(selectClass(clazz));
-    }
-
+    /**
+     * Constructs a JUnit tester that will run tests in the specified classes.
+     *
+     * @param classes the classes containing the tests
+     */
     public JUnitTester(Class<?>... classes) {
+        super(TESTER_NAME);
         selectors = Arrays.stream(classes)
                 .map(DiscoverySelectors::selectClass)
                 .toList();
     }
 
+    /**
+     * Constructs a JUnit tester that will run tests in the specified package.
+     *
+     * @param packageName the package containing the tests
+     */
     public JUnitTester(String packageName) {
+        super(TESTER_NAME);
         selectors = List.of(selectPackage(packageName));
     }
 
+    @Override
     public List<Result> run() {
         Launcher launcher = LauncherFactory.create();
         JUnitTester.Listener listener = new Listener();

@@ -4,6 +4,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import newgrader.common.*;
 import newgrader.syntaxgrader.Parser;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.List;
@@ -30,7 +31,7 @@ public class TestUtilities {
     }
 
     static Path getPath(String filename) throws URISyntaxException {
-        return Paths.get(TestUtilities.class.getClassLoader().getResource(filename).toURI());
+        return Paths.get(TestUtilities.class.getClassLoader().getResource(File.separator + filename).toURI());
     }
 
     static Target getTargetFromResource(String filename) throws URISyntaxException {

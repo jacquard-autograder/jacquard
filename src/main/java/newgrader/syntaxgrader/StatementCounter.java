@@ -23,7 +23,7 @@ public class StatementCounter extends ExpressionStatementCounter {
      *                 if there is no limit
      * @param clazz    the statement class
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
-     *                         , or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
+     *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public StatementCounter(
             String name,
