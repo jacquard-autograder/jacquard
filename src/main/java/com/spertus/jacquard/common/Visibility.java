@@ -26,10 +26,10 @@ public enum Visibility {
      */
     AFTER_PUBLISHED("after_published");
 
-    private final String text;
+    private final String gradescopeText;
 
-    Visibility(String text) {
-        this.text = text;
+    Visibility(String gradescopeText) {
+        this.gradescopeText = gradescopeText;
     }
 
     /**
@@ -37,7 +37,7 @@ public enum Visibility {
      *
      * @return a textual representation suitable for Gradescope
      */
-    public String getText() {
-        return text;
+    public String getGradescopeText() {
+        return gradescopeText;
     }
 }
