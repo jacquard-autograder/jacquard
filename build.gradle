@@ -1,45 +1,28 @@
+// https://github.com/gradle-nexus/publish-plugin
+
 plugins {
-    id 'java-library'
-    id 'maven-publish'
-    id 'signing'
+    id "java-library"
+    id "maven-publish"
+    id "signing"
+    id "io.github.gradle-nexus.publish-plugin" version "1.3.0"
 }
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.25.3'
-    implementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    implementation 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    implementation 'org.junit.platform:junit-platform-launcher:1.10.0-M1'
-    implementation 'net.sourceforge.pmd:pmd:7.0.0-rc3'
-    implementation 'net.sourceforge.pmd:pmd-java:7.0.0-rc3'
-    implementation 'org.jacoco:org.jacoco.core:0.8.10'
-    implementation 'org.json:json:20230618'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0-M1'
-}
-
 group = 'com.spertus'
 version = '0.1-SNAPSHOT'
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-// https://docs.gradle.org/current/userguide/publishing_maven.html
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'jacquard'
-            from components.java
+            from(components.java)
 
             pom {
                 name = 'Jacquard'
                 description = 'Java autograder with Gradescope integration'
                 url = 'https://github.com/espertus/jacquard'
-
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -48,7 +31,7 @@ publishing {
                 }
                 developers {
                     developer {
-                        id ='espertus'
+                        id = 'espertus'
                         name = 'Ellen Spertus'
                         email = 'ellen.spertus@gmail.com'
                     }
@@ -61,92 +44,25 @@ publishing {
             }
         }
     }
+}
+
+nexusPublishing {
     repositories {
-        maven {
-            url = 'https://s01.oss.sonatype.org'
+        sonatype {  //only for users registered in Sonatype after 24 Feb 2021
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
 }
 
-signing {
-    sign publishing.publications.mavenJava
-}
-
-javadoc {
-    if(JavaVersion.current().isJava9Compatible()) {
-        options.addBooleanOption('html5', true)
-    }
-}
-
-/*
-application {
-    mainClass.set("newgrader.Main")
-}
-
-tasks.withType(Jar) {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    manifest {
-        attributes["Main-Class"] = "newgrader.coverage.CodeCoverageGrader"
-    }
-}
-
-tasks.register('uberJar', Jar) {
-    archiveClassifier = 'uber'
-
-    from sourceSets.main.output
-
-    dependsOn configurations.runtimeClasspath
-    from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
-    } {
-        exclude "META-INF/*.SF"
-        exclude "META-INF/*.DSA"
-        exclude "META-INF/*.RSA"
-    }
-}
-
-jacocoTestReport {
-    reports {
-        // Only one of xml or csv should be required because csv > xml
-        xml.required = false
-        csv.required = true
-        html.required = false
-        html.outputLocation = layout.buildDirectory.dir('reports/jacocoHtml')
-    }
-}
-
-// Outputs html and xml to build/reports/pmd
-pmd {
-    ignoreFailures = true
-}
-
-
-// https://stackoverflow.com/questions/32402541/how-can-i-use-gradle-to-just-download-jars
-apply plugin: 'base'
-
-configurations {
-    toCopy
-}
-
 dependencies {
-    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-    toCopy 'com.puppycrawl.tools:checkstyle:10.12.0'
-}
-
-tasks.register('download', Copy) {
-    from configurations.toCopy
-    into 'lib'
-}
-*/
-
-sourceSets {
-    test {
-        resources { srcDirs = ['src/test/resources2', 'src/test/resources'] }
-    }
-}
-
-test {
-    useJUnitPlatform()
+    implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.25.3'
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    implementation 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'org.junit.platform:junit-platform-launcher:1.10.0-M1'
+    implementation 'net.sourceforge.pmd:pmd:7.0.0-rc3'
+    implementation 'net.sourceforge.pmd:pmd-java:7.0.0-rc3'
+    implementation 'org.jacoco:org.jacoco.core:0.8.10'
+    implementation 'org.json:json:20230618'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0-M1'
 }
