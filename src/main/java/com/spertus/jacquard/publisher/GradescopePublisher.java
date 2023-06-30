@@ -11,19 +11,23 @@ import org.json.*;
  * The interface to Gradescope.
  *
  * @see <a href="https://gradescope-autograders.readthedocs.io/en/latest/specs/">
- *     Gradescope Autograder Specifications</a>
+ * Gradescope Autograder Specifications</a>
  */
 public class GradescopePublisher extends Publisher {
     private static final Path RESULTS_PATH = Path.of("results");
     private static final String RESULTS_FILE_NAME = "results.json";
 
-    @Override
-    public String serializeResults(List<Result> results) {
+    private JSONObject convertToJson(List<Result> results) {
         JSONArray testResults = new JSONArray();
         for (Result result : results) {
             testResults.put(assemble(result));
         }
-        return new JSONObject().put("tests", testResults).toString();
+        return new JSONObject().put("tests", testResults);
+    }
+
+    @Override
+    public String serializeResults(List<Result> results) {
+        return convertToJson(results).toString();
     }
 
     @Override
@@ -41,7 +45,8 @@ public class GradescopePublisher extends Publisher {
 
     @Override
     public void displayResults(List<Result> results) {
-        System.out.println(serializeResults(results));
+        System.out.println(convertToJson(results)
+                .toString(4));
     }
 
     private JSONObject assemble(Result result) {

@@ -65,6 +65,8 @@ dependencies {
     implementation 'org.jacoco:org.jacoco.core:0.8.10'
     implementation 'org.json:json:20230618'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0-M1'
+    // Not used directly but needed by clients
+    implementation 'com.puppycrawl.tools:checkstyle:10.12.1'
 }
 
 test {
