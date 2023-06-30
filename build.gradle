@@ -66,3 +66,7 @@ dependencies {
     implementation 'org.json:json:20230618'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0-M1'
 }
+
+test {
+    useJUnitPlatform()
+}
