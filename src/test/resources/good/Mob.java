@@ -34,15 +34,15 @@ public class Mob {
         return behavior;
     }
 
-    public int getMinDamage() {
+    int getMinDamage() {
         return minDamage;
-    }
+    } // should be public
 
     public int getMaxDamage() {
         return maxDamage;
     }
 
-    public int getNumHearts() {
+    public final int getNumHearts() {
         return numHearts;
     }
 
