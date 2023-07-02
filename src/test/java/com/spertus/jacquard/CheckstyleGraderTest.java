@@ -20,6 +20,5 @@ public class CheckstyleGraderTest {
         assertEquals(1, results.size());
         assertEquals(0, results.get(0).score()); // lots of errors
         assertEquals(5.0, results.get(0).maxScore());
-        System.out.println(results);
     }
 }

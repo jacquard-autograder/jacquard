@@ -44,7 +44,8 @@ public final class OverrideChecker extends SyntaxChecker {
 
     /**
      * Creates an override checker that ensures that specified methods have the
-     * {@link Override} annotation.
+     * {@link Override} annotation. If the method does not appear, that counts
+     * as a failure.
      *
      * @param name              the name of the checker
      * @param maxScorePerMethod the per-method score
