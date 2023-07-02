@@ -11,6 +11,9 @@ import java.util.*;
 /**
  * A checker that ensures that the {@link Override} annotation is used
  * when overriding specified methods.
+ * @deprecated
+ * It is better to use PMD to check if the override annotation is used
+ * correctly.
  */
 public final class OverrideChecker extends SyntaxChecker {
     private final List<Method> methodsToOverride;
@@ -65,7 +68,7 @@ public final class OverrideChecker extends SyntaxChecker {
         );
     }
 
-    // For now, don't include methods from the supertype's supertype.
+    // Don't include methods from the supertype's supertype.
     private static OverrideChecker makeOverrideChecker(
             String name,
             double maxScorePerMethod,
@@ -85,7 +88,11 @@ public final class OverrideChecker extends SyntaxChecker {
      * Creates an override checker that ensures that, if methods declared in
      * the supertype are found in the actual code, they have the {@link Override}
      * annotation. Final and static methods are skipped. This does not consider
-     * methods declared in the supertype's supertypes.
+     * methods declared in the supertype's supertypes. Note that the supertype
+     * does not have to be the tested class's direct supertype. For example,
+     * you could create a checker that ensures that any methods overridden
+     * from {@link Object} have the {@code Override} annotation, even if the
+     * tested class is not a direct subtype of {@link Object}.
      *
      * @param name              the name of the checker
      * @param maxScorePerMethod the per-method score

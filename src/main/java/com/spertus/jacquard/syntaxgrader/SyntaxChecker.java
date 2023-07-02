@@ -7,7 +7,9 @@ import com.spertus.jacquard.common.Result;
 import java.util.*;
 
 /**
- * The base class for any parser-based checkers.
+ * The base class for syntax-based checkers involving multiple items of the
+ * same type, such as {@link MethodModifierChecker}, which checks whether
+ * each of a list of methods has the correct modifiers.
  */
 public abstract class SyntaxChecker extends SyntaxGrader {
     /**

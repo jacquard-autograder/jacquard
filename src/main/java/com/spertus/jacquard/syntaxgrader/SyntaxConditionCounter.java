@@ -23,13 +23,13 @@ public class SyntaxConditionCounter extends SyntaxCounter {
      * Creates a new counter to test whether the number of parse nodes
      * satisfying the predicate is within the specified range.
      *
-     * @param name     the name of this grader
+     * @param name        the name of this grader
      * @param countedName the name of the element(s) being counted
-     * @param maxScore the score if the condition holds
-     * @param minCount the minimum number of occurrences, which must be non-negative
-     * @param maxCount the maximum number of occurrences, or {@link Integer#MAX_VALUE}
-     *                 if there is no limit
-     * @param predicate    the condition
+     * @param maxScore    the score if the condition holds
+     * @param minCount    the minimum number of occurrences, which must be non-negative
+     * @param maxCount    the maximum number of occurrences, or {@link Integer#MAX_VALUE}
+     *                    if there is no limit
+     * @param predicate   the condition
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */

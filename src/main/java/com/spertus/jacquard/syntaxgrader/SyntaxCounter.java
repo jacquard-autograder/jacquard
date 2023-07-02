@@ -80,13 +80,18 @@ public abstract class SyntaxCounter extends SyntaxGrader {
         if (minCount == 0) {
             return String.format("Code was required to have up to %d %s", maxCount, countedName);
         }
+
+        if (minCount == maxCount) {
+            return String.format("Code was required to have %d %s", minCount, countedName);
+        }
+
         return String.format("Code was required to have %d-%d %s", minCount, maxCount, countedName);
     }
 
-    private Result getResult(MutableInteger mi) {
+    protected Result getResult(MutableInteger mi) {
         if (mi.getValue() < minCount) {
             return makeFailureResult(maxScore,
-                    String.format("%s but had only %d", getPrefix(), mi.getValue()));
+                    String.format("%s but had %d", getPrefix(), mi.getValue()));
         } else if (mi.getValue() > maxCount) {
             return makeFailureResult(maxScore,
                     String.format("%s but had %d", getPrefix(), mi.getValue()));
