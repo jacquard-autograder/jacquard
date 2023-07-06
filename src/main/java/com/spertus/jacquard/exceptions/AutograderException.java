@@ -12,7 +12,7 @@ public abstract class AutograderException extends RuntimeException {
      * @param cause   the underlying cause
      */
     public AutograderException(String message, Throwable cause) {
-        super(message, cause);
+        super(message + "\nCaused by: " + cause.toString(), cause);
     }
 
     /**

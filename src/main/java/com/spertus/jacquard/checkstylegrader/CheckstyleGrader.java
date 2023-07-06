@@ -21,11 +21,10 @@ public class CheckstyleGrader extends Grader {
     private static final List<String> FIRST_COMMAND_PARTS = List.of(
             "java",
             "-cp",
-            "\"lib/*\"",
+            "lib/*",
             "com.puppycrawl.tools.checkstyle.Main",
             "-f=xml",
-            "-o",
-            RESULT_FILE_NAME);
+            "-o" + RESULT_FILE_NAME);
     private static final String CONFIG_TEMPLATE = "-c=%s";
 
     private final String ruleFile;
@@ -125,7 +124,7 @@ public class CheckstyleGrader extends Grader {
         if (numErrors == 0) {
             return makeSuccessResult(maxPoints, "No violations");
         } else {
-            double score = Math.min(0.0, maxPoints - numErrors * penalty);
+            double score = Math.max(0.0, maxPoints - numErrors * penalty);
             return makePartialCreditResult(score, maxPoints, sb.toString());
         }
     }
