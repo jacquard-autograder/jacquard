@@ -88,6 +88,13 @@ public abstract class SyntaxCounter extends SyntaxGrader {
         return String.format("Code was required to have %d-%d %s", minCount, maxCount, countedName);
     }
 
+    /**
+     * Creates a result with an appropriate score and message based on the
+     * number of occurrences of the syntactic element.
+     *
+     * @param mi the number of occurrences of the syntactic element.
+     * @return the result
+     */
     protected Result getResult(MutableInteger mi) {
         if (mi.getValue() < minCount) {
             return makeFailureResult(maxScore,
