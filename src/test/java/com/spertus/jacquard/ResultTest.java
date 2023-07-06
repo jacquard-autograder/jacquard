@@ -26,12 +26,12 @@ public class ResultTest {
                 NOTHING_STRING,
                 5.0,
                 true);
-        assertEquals(NAME, result.name());
-        assertEquals(5.0, result.score());
-        assertEquals(5.0, result.maxScore());
-        assertTrue(result.output().startsWith(ALL_STRING));
-        assertTrue(result.output().contains("output1"));
-        assertTrue(result.output().contains("output2"));
+        assertEquals(NAME, result.getName());
+        assertEquals(5.0, result.getScore());
+        assertEquals(5.0, result.getMaxScore());
+        assertTrue(result.getMessage().startsWith(ALL_STRING));
+        assertTrue(result.getMessage().contains("output1"));
+        assertTrue(result.getMessage().contains("output2"));
     }
 
     @Test
@@ -47,10 +47,10 @@ public class ResultTest {
                 NOTHING_STRING,
                 5.0,
                 false);
-        assertEquals(NAME, result.name());
-        assertEquals(5.0, result.score());
-        assertEquals(5.0, result.maxScore());
-        assertEquals(ALL_STRING, result.output().trim());
+        assertEquals(NAME, result.getName());
+        assertEquals(5.0, result.getScore());
+        assertEquals(5.0, result.getMaxScore());
+        assertEquals(ALL_STRING, result.getMessage().trim());
     }
 
     @Test
@@ -66,12 +66,12 @@ public class ResultTest {
                 NOTHING_STRING,
                 5.0,
                 true);
-        assertEquals(NAME, result.name());
-        assertEquals(0.0, result.score());
-        assertEquals(5.0, result.maxScore());
-        assertTrue(result.output().startsWith(NOTHING_STRING));
-        assertTrue(result.output().contains("output1"));
-        assertTrue(result.output().contains("output2"));
+        assertEquals(NAME, result.getName());
+        assertEquals(0.0, result.getScore());
+        assertEquals(5.0, result.getMaxScore());
+        assertTrue(result.getMessage().startsWith(NOTHING_STRING));
+        assertTrue(result.getMessage().contains("output1"));
+        assertTrue(result.getMessage().contains("output2"));
     }
 
     @Test
@@ -87,9 +87,9 @@ public class ResultTest {
                 NOTHING_STRING,
                 5.0,
                 false);
-        assertEquals(NAME, result.name());
-        assertEquals(0.0, result.score());
-        assertEquals(5.0, result.maxScore());
-        assertEquals(NOTHING_STRING, result.output().trim());
+        assertEquals(NAME, result.getName());
+        assertEquals(0.0, result.getScore());
+        assertEquals(5.0, result.getMaxScore());
+        assertEquals(NOTHING_STRING, result.getMessage().trim());
     }
 }

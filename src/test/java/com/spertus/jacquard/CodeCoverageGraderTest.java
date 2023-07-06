@@ -16,7 +16,7 @@ public class CodeCoverageGraderTest {
         CodeCoverageGrader grader = new CodeCoverageGrader(scorer);
         List<Result> results = grader.grade(TestUtilities.getTargetFromResource("good/PrimeChecker.java"));
         assertEquals(1, results.size());
-        assertEquals(7.75, results.get(0).score());
-        assertEquals(10.0, results.get(0).maxScore());
+        assertEquals(7.75, results.get(0).getScore());
+        assertEquals(10.0, results.get(0).getMaxScore());
     }
 }

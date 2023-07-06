@@ -36,7 +36,7 @@ public class StatementCounterTest {
                 MAX_SCORE, minCount, maxCount, statementType);
         List<Result> results = counter.grade(cu);
         assertEquals(1, results.size());
-        assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).score());
+        assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).getScore());
     }
 
     private void testTooFew(CompilationUnit cu, int actualCount, Class<? extends Statement> statementType) throws ClientException {

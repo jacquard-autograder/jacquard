@@ -50,7 +50,7 @@ public class ExpressionCounterTest {
                 MAX_SCORE, minCount, maxCount, expressionType);
         List<Result> results = counter.grade(cu);
         assertEquals(1, results.size());
-        assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).score());
+        assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).getScore());
     }
 
     private void testTooFew(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) throws ClientException {

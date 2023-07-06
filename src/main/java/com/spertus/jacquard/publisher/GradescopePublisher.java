@@ -52,10 +52,11 @@ public class GradescopePublisher extends Publisher {
     private JSONObject assemble(Result result) {
         try {
             return new JSONObject()
-                    .put("name", result.name())
-                    .put("score", result.score())
-                    .put("max_score", result.maxScore())
-                    .put("output", result.output());
+                    .put("name", result.getName())
+                    .put("score", result.getScore())
+                    .put("max_score", result.getMaxScore())
+                    .put("output", result.getMessage())
+                    .put("visibility", result.getVisibility().getGradescopeText());
         } catch (JSONException e) {
             throw new InternalError(e);
         }

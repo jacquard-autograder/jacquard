@@ -31,6 +31,6 @@ public class SwitchExpressionCounterTest {
                         """);
         List<Result> results = counter.grade(cu);
         assertEquals(1, results.size());
-        assertEquals(MAX_SCORE, results.get(0).score());
+        assertEquals(MAX_SCORE, results.get(0).getScore());
     }
 }

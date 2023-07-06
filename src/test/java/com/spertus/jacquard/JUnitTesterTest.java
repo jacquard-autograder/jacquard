@@ -16,12 +16,12 @@ public class JUnitTesterTest {
     private static final double FAILING_TEST_MAX_POINTS = 1.5;
 
     private void checkResultsHelper(Result passingResult, Result failingResult) {
-        assertEquals(PASSING_TEST_NAME, passingResult.name());
-        assertEquals(PASSING_TEST_MAX_POINTS, passingResult.maxScore());
-        assertEquals(PASSING_TEST_MAX_POINTS, passingResult.score());
-        assertEquals(FAILING_TEST_NAME, failingResult.name());
-        assertEquals(FAILING_TEST_MAX_POINTS, failingResult.maxScore());
-        assertEquals(0, failingResult.score());
+        assertEquals(PASSING_TEST_NAME, passingResult.getName());
+        assertEquals(PASSING_TEST_MAX_POINTS, passingResult.getMaxScore());
+        assertEquals(PASSING_TEST_MAX_POINTS, passingResult.getScore());
+        assertEquals(FAILING_TEST_NAME, failingResult.getName());
+        assertEquals(FAILING_TEST_MAX_POINTS, failingResult.getMaxScore());
+        assertEquals(0, failingResult.getScore());
     }
 
     private void checkResults(Tester tester) {
@@ -29,7 +29,7 @@ public class JUnitTesterTest {
         assertEquals(2, results.size());
         Result result1 = results.get(0);
         Result result2 = results.get(1);
-        if (result1.name().equals(PASSING_TEST_NAME)) {
+        if (result1.getName().equals(PASSING_TEST_NAME)) {
             checkResultsHelper(result1, result2);
         } else {
             checkResultsHelper(result2, result1);

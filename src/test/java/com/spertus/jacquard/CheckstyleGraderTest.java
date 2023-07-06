@@ -19,8 +19,8 @@ public class CheckstyleGraderTest {
                 TestUtilities.getTargetFromResource("good/BadFormatting.java")
         ));
         assertEquals(1, results.size());
-        assertEquals(0, results.get(0).score()); // lots of errors
-        assertEquals(5.0, results.get(0).maxScore());
+        assertEquals(0, results.get(0).getScore()); // lots of errors
+        assertEquals(5.0, results.get(0).getMaxScore());
     }
 
     @Test
@@ -30,7 +30,7 @@ public class CheckstyleGraderTest {
                 TestUtilities.getTargetFromResource("good/MissingComments.java")
         ));
         assertEquals(1, results.size());
-        assertEquals(18, results.get(0).score()); // 4 violations
-        assertEquals(20.0, results.get(0).maxScore());
+        assertEquals(18, results.get(0).getScore()); // 4 violations
+        assertEquals(20.0, results.get(0).getMaxScore());
     }
 }

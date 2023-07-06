@@ -1,4 +1,6 @@
-package com.spertus.jacquard.common;
+package com.spertus.jacquard.junittester;
+
+import com.spertus.jacquard.common.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -41,7 +43,7 @@ public @interface GradedTest {
      * The visibility level of the test, which determines when the result is shown to
      * the student whose code is being graded.
      *
-     * @return the visibility level of the test.
+     * @return the visibility level of the test
      */
     Visibility visibility() default Visibility.VISIBLE;
 }

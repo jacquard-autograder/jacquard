@@ -32,23 +32,23 @@ public class SyntaxConditionGraderTest {
     public void testHasToStringOverrideWhenPresent() throws URISyntaxException {
         List<Result> results = overrideGrader.grade(TestUtilities.getTargetFromResource("good/Mob.java"));
         assertEquals(1, results.size());
-        assertEquals(5.0, results.get(0).score());
-        assertEquals(5.0, results.get(0).maxScore());
+        assertEquals(5.0, results.get(0).getScore());
+        assertEquals(5.0, results.get(0).getMaxScore());
     }
 
     @Test
     public void testHasToStringOverrideWhenAbsent() throws URISyntaxException {
         List<Result> results = overrideGrader.grade(TestUtilities.getTargetFromResource("good/PrimeChecker.java"));
         assertEquals(1, results.size());
-        assertEquals(0, results.get(0).score());
-        assertEquals(5.0, results.get(0).maxScore());
+        assertEquals(0, results.get(0).getScore());
+        assertEquals(5.0, results.get(0).getMaxScore());
     }
 
     @Test
     public void testHasToStringOverrideWhenAnnotationMissing() throws URISyntaxException {
         List<Result> results = overrideGrader.grade(TestUtilities.getTargetFromResource("good/NoOverrideAnnotation.java"));
         assertEquals(1, results.size());
-        assertEquals(0, results.get(0).score());
-        assertEquals(5.0, results.get(0).maxScore());
+        assertEquals(0, results.get(0).getScore());
+        assertEquals(5.0, results.get(0).getMaxScore());
     }
 }

@@ -105,6 +105,6 @@ public class PmdGraderTest {
         Target target = Target.fromPathString("src/test/resources/good/");
         List<Result> results = pmdGrader.grade(target);
         assertEquals(1, results.size());
-        assertEquals(0, results.get(0).score()); // lots of errors
+        assertEquals(0, results.get(0).getScore()); // lots of errors
     }
 }

@@ -1,6 +1,5 @@
 package com.spertus.jacquard.junittester;
 
-import com.spertus.jacquard.common.GradedTest;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

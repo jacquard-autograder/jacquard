@@ -27,7 +27,7 @@ public class TestUtilities {
     }
 
     static double getTotalScore(List<Result> results) {
-        return results.stream().mapToDouble(Result::score).sum();
+        return results.stream().mapToDouble(Result::getScore).sum();
     }
 
     static Path getPath(String filename) throws URISyntaxException {

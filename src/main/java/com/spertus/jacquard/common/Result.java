@@ -4,15 +4,109 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The result of a checker.
- *
- * @param name     the name of the checker
- * @param score    the actual score
- * @param maxScore the maximum possible score
- * @param output   an explanation of the result or the empty string
+ * The result of an evaluation of student code.
  */
-public record Result(String name, double score, double maxScore,
-                     String output) {
+public class Result {
+    /**
+     * The default visibility of results.
+     */
+    public static final Visibility DEFAULT_VISIBILITY = Visibility.VISIBLE;
+
+    private final String name;
+    private final double score;
+    private final double maxScore;
+    private final String message;
+    private Visibility visibility;
+
+    /**
+     * Creates a result with the specified properties.
+     *
+     * @param name       the name of the checker
+     * @param score      the actual score
+     * @param maxScore   the maximum possible score
+     * @param message    an explanation of the result or the empty string
+     * @param visibility the visibility of the result to the student
+     */
+    public Result(String name, double score, double maxScore,
+                  String message, Visibility visibility) {
+        this.name = name;
+        this.score = score;
+        this.maxScore = maxScore;
+        this.message = message;
+        this.visibility = visibility;
+    }
+
+    /**
+     * Creates a result with the default visibility.
+     *
+     * @param name     the name of the checker
+     * @param score    the actual score
+     * @param maxScore the maximum possible score
+     * @param message  an explanation of the result or the empty string
+     * @see #DEFAULT_VISIBILITY
+     */
+    public Result(String name, double score, double maxScore,
+                  String message) {
+        this.name = name;
+        this.score = score;
+        this.maxScore = maxScore;
+        this.message = message;
+        this.visibility = DEFAULT_VISIBILITY;
+    }
+
+    /**
+     * Gets the name of the result
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the score (points earned) of the result.
+     *
+     * @return the score
+     */
+    public double getScore() {
+        return score;
+    }
+
+    /**
+     * Gets the maximum possible score of the test associated with this result.
+     *
+     * @return the maximum score
+     */
+    public double getMaxScore() {
+        return maxScore;
+    }
+
+    /**
+     * Gets the message with any additional information about this result.
+     *
+     * @return the message, possibly the empty string
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Gets the visibility level of this result.
+     *
+     * @return the visibility
+     */
+    public Visibility getVisibility() {
+        return visibility;
+    }
+
+    /**
+     * Sets the visibility of this result.
+     *
+     * @param visibility the visibility
+     */
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
+    }
 
     /**
      * Makes a result indicating a total failure.
@@ -59,16 +153,15 @@ public record Result(String name, double score, double maxScore,
      * @return a result
      */
     public static Result makeSuccess(String name, double score, String output) {
-        return new Result(name, score, score, output);
+        return new Result(name, score, score, output, DEFAULT_VISIBILITY);
     }
 
     /**
      * Creates a single result summarizing a list of results, giving credit only
-     * if all the results indicate complete success (having {@link #score()}
-     * equal to {@link #maxScore()}. Otherwise, the returned result has a score
-     * of 0.
+     * if all the results indicate complete success (having a score equal to
+     * the maximum score}. Otherwise, the returned result has a score of 0.
      * <p>
-     * The {@link #output()} of the new result begins with either {@code
+     * The message of the new result begins with either {@code
      * allMessage} (for all successful) or {@code nothingMessage}. If
      * {@code includeOutputs} is true, the outputs of the individual results
      * will be appended to the output of the produced result.
@@ -92,14 +185,24 @@ public record Result(String name, double score, double maxScore,
             boolean includeOutputs) {
         String outputs = includeOutputs ? results.
                 stream().
-                map(Result::output).
+                map(Result::getMessage).
                 collect(Collectors.joining("\n"))
                 : "";
         if (results.
                 stream().
-                allMatch((Result r) -> r.score() == r.maxScore())) {
+                allMatch((Result r) -> r.getScore() == r.getMaxScore())) {
             return makeSuccess(name, maxScore, allMessage + "\n" + outputs);
         }
         return makeTotalFailure(name, maxScore, nothingMessage + "\n" + outputs);
+    }
+
+    /**
+     * Changes the visibility of all the results.
+     *
+     * @param results    the results
+     * @param visibility the new visibility
+     */
+    public static void changeVisibility(List<Result> results, Visibility visibility) {
+        results.forEach((Result r) -> r.setVisibility(visibility));
     }
 }

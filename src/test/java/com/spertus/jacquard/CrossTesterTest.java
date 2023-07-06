@@ -37,8 +37,8 @@ public class CrossTesterTest {
     }
 
     private void testResult(Result result, double score, double maxScore) {
-        assertEquals(score, result.score());
-        assertEquals(maxScore, result.maxScore());
+        assertEquals(score, result.getScore());
+        assertEquals(maxScore, result.getMaxScore());
     }
 
     @Test
