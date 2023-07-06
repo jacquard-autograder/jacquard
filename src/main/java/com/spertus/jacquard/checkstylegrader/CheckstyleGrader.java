@@ -94,6 +94,11 @@ public class CheckstyleGrader extends Grader {
     }
 
     private void runCheckstyle(Target target) {
+        // Delete old output file.
+        File file = new File(RESULT_FILE_NAME);
+        file.delete();
+
+        // Run checkstyle.
         List<String> arguments = new ArrayList<>(FIRST_COMMAND_PARTS);
         arguments.add(String.format(CONFIG_TEMPLATE, ruleFile));
         arguments.add(target.toPathString());

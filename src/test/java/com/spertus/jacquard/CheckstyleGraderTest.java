@@ -30,7 +30,7 @@ public class CheckstyleGraderTest {
                 TestUtilities.getTargetFromResource("good/MissingComments.java")
         ));
         assertEquals(1, results.size());
-        assertEquals(18, results.get(0).score()); // lots of errors
+        assertEquals(18, results.get(0).score()); // 4 violations
         assertEquals(20.0, results.get(0).maxScore());
     }
 }

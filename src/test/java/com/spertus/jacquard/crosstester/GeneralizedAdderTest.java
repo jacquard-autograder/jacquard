@@ -1,9 +1,11 @@
 package com.spertus.jacquard.crosstester;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.reflect.*;
 
+@Tag("IndirectTest")
 @ExtendWith(DependencyInjector.class)
 public class GeneralizedAdderTest extends AdderTest {
     private Class<? extends AbstractAdder> classUnderTest;
