@@ -19,9 +19,11 @@ public class JUnitTesterTest {
         assertEquals(PASSING_TEST_NAME, passingResult.getName());
         assertEquals(PASSING_TEST_MAX_POINTS, passingResult.getMaxScore());
         assertEquals(PASSING_TEST_MAX_POINTS, passingResult.getScore());
+        assertEquals(Visibility.HIDDEN, passingResult.getVisibility());
         assertEquals(FAILING_TEST_NAME, failingResult.getName());
         assertEquals(FAILING_TEST_MAX_POINTS, failingResult.getMaxScore());
         assertEquals(0, failingResult.getScore());
+        assertEquals(Visibility.VISIBLE, failingResult.getVisibility());
     }
 
     private void checkResults(Tester tester) {

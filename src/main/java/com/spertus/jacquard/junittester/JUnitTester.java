@@ -95,15 +95,21 @@ public class JUnitTester extends Tester {
                     GradedTest gt = methodSource.getJavaMethod().getAnnotation(GradedTest.class);
                     if (gt != null) {
                         try {
-                            results.add(switch (testExecutionResult.getStatus()) {
+                            Result result = switch (testExecutionResult.getStatus()) {
                                 case SUCCESSFUL ->
                                         Result.makeSuccess(gt.name(), gt.points(), baos.toString());
                                 case FAILED, ABORTED ->
                                         Result.makeTotalFailure(gt.name(), gt.points(), makeOutput(testExecutionResult));
-                            });
+                            };
+                            results.add(result.changeVisibility(gt.visibility()));
                             ps.close();
                         } catch (NoSuchElementException e) { // if get() failed
-                            results.add(Result.makeTotalFailure(gt.name(), gt.points(), "Test failed with no additional information"));
+                            results.add(
+                                    Result.makeTotalFailure(
+                                            gt.name(),
+                                            gt.points(),
+                                            "Test failed with no additional information")
+                                            .changeVisibility(gt.visibility()));
                         }
                     }
                 }

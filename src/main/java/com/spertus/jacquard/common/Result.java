@@ -109,6 +109,17 @@ public class Result {
     }
 
     /**
+     * Changes the visibility of this result and returns it.
+     *
+     * @param visibility the visibility
+     * @return this result with the new visibility
+     */
+    public Result changeVisibility(Visibility visibility) {
+        this.visibility = visibility;
+        return this;
+    }
+
+    /**
      * Makes a result indicating a total failure.
      *
      * @param name     the name
