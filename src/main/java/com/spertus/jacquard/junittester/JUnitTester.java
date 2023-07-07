@@ -3,7 +3,7 @@ package com.spertus.jacquard.junittester;
 import com.spertus.jacquard.common.*;
 
 import org.junit.platform.engine.*;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.discovery.*;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.*;
 import org.junit.platform.launcher.core.LauncherFactory;
@@ -12,7 +12,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -22,7 +21,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 public class JUnitTester extends Tester {
     private static final String TESTER_NAME = "JUnit Tester";
     private final List<? extends DiscoverySelector> selectors;
-    private PrintStream stdoutCapture;
 
     /**
      * Constructs a JUnit tester that will run tests in the specified classes.
@@ -53,6 +51,7 @@ public class JUnitTester extends Tester {
         launcher.registerTestExecutionListeners(listener);
         PrintStream originalOut = System.out;
         launcher.execute(request().selectors(selectors).build());
+
         System.setOut(originalOut);
         return listener.results;
     }
@@ -94,19 +93,20 @@ public class JUnitTester extends Tester {
                 if (source instanceof MethodSource methodSource) {
                     GradedTest gt = methodSource.getJavaMethod().getAnnotation(GradedTest.class);
                     if (gt != null) {
+                        String name = gt.name().isEmpty() ? testIdentifier.getDisplayName() : gt.name();
                         try {
                             Result result = switch (testExecutionResult.getStatus()) {
                                 case SUCCESSFUL ->
-                                        Result.makeSuccess(gt.name(), gt.points(), baos.toString());
+                                        Result.makeSuccess(name, gt.points(), baos.toString());
                                 case FAILED, ABORTED ->
-                                        Result.makeTotalFailure(gt.name(), gt.points(), makeOutput(testExecutionResult));
+                                        Result.makeTotalFailure(name, gt.points(), makeOutput(testExecutionResult));
                             };
                             results.add(result.changeVisibility(gt.visibility()));
                             ps.close();
                         } catch (NoSuchElementException e) { // if get() failed
                             results.add(
                                     Result.makeTotalFailure(
-                                            gt.name(),
+                                            name,
                                             gt.points(),
                                             "Test failed with no additional information")
                                             .changeVisibility(gt.visibility()));

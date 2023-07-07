@@ -19,11 +19,12 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 public @interface GradedTest {
     /**
-     * The name of the test.
+     * The name of the test. If this is not set, the name of the test method
+     * will be used in the corresponding {@link Result}.
      *
      * @return the name of the test
      */
-    String name() default "Unnamed Test";
+    String name() default "";
 
     /**
      * The number of points the test is worth.
