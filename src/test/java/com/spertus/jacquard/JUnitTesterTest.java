@@ -1,8 +1,9 @@
 package com.spertus.jacquard;
 
 import com.spertus.jacquard.common.*;
-import com.spertus.jacquard.junittester.SampleTest;
+import com.spertus.jacquard.junittester.sample.SampleTest;
 import com.spertus.jacquard.junittester.JUnitTester;
+import com.spertus.jacquard.junittester.visibility.VisibilityLevelsTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -46,7 +47,25 @@ public class JUnitTesterTest {
 
     @Test
     public void testPackage() {
-        JUnitTester tester = new JUnitTester("com.spertus.jacquard.junittester");
+        JUnitTester tester = new JUnitTester("com.spertus.jacquard.junittester.sample");
         checkResults(tester);
+    }
+
+    @Test
+    public void testVisibility() {
+        JUnitTester tester = new JUnitTester(VisibilityLevelsTest.class);
+        List<Result> results = tester.run();
+
+        for (Result result : results) {
+            Visibility expectedVisibility = switch (result.getName()) {
+                case "visibleTest1()", "visibleTest2()" -> Visibility.VISIBLE;
+                case "afterDueDateTest()" -> Visibility.AFTER_DUE_DATE;
+                case "afterPublishedTest()" -> Visibility.AFTER_PUBLISHED;
+                case "hiddenTest()" -> Visibility.HIDDEN;
+                default -> throw new AssertionError("Test had unexpected name: " + result.getName());
+            };
+            assertEquals(expectedVisibility, result.getVisibility(),
+                    "Visibility incorrect for " + result.getName());
+        }
     }
 }

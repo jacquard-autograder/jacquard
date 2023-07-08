@@ -35,7 +35,8 @@ public class JUnitTester extends Tester {
     }
 
     /**
-     * Constructs a JUnit tester that will run tests in the specified package.
+     * Constructs a JUnit tester that will run tests in the specified package
+     * and its subpackages.
      *
      * @param packageName the package containing the tests
      */
