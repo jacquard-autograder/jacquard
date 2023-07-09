@@ -1,6 +1,6 @@
 package com.spertus.jacquard;
 
-import com.spertus.jacquard.common.Result;
+import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.coverage.*;
 import org.junit.jupiter.api.Test;
 
@@ -14,9 +14,25 @@ public class CodeCoverageGraderTest {
     public void testLinearScorer() throws URISyntaxException {
         Scorer scorer = new LinearScorer(.5, 10);
         CodeCoverageGrader grader = new CodeCoverageGrader(scorer);
-        List<Result> results = grader.grade(TestUtilities.getTargetFromResource("good/PrimeChecker.java"));
+        List<Result> results = grader.grade(
+                TestUtilities.getTargetFromResource("com/spertus/jacquard/coverage/PrimeChecker.java"));
         assertEquals(1, results.size());
         assertEquals(7.75, results.get(0).getScore());
         assertEquals(10.0, results.get(0).getMaxScore());
+    }
+
+    @Test
+    public void testJacoco() throws Exception {
+        CodeCoverageGrader.runJacoco(
+                "com.spertus.jacquard.coverage.PrimeChecker",
+                "build/classes/java/test/com/spertus/jacquard/coverage/PrimeChecker.class",
+                com.spertus.jacquard.coverage.PrimeCheckerTest.class
+            );
+    }
+
+    @Test
+    public void testCoreTutorialPrime() throws Exception {
+        CoreTutorialPrime ctp = new CoreTutorialPrime(System.out);
+        ctp.execute("com.spertus.jacquard.coverage.PrimeChecker");
     }
 }

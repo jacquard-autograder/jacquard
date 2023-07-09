@@ -38,7 +38,7 @@ public class SyntaxConditionGraderTest {
 
     @Test
     public void testHasToStringOverrideWhenAbsent() throws URISyntaxException {
-        List<Result> results = overrideGrader.grade(TestUtilities.getTargetFromResource("good/PrimeChecker.java"));
+        List<Result> results = overrideGrader.grade(TestUtilities.getTargetFromResource("com/spertus/jacquard/coverage/PrimeChecker.java"));
         assertEquals(1, results.size());
         assertEquals(0, results.get(0).getScore());
         assertEquals(5.0, results.get(0).getMaxScore());

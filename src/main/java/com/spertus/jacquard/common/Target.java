@@ -118,6 +118,10 @@ public class Target {
         return className;
     }
 
+    public String toQualifiedName() {
+        return toPackageName() + "." + toClassName();
+    }
+
     /**
      * Gets this target's directory. This is the target itself if it is a
      * directory; otherwise, it is the parent directory of the file.
