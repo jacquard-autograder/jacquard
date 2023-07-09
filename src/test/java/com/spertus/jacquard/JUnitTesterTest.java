@@ -1,7 +1,7 @@
 package com.spertus.jacquard;
 
 import com.spertus.jacquard.common.*;
-import com.spertus.jacquard.junittester.sample.SampleTest;
+import com.spertus.jacquard.junittester.SampleTest;
 import com.spertus.jacquard.junittester.JUnitTester;
 import com.spertus.jacquard.junittester.visibility.VisibilityLevelsTest;
 import org.junit.jupiter.api.Test;
@@ -46,9 +46,16 @@ public class JUnitTesterTest {
     }
 
     @Test
-    public void testPackage() {
-        JUnitTester tester = new JUnitTester("com.spertus.jacquard.junittester.sample");
+    public void testPackageExcludingSubpackages() {
+        JUnitTester tester = new JUnitTester("com.spertus.jacquard.junittester", false);
         checkResults(tester);
+    }
+
+    @Test
+    public void testPackageIncludingSubpackages() {
+        JUnitTester tester = new JUnitTester("com.spertus.jacquard.junittester", true);
+        List<Result> results = tester.run();
+        assertEquals(7, results.size());
     }
 
     @Test

@@ -3,7 +3,6 @@ package com.spertus.jacquard.junittester.visibility;
 import com.spertus.jacquard.common.Visibility;
 import com.spertus.jacquard.junittester.GradedTest;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.discovery.PackageNameFilter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

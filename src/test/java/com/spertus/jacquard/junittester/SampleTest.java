@@ -1,7 +1,7 @@
-package com.spertus.jacquard.junittester.sample;
+package com.spertus.jacquard.junittester;
 
 import com.spertus.jacquard.common.Visibility;
-import com.spertus.jacquard.junittester.GradedTest;import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
