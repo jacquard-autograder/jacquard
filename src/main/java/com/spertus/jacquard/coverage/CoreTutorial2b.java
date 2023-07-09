@@ -14,26 +14,19 @@ package com.spertus.jacquard.coverage;
  *
  *******************************************************************************/
 
-import java.io.InputStream;
-import java.io.PrintStream;
-
-import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.analysis.*;
+import org.jacoco.core.data.*;
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.LoggerRuntime;
-import org.jacoco.core.runtime.RuntimeData;
+import org.jacoco.core.runtime.*;
+
+import java.io.*;
 
 /**
  * Example usage of the JaCoCo core API. In this tutorial a single target class
  * will be instrumented and executed. Finally the coverage information will be
  * dumped.
  */
-public final class CoreTutorial2 {
+public final class CoreTutorial2b {
 
     /**
      * The test target we want to see code coverage for.
@@ -65,7 +58,7 @@ public final class CoreTutorial2 {
      * @param out
      *            stream for outputs
      */
-    public CoreTutorial2(final PrintStream out) {
+    public CoreTutorial2b(final PrintStream out) {
         this.out = out;
     }
 
@@ -77,6 +70,7 @@ public final class CoreTutorial2 {
      */
     public void execute() throws Exception {
         final String cutName = ClassUnderTest.class.getName();
+        final String testClassName = TestClass.class.getName();
 
         // For instrumentation and runtime we need a IRuntime instance
         // to collect execution data:
@@ -88,6 +82,12 @@ public final class CoreTutorial2 {
         InputStream original = getTargetClass(cutName);
         final byte[] instrumented = instr.instrument(original, cutName);
         original.close();
+
+        // Let's do the same for the test class.
+        final Instrumenter instr2 = new Instrumenter(runtime);
+        InputStream original2 = getTargetClass(testClassName);
+        final byte[] instrumented2 = instr.instrument(original2, testClassName);
+        original2.close();
 
         // Now we're ready to run our instrumented class and need to startup the
         // runtime first:
@@ -168,7 +168,7 @@ public final class CoreTutorial2 {
      *             in case of errors
      */
     public static void main(final String[] args) throws Exception {
-        new CoreTutorial2(System.out).execute();
+        new CoreTutorial2b(System.out).execute();
     }
 
 }

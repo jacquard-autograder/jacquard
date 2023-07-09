@@ -1,4 +1,4 @@
-package com.spertus.jacquard.coverage;
+package com.spertus.jacquard.coveragetests;
 
 public class PrimeChecker {
     public boolean isPrime(final int n) {

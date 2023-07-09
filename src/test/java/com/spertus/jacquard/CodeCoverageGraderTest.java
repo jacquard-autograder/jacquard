@@ -2,6 +2,7 @@ package com.spertus.jacquard;
 
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.coverage.*;
+import com.spertus.jacquard.coveragetests.PrimeCheckerTest;
 import org.junit.jupiter.api.Test;
 
 import java.net.URISyntaxException;
@@ -15,7 +16,7 @@ public class CodeCoverageGraderTest {
         Scorer scorer = new LinearScorer(.5, 10);
         CodeCoverageGrader grader = new CodeCoverageGrader(scorer);
         List<Result> results = grader.grade(
-                TestUtilities.getTargetFromResource("com/spertus/jacquard/coverage/PrimeChecker.java"));
+                TestUtilities.getTargetFromResource("com/spertus/jacquard/coveragetests/PrimeChecker.java"));
         assertEquals(1, results.size());
         assertEquals(7.75, results.get(0).getScore());
         assertEquals(10.0, results.get(0).getMaxScore());
@@ -24,15 +25,15 @@ public class CodeCoverageGraderTest {
     @Test
     public void testJacoco() throws Exception {
         CodeCoverageGrader.runJacoco(
-                "com.spertus.jacquard.coverage.PrimeChecker",
+                "com.spertus.jacquard.coveragetests.PrimeChecker",
                 "build/classes/java/test/com/spertus/jacquard/coverage/PrimeChecker.class",
-                com.spertus.jacquard.coverage.PrimeCheckerTest.class
+                PrimeCheckerTest.class
             );
     }
 
     @Test
-    public void testCoreTutorialPrime() throws Exception {
-        CoreTutorialPrime ctp = new CoreTutorialPrime(System.out);
-        ctp.execute("com.spertus.jacquard.coverage.PrimeChecker");
+    public void testCoreTutorial5() throws Exception {
+        CoreTutorial5 ctp = new CoreTutorial5(System.out);
+        ctp.execute("com.spertus.jacquard.coveragetests.PrimeChecker", PrimeCheckerTest.class);
     }
 }

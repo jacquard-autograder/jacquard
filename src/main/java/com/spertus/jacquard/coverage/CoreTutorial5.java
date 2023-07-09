@@ -71,7 +71,7 @@ public final class CoreTutorial5 {
      *
      * @throws Exception in case of errors
      */
-    public void execute(final String cutName, final Class<? extends Runnable> testClass) throws Exception {
+    public void execute(final String cutName, final Class<?> testClass) throws Exception {
         //   final String cutName = ClassUnderTest.class.getName();
 
         // For instrumentation and runtime we need a IRuntime instance
