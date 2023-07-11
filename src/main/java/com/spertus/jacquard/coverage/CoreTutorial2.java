@@ -73,47 +73,39 @@ public final class CoreTutorial2 {
         this.out = out;
     }
 
+    private void runTests(Class<?> testClass) throws InstantiationException, IllegalAccessException {
+        final Runnable testInstance = (Runnable) testClass.newInstance();
+        testInstance.run();
+    }
+
     /**
      * Run this example.
      *
      * @throws Exception
      *             in case of errors
      */
-    public void execute() throws Exception {
-        final String cutName = ClassUnderTest.class.getName();
-
-        // For instrumentation and runtime we need a IRuntime instance
-        // to collect execution data:
+    public void execute(final String cutName, final String testClassName) throws Exception {
         final IRuntime runtime = new LoggerRuntime();
+        final Instrumenter instrumenter = new Instrumenter(runtime);
+        final MemoryClassLoader memoryClassLoader = new MemoryClassLoader();
 
-        // The Instrumenter creates a modified version of our test target class
-        // that contains additional probes for execution data recording:
-        final Instrumenter instr = new Instrumenter(runtime);
-
-        InputStream original = getTargetClass(cutName);
-        byte[] instrumented = instr.instrument(original, cutName);
-        original.close();
+        // Instrument classes and add to class loader.
+        try (InputStream is = getTargetClass(cutName)) {
+            byte[] instrumented = instrumenter.instrument(is, cutName);
+            memoryClassLoader.addDefinition(cutName, instrumented);
+        }
+        try (InputStream is = getTargetClass(testClassName)) {
+            byte[] instrumented = instrumenter.instrument(is, testClassName);
+            memoryClassLoader.addDefinition(testClassName, instrumented);
+        }
 
         // Now we're ready to run our instrumented class and need to startup the
         // runtime first:
         final RuntimeData data = new RuntimeData();
         runtime.startup(data);
 
-        // In this tutorial we use a special class loader to directly load the
-        // instrumented class definition from a byte[] instances.
-        final MemoryClassLoader memoryClassLoader = new MemoryClassLoader();
-        memoryClassLoader.addDefinition(cutName, instrumented);
-        final Class<?> targetClass = memoryClassLoader.loadClass(cutName);
-
-        // Now we do the same thing for the other class.
-        final String testClassName = TestClass.class.getName();
-        original = getTargetClass(testClassName);
-        instrumented = instr.instrument(original, testClassName);
-        original.close();
-        memoryClassLoader.addDefinition(testClassName, instrumented);
-        final Class<?> testClass = memoryClassLoader.loadClass(testClassName);
-
         // Here we execute our test class through its Runnable interface:
+        final Class<?> testClass = memoryClassLoader.loadClass(testClassName);
         final Runnable testInstance = (Runnable) testClass.newInstance();
         testInstance.run();
 
@@ -128,9 +120,9 @@ public final class CoreTutorial2 {
         // information:
         final CoverageBuilder coverageBuilder = new CoverageBuilder();
         final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
-        original = getTargetClass(cutName);
-        analyzer.analyzeClass(original, cutName);
-        original.close();
+        try (InputStream is = getTargetClass(cutName)) {
+            analyzer.analyzeClass(is, cutName);
+        }
 
         // Let's dump some metrics and line coverage information:
         for (final IClassCoverage cc : coverageBuilder.getClasses()) {
@@ -181,7 +173,7 @@ public final class CoreTutorial2 {
      *             in case of errors
      */
     public static void main(final String[] args) throws Exception {
-        new CoreTutorial(System.out).execute();
+        new CoreTutorial2(System.out).execute(ClassUnderTest.class.getName(), TestClass.class.getName());
     }
 
 }
