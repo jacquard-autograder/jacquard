@@ -49,7 +49,7 @@ public class JUnitTester extends Tester {
         selectors = List.of(selectPackage(packageName));
         filter = includeSubpackages ? null :
                 ClassNameFilter.excludeClassNamePatterns(
-                        packageName + "\\.[^.]*\\..*");
+                        packageName + "\\.[^.]+\\..*");
     }
 
     @Override
