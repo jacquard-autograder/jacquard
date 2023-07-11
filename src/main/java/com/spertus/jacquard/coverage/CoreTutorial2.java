@@ -1,4 +1,7 @@
-// This version has separate class under test and test class
+// This version of CoreTutorial separates the class under test (ClassUnderTest)
+// from the test class (TestClass) that implements Runnable.
+// No data is collected.
+
 package com.spertus.jacquard.coverage;
 
 /*******************************************************************************
@@ -34,6 +37,15 @@ import org.jacoco.core.runtime.RuntimeData;
  * dumped.
  */
 public final class CoreTutorial2 {
+    /**
+     * The class with the tests of the target class.
+     */
+    public static class TestClass implements Runnable {
+        @Override
+        public void run() {
+            new ClassUnderTest().isPrime(7);
+        }
+    }
 
     /**
      * The test target we want to see code coverage for.
@@ -46,14 +58,6 @@ public final class CoreTutorial2 {
                 }
             }
             return true;
-        }
-
-    }
-
-    public static class TestClass implements Runnable {
-        @Override
-        public void run() {
-            new ClassUnderTest().isPrime(7);
         }
     }
 
@@ -85,8 +89,9 @@ public final class CoreTutorial2 {
         // The Instrumenter creates a modified version of our test target class
         // that contains additional probes for execution data recording:
         final Instrumenter instr = new Instrumenter(runtime);
+
         InputStream original = getTargetClass(cutName);
-        final byte[] instrumented = instr.instrument(original, cutName);
+        byte[] instrumented = instr.instrument(original, cutName);
         original.close();
 
         // Now we're ready to run our instrumented class and need to startup the
@@ -100,8 +105,16 @@ public final class CoreTutorial2 {
         memoryClassLoader.addDefinition(cutName, instrumented);
         final Class<?> targetClass = memoryClassLoader.loadClass(cutName);
 
+        // Now we do the same thing for the other class.
+        final String testClassName = TestClass.class.getName();
+        original = getTargetClass(testClassName);
+        instrumented = instr.instrument(original, testClassName);
+        original.close();
+        memoryClassLoader.addDefinition(testClassName, instrumented);
+        final Class<?> testClass = memoryClassLoader.loadClass(testClassName);
+
         // Here we execute our test class through its Runnable interface:
-        final Runnable testInstance = (Runnable) TestClass.class.newInstance();
+        final Runnable testInstance = (Runnable) testClass.newInstance();
         testInstance.run();
 
         // At the end of test execution we collect execution data and shutdown
@@ -168,7 +181,7 @@ public final class CoreTutorial2 {
      *             in case of errors
      */
     public static void main(final String[] args) throws Exception {
-        new CoreTutorial2(System.out).execute();
+        new CoreTutorial(System.out).execute();
     }
 
 }
