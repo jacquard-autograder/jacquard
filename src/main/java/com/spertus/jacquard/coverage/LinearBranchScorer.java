@@ -18,8 +18,8 @@ public class LinearBranchScorer extends LinearScorer {
     }
 
     @Override
-    protected String getMessage(ClassInfo info) {
+    protected String getMessage(double branchCoverage, double lineCoverage) {
         return String.format("Branch coverage is %.0f%%",
-                info.branchCoverage());
+                branchCoverage);
     }
 }

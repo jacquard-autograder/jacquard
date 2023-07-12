@@ -64,23 +64,24 @@ public class LinearScorer extends Scorer {
     }
 
     @Override
-    public Result getResult(ClassInfo info) {
-        double points = score(info);
+    public Result getResult(double branchCoverage, double lineCoverage) {
+        double points = score(branchCoverage, lineCoverage);
         return new Result(
                 "Code coverage",
                 points,
                 maxScore,
-                getMessage(info));
+                getMessage(branchCoverage, lineCoverage));
     }
 
     /**
      * Gets a message summarizing information about the coverage being tested.
      *
-     * @param info information about the class being tested
+     * @param branchCoverage the branch coverage ratio [0, 1]
+     * @param lineCoverage   the line coverage ratio [0, 1]
      * @return a message
      */
-    protected String getMessage(ClassInfo info) {
+    protected String getMessage(double branchCoverage, double lineCoverage) {
         return String.format("Branch coverage is %.0f%% and line coverage is %.0f%%",
-                100 * info.branchCoverage(), 100 * info.lineCoverage());
+                100 * branchCoverage, 100 * lineCoverage);
     }
 }
