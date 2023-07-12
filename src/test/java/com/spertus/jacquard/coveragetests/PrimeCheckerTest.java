@@ -1,10 +1,11 @@
 package com.spertus.jacquard.coveragetests;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Tag("IndirectTest")
 public class PrimeCheckerTest {
     @Test
     public void testIs7Prime() {

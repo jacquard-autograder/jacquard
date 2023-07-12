@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class MemoryClassLoader extends ClassLoader {
 
-    private final Map<String, byte[]> definitions = new HashMap<String, byte[]>();
+    private final Map<String, byte[]> definitions = new HashMap<>();
 
     /**
      * Add a in-memory representation of a class.
