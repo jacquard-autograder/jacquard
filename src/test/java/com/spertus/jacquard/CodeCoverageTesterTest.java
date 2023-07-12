@@ -32,8 +32,9 @@ public class CodeCoverageGraderTest {
     }
 
     @Test
-    public void testCoreTutorial5() throws Exception {
-        CoreTutorial5 ctp = new CoreTutorial5(System.out);
-        ctp.execute("com.spertus.jacquard.coveragetests.PrimeChecker", PrimeCheckerTest.class);
+    public void testCoreTutorial3() throws Exception {
+        CoreTutorial3 ctp = new CoreTutorial3(System.out);
+        ctp.execute(com.spertus.jacquard.coveragetests.PrimeChecker.class,
+                com.spertus.jacquard.coveragetests.PrimeCheckerTest.class);
     }
 }

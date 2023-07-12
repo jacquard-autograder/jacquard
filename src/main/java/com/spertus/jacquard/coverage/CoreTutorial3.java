@@ -1,3 +1,7 @@
+// This version of CoreTutorial separates the class under test (ClassUnderTest)
+// from the test class (TestClass) that implements Runnable.
+// No data is collected.
+
 package com.spertus.jacquard.coverage;
 
 /*******************************************************************************
@@ -13,37 +17,44 @@ package com.spertus.jacquard.coverage;
  *
  *******************************************************************************/
 
-import java.io.InputStream;
-import java.io.PrintStream;
-
-import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.CoverageBuilder;
-import org.jacoco.core.analysis.IClassCoverage;
-import org.jacoco.core.analysis.ICounter;
-import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.analysis.*;
+import org.jacoco.core.data.*;
 import org.jacoco.core.instr.Instrumenter;
-import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.runtime.LoggerRuntime;
-import org.jacoco.core.runtime.RuntimeData;
+import org.jacoco.core.runtime.*;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.core.LauncherFactory;
+
+import java.io.*;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 /**
  * Example usage of the JaCoCo core API. In this tutorial a single target class
  * will be instrumented and executed. Finally the coverage information will be
  * dumped.
  */
-public final class CoreTutorialPrime {
+public final class CoreTutorial3 {
+    /**
+     * The class with the tests of the target class.
+     */
+    public static class TestClass {
+        @Test
+        public void run() {
+            ClassUnderTest primeFinder = new ClassUnderTest();
+            assertTrue(primeFinder.isPrime(7));
+        }
+    }
 
     /**
      * The test target we want to see code coverage for.
      */
-    public static class TestTarget implements Runnable {
-
-        public void run() {
-            isPrime(7);
-        }
-
-        private boolean isPrime(final int n) {
+    public static class ClassUnderTest  {
+        public boolean isPrime(final int n) {
             for (int i = 2; i * i <= n; i++) {
                 if ((n ^ i) == 0) {
                     return false;
@@ -51,7 +62,6 @@ public final class CoreTutorialPrime {
             }
             return true;
         }
-
     }
 
     private final PrintStream out;
@@ -62,8 +72,28 @@ public final class CoreTutorialPrime {
      * @param out
      *            stream for outputs
      */
-    public CoreTutorialPrime(final PrintStream out) {
+    public CoreTutorial3(final PrintStream out) {
         this.out = out;
+    }
+
+    private void runTests(Class<?> testClass) throws InstantiationException, IllegalAccessException {
+        final Runnable testInstance = (Runnable) testClass.newInstance();
+        testInstance.run();
+    }
+
+    private void runJUnitTests(MemoryClassLoader memoryClassLoader, Class<?>... testClasses) {
+        final List<? extends DiscoverySelector> selectors =
+                Arrays.stream(testClasses)
+                        .map(DiscoverySelectors::selectClass)
+                        .toList();
+        CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(Optional.ofNullable(memoryClassLoader));
+        executor.invoke(() -> executeTests(selectors));
+    }
+
+    private static int executeTests(List<? extends DiscoverySelector> selectors) {
+        Launcher launcher = LauncherFactory.create();
+        launcher.execute(request().selectors(selectors).build());
+        return 0;
     }
 
     /**
@@ -72,33 +102,32 @@ public final class CoreTutorialPrime {
      * @throws Exception
      *             in case of errors
      */
-    public void execute(String targetName) throws Exception {
+    public void execute(final Class<?> classUnderTest, Class<?> testClass) throws Exception {
+        final String cutName = classUnderTest.getName();
+        final String testClassName = testClass.getName();
 
-        // For instrumentation and runtime we need a IRuntime instance
-        // to collect execution data:
         final IRuntime runtime = new LoggerRuntime();
+        final Instrumenter instrumenter = new Instrumenter(runtime);
+        final MemoryClassLoader memoryClassLoader = new MemoryClassLoader();
 
-        // The Instrumenter creates a modified version of our test target class
-        // that contains additional probes for execution data recording:
-        final Instrumenter instr = new Instrumenter(runtime);
-        InputStream original = getTargetClass(targetName);
-        final byte[] instrumented = instr.instrument(original, targetName);
-        original.close();
+        // Instrument classes and add to class loader.
+        try (InputStream is = getTargetClass(cutName)) {
+            byte[] instrumented = instrumenter.instrument(is, cutName);
+            memoryClassLoader.addDefinition(cutName, instrumented);
+        }
+        try (InputStream is = getTargetClass(testClassName)) {
+            byte[] instrumented = instrumenter.instrument(is, testClassName);
+            memoryClassLoader.addDefinition(testClassName, instrumented);
+        }
 
         // Now we're ready to run our instrumented class and need to startup the
         // runtime first:
         final RuntimeData data = new RuntimeData();
         runtime.startup(data);
 
-        // In this tutorial we use a special class loader to directly load the
-        // instrumented class definition from a byte[] instances.
-        final MemoryClassLoader memoryClassLoader = new MemoryClassLoader();
-        memoryClassLoader.addDefinition(targetName, instrumented);
-        final Class<?> targetClass = memoryClassLoader.loadClass(targetName);
-
-        // Here we execute our test target class through its Runnable interface:
-        final Runnable targetInstance = (Runnable) targetClass.newInstance();
-        targetInstance.run();
+        final Class<?> instrumentedTestClass = memoryClassLoader.loadClass(testClassName);
+        //runTests(testClass);
+        runJUnitTests(memoryClassLoader, instrumentedTestClass);
 
         // At the end of test execution we collect execution data and shutdown
         // the runtime:
@@ -111,9 +140,9 @@ public final class CoreTutorialPrime {
         // information:
         final CoverageBuilder coverageBuilder = new CoverageBuilder();
         final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
-        original = getTargetClass(targetName);
-        analyzer.analyzeClass(original, targetName);
-        original.close();
+        try (InputStream is = getTargetClass(cutName)) {
+            analyzer.analyzeClass(is, cutName);
+        }
 
         // Let's dump some metrics and line coverage information:
         for (final IClassCoverage cc : coverageBuilder.getClasses()) {
@@ -164,7 +193,7 @@ public final class CoreTutorialPrime {
      *             in case of errors
      */
     public static void main(final String[] args) throws Exception {
-        new CoreTutorial(System.out).execute();
+        new CoreTutorial3(System.out).execute(ClassUnderTest.class, TestClass.class);
     }
 
 }
