@@ -75,6 +75,7 @@ dependencies {
 }
 
 tasks.register('installCheckstyle', Download) {
+    // If checkstyle version is upgraded, update constants in CheckstyleGrader.java.
     src 'https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.1/checkstyle-10.12.1-all.jar'
     dest 'lib'
     overwrite false

@@ -8,6 +8,8 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.*;
 import java.io.*;
+import java.net.*;
+import java.nio.channels.*;
 import java.util.*;
 
 /**
@@ -17,6 +19,12 @@ import java.util.*;
  */
 public class CheckstyleGrader extends Grader {
     private static final String GRADER_NAME = "Checkstyle";
+    private static final String CHECKSTYLE_VERSION = "10.12.1";
+    private static final String CHECKSTYLE_JAR = "checkstyle-" + CHECKSTYLE_VERSION + "-all.jar";
+    private static final String CHECKSTYLE_URL = String.format(
+            "https://github.com/checkstyle/checkstyle/releases/download/checkstyle-%1s/%2s",
+            CHECKSTYLE_VERSION, CHECKSTYLE_JAR);
+    private static final String CHECKSTYLE_SUBDIR = "lib";
     private static final String RESULT_FILE_NAME = "checkstyle-results.xml";
     private static final List<String> FIRST_COMMAND_PARTS = List.of(
             "java",
@@ -34,9 +42,9 @@ public class CheckstyleGrader extends Grader {
     /**
      * Creates a checkstyle grader.
      *
-     * @param name the name of the grader
-     * @param ruleFile the path to the rule file
-     * @param penalty the penalty per violation
+     * @param name      the name of the grader
+     * @param ruleFile  the path to the rule file
+     * @param penalty   the penalty per violation
      * @param maxPoints the maximum number of points if no violations occur
      */
     public CheckstyleGrader(String name, String ruleFile, double penalty, double maxPoints) {
@@ -49,8 +57,8 @@ public class CheckstyleGrader extends Grader {
     /**
      * Creates a checkstyle grader.
      *
-     * @param ruleFile the path to the rule file
-     * @param penalty the penalty per violation
+     * @param ruleFile  the path to the rule file
+     * @param penalty   the penalty per violation
      * @param maxPoints the maximum number of points if no violations occur
      */
     public CheckstyleGrader(String ruleFile, double penalty, double maxPoints) {
@@ -93,12 +101,32 @@ public class CheckstyleGrader extends Grader {
         return errorNodes.getLength();
     }
 
-    private void runCheckstyle(Target target) {
+    private void downloadCheckstyleIfNeeded() throws InternalException {
+        // It will already be downloaded if the recommended build.gradle file
+        // or Dockerfile is used.
+        try {
+            File file = new File(CHECKSTYLE_SUBDIR + "/" + CHECKSTYLE_JAR);
+            if (!file.exists()) {
+                // https://www.baeldung.com/java-download-file#using-nio
+                ReadableByteChannel readableByteChannel =
+                        Channels.newChannel(new URL(CHECKSTYLE_URL).openStream());
+                try (FileOutputStream fileOutputStream = new FileOutputStream(CHECKSTYLE_SUBDIR + "/" + CHECKSTYLE_JAR)) {
+                    fileOutputStream.getChannel()
+                            .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+                }
+            }
+        } catch (IOException e) {
+            throw new InternalException("Unable to download checkstyle jar");
+        }
+    }
+
+    private void runCheckstyle(Target target) throws InternalException {
         // Delete old output file.
         File file = new File(RESULT_FILE_NAME);
         file.delete();
 
         // Run checkstyle.
+        downloadCheckstyleIfNeeded();
         List<String> arguments = new ArrayList<>(FIRST_COMMAND_PARTS);
         arguments.add(String.format(CONFIG_TEMPLATE, ruleFile));
         arguments.add(target.toPathString());
@@ -115,7 +143,8 @@ public class CheckstyleGrader extends Grader {
         }
     }
 
-    private Result interpretOutput() throws IOException, SAXException, ParserConfigurationException {
+    private Result interpretOutput() throws
+            IOException, SAXException, ParserConfigurationException {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         File file = new File(RESULT_FILE_NAME);
         Document doc = builder.parse(file);
@@ -139,7 +168,8 @@ public class CheckstyleGrader extends Grader {
         try {
             runCheckstyle(target);
             return List.of(interpretOutput());
-        } catch (IOException | ParserConfigurationException | SAXException e) {
+        } catch (IOException | ParserConfigurationException |
+                 SAXException e) {
             return makeExceptionResultList(
                     new InternalException("Internal error when running Checkstyle", e)
             );
