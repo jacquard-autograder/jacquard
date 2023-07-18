@@ -4,6 +4,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.spertus.jacquard.common.*;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Syntax-based graders that make use of the linked
@@ -20,8 +21,8 @@ public abstract class SyntaxGrader extends Grader {
     }
 
     @Override
-    public List<Result> gradeInternal(Target target) {
-        return grade(target.toCompilationUnit());
+    public Callable<List<Result>> getCallable(final Target target) {
+        return () -> grade(target.toCompilationUnit());
     }
 
     /**

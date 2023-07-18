@@ -7,6 +7,7 @@ import net.sourceforge.pmd.lang.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 /**
@@ -139,18 +140,20 @@ public class PmdGrader extends Grader {
     }
 
     @Override
-    public List<Result> gradeInternal(Target target) {
-        try (PmdAnalysis analysis = createAnalysis()) {
-            boolean added = analysis.files().addFileOrDirectory(target.toPath());
-            if (!added) {
-                throw new ClientException("File or directory cannot be found: " + target.toPathString());
+    public Callable<List<Result>> getCallable(final Target target) {
+        return () -> {
+            try (PmdAnalysis analysis = createAnalysis()) {
+                boolean added = analysis.files().addFileOrDirectory(target.toPath());
+                if (!added) {
+                    throw new ClientException("File or directory cannot be found: " + target.toPathString());
+                }
+                Report report = analysis.performAnalysisAndCollectReport();
+                return produceResults(report);
+            } catch (IOException e) {
+                return makeExceptionResultList(
+                        new ClientException("File or directory cannot be found: " + target.toPathString()));
             }
-            Report report = analysis.performAnalysisAndCollectReport();
-            return produceResults(report);
-        } catch (IOException e) {
-            return makeExceptionResultList(
-                    new ClientException("File or directory cannot be found: " + target.toPathString()));
-        }
+        };
     }
 
     private String violationToString(RuleViolation violation) {

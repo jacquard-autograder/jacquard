@@ -1,13 +1,18 @@
 package com.spertus.jacquard.common;
 
-import com.spertus.jacquard.exceptions.InternalException;
+import com.spertus.jacquard.exceptions.*;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * The superclass of all graders.
  */
 public abstract class Grader {
+    private static final long TIMEOUT_MS = 1000;
+    private static final ScheduledExecutorService scheduler = Executors
+            .newScheduledThreadPool(1);
+
     private final String name;
 
     /**
@@ -43,17 +48,24 @@ public abstract class Grader {
         List<Result> results = new ArrayList<>();
         try {
             for (Target target : targets) {
-                results.addAll(gradeInternal(target));
+                ScheduledFuture<List<Result>> future = scheduler.schedule(
+                        getCallable(target), TIMEOUT_MS, TimeUnit.MILLISECONDS);
+                results.addAll(future.get());
             }
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+     //       results.add(makeExceptionResult(
+     //               new ClientException("Operation timed out")));
+        } catch (ExecutionException e) {
+            // This currently returns after the first exception is thrown.
             results.add(
                     makeExceptionResult(
-                            new InternalException("Internal error when running Checkstyle", e)));
+                            new InternalException("Internal error", e.getCause())));
         }
         return results;
     }
 
-    public abstract List<Result> gradeInternal(Target target) throws Exception;
+    public abstract Callable<List<Result>> getCallable(Target target);
 
     /**
      * Creates a one-element list holding a result indicating complete success.

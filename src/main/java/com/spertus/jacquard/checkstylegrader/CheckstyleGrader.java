@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.channels.*;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 /**
  * A grader that runs checkstyle.
@@ -164,9 +165,10 @@ public class CheckstyleGrader extends Grader {
     }
 
     @Override
-    public List<Result> gradeInternal(Target target)
-            throws IOException, ParserConfigurationException, SAXException {
-        runCheckstyle(target);
-        return List.of(interpretOutput());
+    public Callable<List<Result>> getCallable(final Target target) {
+        return () -> {
+            runCheckstyle(target);
+            return List.of(interpretOutput());
+        };
     }
 }
