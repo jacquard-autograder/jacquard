@@ -139,7 +139,7 @@ public class PmdGrader extends Grader {
     }
 
     @Override
-    public List<Result> grade(Target target) {
+    public List<Result> gradeInternal(Target target) {
         try (PmdAnalysis analysis = createAnalysis()) {
             boolean added = analysis.files().addFileOrDirectory(target.toPath());
             if (!added) {
@@ -148,7 +148,8 @@ public class PmdGrader extends Grader {
             Report report = analysis.performAnalysisAndCollectReport();
             return produceResults(report);
         } catch (IOException e) {
-            throw new ClientException("File or directory cannot be found: " + target.toPathString());
+            return makeExceptionResultList(
+                    new ClientException("File or directory cannot be found: " + target.toPathString()));
         }
     }
 

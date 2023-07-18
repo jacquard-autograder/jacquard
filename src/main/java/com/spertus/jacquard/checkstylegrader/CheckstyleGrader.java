@@ -164,15 +164,9 @@ public class CheckstyleGrader extends Grader {
     }
 
     @Override
-    public List<Result> grade(Target target) {
-        try {
-            runCheckstyle(target);
-            return List.of(interpretOutput());
-        } catch (IOException | ParserConfigurationException |
-                 SAXException e) {
-            return makeExceptionResultList(
-                    new InternalException("Internal error when running Checkstyle", e)
-            );
-        }
+    public List<Result> gradeInternal(Target target)
+            throws IOException, ParserConfigurationException, SAXException {
+        runCheckstyle(target);
+        return List.of(interpretOutput());
     }
 }

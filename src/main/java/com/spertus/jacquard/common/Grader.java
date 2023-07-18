@@ -1,5 +1,7 @@
 package com.spertus.jacquard.common;
 
+import com.spertus.jacquard.exceptions.InternalException;
+
 import java.util.*;
 
 /**
@@ -32,18 +34,32 @@ public abstract class Grader {
     }
 
     /**
-     * Grades a single target.
+     * Grades the provided targets.
      *
-     * @param target the target
+     * @param targets the targets
      * @return the results
      */
-    public abstract List<Result> grade(Target target);
+    public List<Result> grade(Target... targets) {
+        List<Result> results = new ArrayList<>();
+        try {
+            for (Target target : targets) {
+                results.addAll(gradeInternal(target));
+            }
+        } catch (Exception e) {
+            results.add(
+                    makeExceptionResult(
+                            new InternalException("Internal error when running Checkstyle", e)));
+        }
+        return results;
+    }
+
+    public abstract List<Result> gradeInternal(Target target) throws Exception;
 
     /**
      * Creates a one-element list holding a result indicating complete success.
      *
      * @param maxPoints the maximum number of points, all of which are earned
-     * @param message any message to include
+     * @param message   any message to include
      * @return the result
      */
     protected List<Result> makeSuccessResultList(double maxPoints, String message) {
@@ -54,7 +70,7 @@ public abstract class Grader {
      * Creates a result for a fully successful outcome.
      *
      * @param maxPoints the maximum number of points, all of which are awarded
-     * @param message any message to include
+     * @param message   any message to include
      * @return the result
      */
     protected Result makeSuccessResult(double maxPoints, String message) {
@@ -66,7 +82,7 @@ public abstract class Grader {
      * unsuccessful outcome.
      *
      * @param maxPoints the maximum number of points, none of which are awarded
-     * @param message any message to include
+     * @param message   any message to include
      * @return the result
      */
     protected List<Result> makeFailureResultList(double maxPoints, String message) {
@@ -77,7 +93,7 @@ public abstract class Grader {
      * Creates a result for a completely unsuccessful outcome.
      *
      * @param maxPoints the maximum number of points, none of which are earned
-     * @param message any message to include
+     * @param message   any message to include
      * @return the result
      */
     protected Result makeFailureResult(double maxPoints, String message) {
@@ -109,9 +125,9 @@ public abstract class Grader {
     /**
      * Creates a result indicating partial credit.
      *
-     * @param points the number of points awarded
+     * @param points    the number of points awarded
      * @param maxPoints the maximum possible points
-     * @param message any message
+     * @param message   any message
      * @return the result
      */
     protected Result makePartialCreditResult(double points, double maxPoints, String message) {

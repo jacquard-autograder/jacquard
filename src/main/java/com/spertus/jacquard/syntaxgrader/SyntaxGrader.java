@@ -20,7 +20,7 @@ public abstract class SyntaxGrader extends Grader {
     }
 
     @Override
-    public List<Result> grade(Target target) {
+    public List<Result> gradeInternal(Target target) {
         return grade(target.toCompilationUnit());
     }
 
