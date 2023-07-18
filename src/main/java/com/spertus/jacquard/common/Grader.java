@@ -9,9 +9,9 @@ import java.util.concurrent.*;
  * The superclass of all graders.
  */
 public abstract class Grader {
-    private static final long TIMEOUT_MS = 1000;
+    private static final long TIMEOUT_MS = 10000;
     private static final ScheduledExecutorService scheduler = Executors
-            .newScheduledThreadPool(1);
+            .newScheduledThreadPool(5);
 
     private final String name;
 
@@ -52,15 +52,19 @@ public abstract class Grader {
                         getCallable(target), TIMEOUT_MS, TimeUnit.MILLISECONDS);
                 results.addAll(future.get());
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
+            /*
      //       results.add(makeExceptionResult(
      //               new ClientException("Operation timed out")));
-        } catch (ExecutionException e) {
+  //      } catch (ExecutionException e) {
             // This currently returns after the first exception is thrown.
-            results.add(
+     //       results.add(
                     makeExceptionResult(
                             new InternalException("Internal error", e.getCause())));
+
+        }
+             */
         }
         return results;
     }
