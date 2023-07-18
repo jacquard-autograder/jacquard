@@ -10,8 +10,7 @@ import java.util.concurrent.*;
  */
 public abstract class Grader {
     private static final long TIMEOUT_MS = 10000;
-    private static final ScheduledExecutorService scheduler = Executors
-            .newScheduledThreadPool(5);
+    ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private final String name;
 
@@ -48,23 +47,19 @@ public abstract class Grader {
         List<Result> results = new ArrayList<>();
         try {
             for (Target target : targets) {
-                ScheduledFuture<List<Result>> future = scheduler.schedule(
-                        getCallable(target), TIMEOUT_MS, TimeUnit.MILLISECONDS);
-                results.addAll(future.get());
+                Future<List<Result>> future = executor.submit(getCallable(target));
+                results.addAll(future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS));
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-            /*
-     //       results.add(makeExceptionResult(
-     //               new ClientException("Operation timed out")));
-  //      } catch (ExecutionException e) {
-            // This currently returns after the first exception is thrown.
-     //       results.add(
+        } catch (TimeoutException e) {
+            results.add(makeExceptionResult(
+                    new ClientException("Operation timed out")));
+        } catch (InterruptedException | ExecutionException e) {
+            // This currently returns after the first exception is thrown,
+            // rather than continuing to other targets.
+            results.add(
                     makeExceptionResult(
-                            new InternalException("Internal error", e.getCause())));
-
-        }
-             */
+                            new InternalException(
+                                    "Internal error", e.getCause())));
         }
         return results;
     }
