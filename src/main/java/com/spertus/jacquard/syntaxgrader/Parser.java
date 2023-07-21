@@ -30,7 +30,7 @@ public class Parser {
     }
 
     /**
-     * Constructs a parser with the given language level.
+     * Constructs a parser with the specified language level.
      *
      * @param languageLevel the language level
      */

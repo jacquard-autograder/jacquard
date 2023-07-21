@@ -1,12 +1,12 @@
 package com.spertus.jacquard;
 
-import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.expr.*;
-import com.spertus.jacquard.common.Result;
+import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.exceptions.ClientException;
 import com.spertus.jacquard.syntaxgrader.ExpressionCounter;
 import org.junit.jupiter.api.*;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,11 +16,14 @@ public class ExpressionCounterTest {
     private static final String NAME = "name";
     private static final double MAX_SCORE = 10.0;
 
+    private Autograder autograder = new Autograder();
     private ExpressionCounter counter;
+    private Target expressionTarget;
 
     @BeforeEach
-    public void setup() throws ClientException {
+    public void setup() throws ClientException, URISyntaxException {
         counter = new ExpressionCounter(NAME, MAX_SCORE, 1, 2, InstanceOfExpr.class);
+        expressionTarget = TestUtilities.getTargetFromResource("good/Expressions.java");
     }
 
     @Test
@@ -39,64 +42,51 @@ public class ExpressionCounterTest {
     }
 
     private void testHelper(
-            CompilationUnit cu,
             int actualCount,
             int minCount,
             int maxCount,
             Class<? extends Expression> expressionType
     ) throws ClientException {
         ExpressionCounter counter = new ExpressionCounter(
-                expressionType.getSimpleName() + " counter",
                 MAX_SCORE, minCount, maxCount, expressionType);
-        List<Result> results = counter.grade(cu);
+        List<Result> results = autograder.grade(counter, expressionTarget);
         assertEquals(1, results.size());
         assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).getScore());
     }
 
-    private void testTooFew(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) throws ClientException {
-        testHelper(cu, actualCount, actualCount + 1, actualCount + 10, expressionType);
-        testHelper(cu, actualCount, actualCount + 1, Integer.MAX_VALUE, expressionType);
+    private void testTooFew(int actualCount, Class<? extends Expression> expressionType) throws ClientException {
+        testHelper(actualCount, actualCount + 1, actualCount + 10, expressionType);
+        testHelper(actualCount, actualCount + 1, Integer.MAX_VALUE, expressionType);
     }
 
     // actualCount must be > 0
-    private void testTooMany(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) throws ClientException {
-        testHelper(cu, actualCount, 0, actualCount - 1, expressionType);
+    private void testTooMany(int actualCount, Class<? extends Expression> expressionType) throws ClientException {
+        testHelper(actualCount, 0, actualCount - 1, expressionType);
     }
 
-    private void testRightNumber(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) throws ClientException {
-        testHelper(cu, actualCount, 0, actualCount, expressionType);
-        testHelper(cu, actualCount, actualCount, Integer.MAX_VALUE, expressionType);
+    private void testRightNumber(int actualCount, Class<? extends Expression> expressionType) throws ClientException {
+        testHelper(actualCount, 0, actualCount, expressionType);
+        testHelper(actualCount, actualCount, Integer.MAX_VALUE, expressionType);
     }
 
-    private void testAllPossibilities(CompilationUnit cu, int actualCount, Class<? extends Expression> expressionType) throws ClientException {
-        testTooFew(cu, actualCount, expressionType);
-        testTooMany(cu, actualCount, expressionType);
-        testRightNumber(cu, actualCount, expressionType);
+    private void testAllPossibilities(int actualCount, Class<? extends Expression> expressionType) throws ClientException {
+        testTooFew(actualCount, expressionType);
+        testTooMany(actualCount, expressionType);
+        testRightNumber(actualCount, expressionType);
     }
 
     @Test
     public void testInstanceOfExprCounter() throws ClientException {
-        CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
-                if (x instanceof String) {
-                    System.out.println(x);
-                }
-                """);
-        testAllPossibilities(cu, 1, InstanceOfExpr.class);
+        testAllPossibilities(1, InstanceOfExpr.class);
     }
 
     @Test
     public void testBinaryExprCounter() throws ClientException {
-        CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
-                System.out.println(x + y + 1 + 2);
-                """);
-        testAllPossibilities(cu, 3, BinaryExpr.class);
+        testAllPossibilities(3, BinaryExpr.class);
     }
 
     @Test
     public void testUnaryExprCounter() throws ClientException {
-        CompilationUnit cu = TestUtilities.parseProgramFromStatements("""
-                System.out.println(-(-x));
-                """);
-        testAllPossibilities(cu, 2, UnaryExpr.class);
+        testAllPossibilities(2, UnaryExpr.class);
     }
 }

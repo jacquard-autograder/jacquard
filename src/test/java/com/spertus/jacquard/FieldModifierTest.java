@@ -11,6 +11,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FieldModifierTest {
+    Autograder autograder = new Autograder();
+
     @Test
     public void testWithPenalizeMissingFields() throws URISyntaxException {
         FieldModifierChecker checker = FieldModifierChecker.makeChecker("Private/final check", 1.0,
@@ -19,7 +21,7 @@ public class FieldModifierTest {
                 List.of(),
                 true);
         Target target = TestUtilities.getTargetFromResource("good/Mob.java");
-        List<Result> results = checker.grade(target);
+        List<Result> results = autograder.grade(checker, target);
         assertEquals(6, results.size());
         assertEquals(4.0, TestUtilities.getTotalScore(results));
     }
@@ -32,7 +34,7 @@ public class FieldModifierTest {
                 List.of(),
                 false);
         Target target = TestUtilities.getTargetFromResource("good/Mob.java");
-        List<Result> results = checker.grade(target);
+        List<Result> results = autograder.grade(checker, target);
         assertEquals(5, results.size());
         assertEquals(4.0, TestUtilities.getTotalScore(results));
     }

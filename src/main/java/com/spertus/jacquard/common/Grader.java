@@ -9,9 +9,6 @@ import java.util.concurrent.*;
  * The superclass of all graders.
  */
 public abstract class Grader {
-    private static final long TIMEOUT_MS = 10000;
-    ExecutorService executor = Executors.newSingleThreadExecutor();
-
     private final String name;
 
     /**
@@ -21,47 +18,6 @@ public abstract class Grader {
      */
     public Grader(String name) {
         this.name = name;
-    }
-
-    /**
-     * Grades the specified target files and directories.
-     *
-     * @param targets the targets
-     * @return the results
-     */
-    public List<Result> grade(List<Target> targets) {
-        List<Result> results = new ArrayList<>();
-        for (Target target : targets) {
-            results.addAll(grade(target));
-        }
-        return results;
-    }
-
-    /**
-     * Grades the provided targets.
-     *
-     * @param targets the targets
-     * @return the results
-     */
-    public List<Result> grade(Target... targets) {
-        List<Result> results = new ArrayList<>();
-        try {
-            for (Target target : targets) {
-                Future<List<Result>> future = executor.submit(getCallable(target));
-                results.addAll(future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS));
-            }
-        } catch (TimeoutException e) {
-            results.add(makeExceptionResult(
-                    new ClientException("Operation timed out")));
-        } catch (InterruptedException | ExecutionException e) {
-            // This currently returns after the first exception is thrown,
-            // rather than continuing to other targets.
-            results.add(
-                    makeExceptionResult(
-                            new InternalException(
-                                    "Internal error", e.getCause())));
-        }
-        return results;
     }
 
     public abstract Callable<List<Result>> getCallable(Target target);

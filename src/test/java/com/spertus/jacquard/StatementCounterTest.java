@@ -2,71 +2,64 @@ package com.spertus.jacquard;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.stmt.*;
-import com.spertus.jacquard.common.Result;
+import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.exceptions.ClientException;
 import com.spertus.jacquard.syntaxgrader.StatementCounter;
 import org.junit.jupiter.api.*;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StatementCounterTest {
     private static final double MAX_SCORE = 2.5;
-    private static final String SAMPLE_LOOP_CODE = """
-            for (int i = 0; i < 10; i++) {
-                System.out.println(i);
-            }
-            for (String s : myStrings) {}
-            for (int i : myInts) {
-                System.out.println(i);
-            }
-            """;
-    private static CompilationUnit sampleLoopParsed;
+    private static Target forTarget;
+
+    private Autograder autograder = new Autograder();
 
     @BeforeAll
-    public static void setup() {
-        sampleLoopParsed = TestUtilities.parseProgramFromStatements(SAMPLE_LOOP_CODE);
+    public static void setup() throws URISyntaxException {
+        forTarget = TestUtilities.getTargetFromResource("good/ForStatements.java");
     }
 
-    private void testHelper(CompilationUnit cu, int actualCount, int minCount, int maxCount, Class<? extends Statement> statementType)
+    private void testHelper(int actualCount, int minCount, int maxCount, Class<? extends Statement> statementType)
             throws ClientException {
         StatementCounter counter = new StatementCounter(
-                statementType.getSimpleName() + " counter",
                 MAX_SCORE, minCount, maxCount, statementType);
-        List<Result> results = counter.grade(cu);
+        List<Result> results = autograder.grade(counter, forTarget);
         assertEquals(1, results.size());
         assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).getScore());
     }
 
-    private void testTooFew(CompilationUnit cu, int actualCount, Class<? extends Statement> statementType) throws ClientException {
-        testHelper(cu, actualCount, actualCount + 1, actualCount + 10, statementType);
-        testHelper(cu, actualCount, actualCount + 1, Integer.MAX_VALUE, statementType);
+    private void testTooFew(int actualCount, Class<? extends Statement> statementType) throws ClientException {
+        testHelper(actualCount, actualCount + 1, actualCount + 10, statementType);
+        testHelper(actualCount, actualCount + 1, Integer.MAX_VALUE, statementType);
     }
 
     // actualCount must be > 0
-    private void testTooMany(CompilationUnit cu, int actualCount, Class<? extends Statement> statementType) throws ClientException {
-        testHelper(cu, actualCount, 0, actualCount - 1, statementType);
+    private void testTooMany(int actualCount, Class<? extends Statement> statementType) throws ClientException {
+        testHelper(actualCount, 0, actualCount - 1, statementType);
     }
 
-    private void testRightNumber(CompilationUnit cu, int actualCount, Class<? extends Statement> statementType) throws ClientException {
-        testHelper(cu, actualCount, 0, actualCount, statementType);
-        testHelper(cu, actualCount, actualCount, Integer.MAX_VALUE, statementType);
+    private void testRightNumber(int actualCount, Class<? extends Statement> statementType) throws ClientException {
+        testHelper(actualCount, 0, actualCount, statementType);
+        testHelper(actualCount, actualCount, Integer.MAX_VALUE, statementType);
     }
 
-    private void testAllPossibilities(CompilationUnit cu, int actualCount, Class<? extends Statement> statementType) throws ClientException {
-        testTooFew(cu, actualCount, statementType);
-        testTooMany(cu, actualCount, statementType);
-        testRightNumber(cu, actualCount, statementType);
+    private void testAllPossibilities(int actualCount, Class<? extends Statement> statementType) throws ClientException {
+        testTooFew(actualCount, statementType);
+        testTooMany(actualCount, statementType);
+        testRightNumber(actualCount, statementType);
     }
 
     @Test
     public void testForStatementCounter() throws ClientException {
-        testAllPossibilities(sampleLoopParsed, 1, ForStmt.class);
+        testAllPossibilities(1, ForStmt.class);
     }
 
     @Test
     public void testAssignmentStatementCounter() throws ClientException {
-        testAllPossibilities(sampleLoopParsed, 2, ForEachStmt.class);
+        testAllPossibilities(2, ForEachStmt.class);
     }
 }

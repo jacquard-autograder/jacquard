@@ -15,6 +15,7 @@ public class PmdGraderTest {
     private static final double PENALTY_PER_VIOLATION = .5;
     private static final double MAX_PENALTY = 2.5;
 
+    private Autograder autograder = new Autograder();
     private Target missingCommentsTarget;
 
     @BeforeEach
@@ -29,7 +30,7 @@ public class PmdGraderTest {
                 MAX_PENALTY,
                 "category/java/documentation.xml",
                 "CommentRequired");
-        List<Result> results = pmdGrader.grade(missingCommentsTarget);
+        List<Result> results = autograder.grade(pmdGrader, missingCommentsTarget);
         assertEquals(1, results.size());
         assertEquals(MAX_PENALTY - 2 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
     }
@@ -41,7 +42,7 @@ public class PmdGraderTest {
                 MAX_PENALTY,
                 "category/java/documentation.xml",
                 "CommentRequired", "UncommentedEmptyConstructor");
-        List<Result> results = pmdGrader.grade(missingCommentsTarget);
+        List<Result> results = autograder.grade(pmdGrader, missingCommentsTarget);
         assertEquals(1, results.size());
         assertEquals(MAX_PENALTY - 3 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
     }
@@ -78,7 +79,7 @@ public class PmdGraderTest {
                 PENALTY_PER_VIOLATION,
                 MAX_PENALTY,
                 "category/java/documentation.xml");
-        List<Result> results = pmdGrader.grade(missingCommentsTarget);
+        List<Result> results = autograder.grade(pmdGrader, missingCommentsTarget);
         assertEquals(1, results.size());
         assertEquals(MAX_PENALTY - 3 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
     }
@@ -90,20 +91,20 @@ public class PmdGraderTest {
                 MAX_PENALTY,
                 "category/java/documentation.xml",
                 "category/java/codestyle.xml");
-        List<Result> results = pmdGrader.grade(missingCommentsTarget);
+        List<Result> results = autograder.grade(pmdGrader, missingCommentsTarget);
         assertEquals(1, results.size());
         assertEquals(MAX_PENALTY - 5 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
     }
 
     @Test
-    public void testDirectory() throws URISyntaxException {
+    public void testDirectory() {
         PmdGrader pmdGrader = PmdGrader.createFromRuleSetPaths(
                 PENALTY_PER_VIOLATION,
                 MAX_PENALTY,
                 "category/java/documentation.xml",
                 "category/java/codestyle.xml");
         Target target = Target.fromPathString("src/test/resources/good/");
-        List<Result> results = pmdGrader.grade(target);
+        List<Result> results = autograder.grade(pmdGrader, target);
         assertEquals(1, results.size());
         assertEquals(0, results.get(0).getScore()); // lots of errors
     }

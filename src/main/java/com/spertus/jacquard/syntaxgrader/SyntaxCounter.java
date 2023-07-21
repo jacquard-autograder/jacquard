@@ -61,7 +61,7 @@ public abstract class SyntaxCounter extends SyntaxGrader {
     }
 
     @Override
-    public List<Result> grade(CompilationUnit cu) {
+    protected List<Result> grade(CompilationUnit cu) {
         final MutableInteger mi = new MutableInteger();
         adapter.visit(cu, mi);
         return List.of(getResult(mi));
