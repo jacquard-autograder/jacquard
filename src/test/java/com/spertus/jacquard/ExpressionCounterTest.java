@@ -2,15 +2,14 @@ package com.spertus.jacquard;
 
 import com.github.javaparser.ast.expr.*;
 import com.spertus.jacquard.common.*;
-import com.spertus.jacquard.exceptions.ClientException;
+import com.spertus.jacquard.exceptions.*;
 import com.spertus.jacquard.syntaxgrader.ExpressionCounter;
 import org.junit.jupiter.api.*;
 
 import java.net.URISyntaxException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ExpressionCounterTest {
     private static final String NAME = "name";

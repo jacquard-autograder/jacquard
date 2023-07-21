@@ -22,10 +22,10 @@ public class Autograder {
     }
 
     /**
-     * Sets the timeout for {@link Grader} execution. If this method
-     * is not called, {@link #DEFAULT_TIMEOUT_MS} is used.
+     * Sets the timeout for {@link Grader} execution (or 0 for no timeout).
+     * If this method is not called, {@link #DEFAULT_TIMEOUT_MS} is used.
      *
-     * @param timeout the timeout in milliseconds.
+     * @param timeout the timeout in milliseconds or 0 for no timeout
      */
     public void setTimeout(long timeout) {
         timeoutMilliseconds = timeout;
@@ -53,6 +53,16 @@ public class Autograder {
      */
     public List<Result> grade(Grader grader, Target... targets) {
         List<Result> results = new ArrayList<>();
+        if (timeoutMilliseconds == 0) {
+            try {
+                for (Target target : targets) {
+                    results.addAll(grader.getCallable(target).call());
+                }
+            } catch (Exception e) {
+                results.add(grader.makeExceptionResult(new InternalException(e)));
+            }
+            return results;
+        }
         try {
             for (Target target : targets) {
                 Future<List<Result>> future = executor.submit(grader.getCallable(target));
