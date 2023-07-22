@@ -50,7 +50,7 @@ public class ImportChecker extends SyntaxChecker {
                         makeSuccessResult(maxPoints, "Forbidden import not found"));
     }
 
-    private class ImportCheckerAdapter extends VoidVisitorAdapter<List<Result>> {
+    private class ImportCheckerAdapter extends VoidVisitorAdapter<List<Result>> { // NOPMD
         @Override
         public void visit(ImportDeclaration importDecl, List<Result> results) {
             if (!results.isEmpty()) {

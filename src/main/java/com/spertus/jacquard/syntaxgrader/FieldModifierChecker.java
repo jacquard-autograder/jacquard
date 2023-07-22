@@ -87,8 +87,7 @@ public final class FieldModifierChecker extends ModifierChecker {
         );
     }
 
-    private class Adapter extends ModifierChecker.Adapter {
-
+    private class Adapter extends ModifierChecker.Adapter { // NOPMD
         @Override
         public void visit(VariableDeclarator vd, List<Result> collector) {
             if (isField(vd)) {

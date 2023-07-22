@@ -82,7 +82,7 @@ public final class MethodModifierChecker extends ModifierChecker {
     }
 
 
-    private class Adapter extends ModifierChecker.Adapter {
+    private class Adapter extends ModifierChecker.Adapter { // NOPMD
         @Override
         public void visit(MethodDeclaration md, List<Result> collector) {
             process(collector, md, md.getNameAsString(), md.getModifiers());

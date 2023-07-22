@@ -27,10 +27,13 @@ public class CodeCoverageTester extends Tester {
     private final Class<?> testClass;
 
     /**
-     * Creates a code coverage tester with the given name and scorer.
+     * Creates a code coverage tester. The result depends on the {@code scorer}
+     * and how much of the class under test is covered by the test class.
      *
-     * @param name   the name
-     * @param scorer a scorer, which converts the outcome to a point value
+     * @param name           the name
+     * @param scorer         the scorer
+     * @param classUnderTest the class under test
+     * @param testClass      the test class
      */
     public CodeCoverageTester(String name, Scorer scorer, Class<?> classUnderTest, Class<?> testClass) {
         super(name);
@@ -40,9 +43,13 @@ public class CodeCoverageTester extends Tester {
     }
 
     /**
-     * Creates a code coverage grader with the given scorer.
+     * Creates a code coverage tester with a default name. The result depends on
+     * the {@code scorer} and how much of the class under test is covered by the
+     * test class.
      *
      * @param scorer a scorer, which converts the outcome to a point value
+     * @param classUnderTest the class under test
+     * @param testClass      the test class
      */
     public CodeCoverageTester(Scorer scorer, Class<?> classUnderTest, Class<?> testClass) {
         this(GRADER_NAME, scorer, classUnderTest, testClass);

@@ -11,9 +11,20 @@ import com.spertus.jacquard.exceptions.ClientException;
 public final class Autograder {
     private static Autograder instance;
 
+    /**
+     * The Java level of student code.
+     */
     public final int javaLevel;
+
+    /**
+     * The number of milliseconds tests should run before timing out.
+     */
     public final long timeoutMillis;
-    private final Visibility visibility;
+
+    /**
+     * The visibility level of {@link Grader} results.
+     */
+    public final Visibility visibility;
 
     /**
      * A singleton class for building the Autograder.
@@ -149,6 +160,7 @@ public final class Autograder {
     /**
      * Gets the singleton Autograder instance.
      *
+     * @return the singleton Autograder instance
      * @throws ClientException if the Autograder has not been initialized
      */
     public static Autograder getInstance() throws ClientException {

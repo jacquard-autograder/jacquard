@@ -34,25 +34,25 @@ public class SyntaxConditionCounter extends SyntaxCounter {
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public SyntaxConditionCounter(
-            String name,
-            String countedName,
-            double maxScore,
-            int minCount,
-            int maxCount,
-            Predicate<Node> predicate)
+            final String name,
+            final String countedName,
+            final double maxScore,
+            final int minCount,
+            final int maxCount,
+            final Predicate<Node> predicate)
             throws ClientException {
         super(name, countedName, maxScore, minCount, maxCount, new Adapter(predicate));
     }
 
-    private static class Adapter extends VoidVisitorAdapter<MutableInteger> {
+    private static class Adapter extends VoidVisitorAdapter<MutableInteger> { // NOPMD
         private final Predicate<Node> predicate;
 
-        private Adapter(Predicate<Node> predicate) {
+        private Adapter(final Predicate<Node> predicate) {
             super();
             this.predicate = predicate;
         }
 
-        private void count(Node node, MutableInteger mi) {
+        private void count(final Node node, final MutableInteger mi) {
             if (predicate.test(node)) {
                 mi.increment();
             }

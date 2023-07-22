@@ -7,11 +7,6 @@ import java.util.stream.Collectors;
  * The result of an evaluation of student code.
  */
 public class Result {
-    /**
-     * The default visibility of results.
-     */
-    public static final Visibility DEFAULT_VISIBILITY = Visibility.VISIBLE;
-
     private final String name;
     private final double score;
     private final double maxScore;
@@ -27,8 +22,12 @@ public class Result {
      * @param message    an explanation of the result or the empty string
      * @param visibility the visibility of the result to the student
      */
-    public Result(String name, double score, double maxScore,
-                  String message, Visibility visibility) {
+    public Result(
+            final String name,
+            final double score,
+            final double maxScore,
+            final String message,
+            final Visibility visibility) {
         this.name = name;
         this.score = score;
         this.maxScore = maxScore;
@@ -37,25 +36,24 @@ public class Result {
     }
 
     /**
-     * Creates a result with the default visibility.
+     * Creates a result with the visibility level specified in
+     * {@link Autograder#visibility}.
      *
      * @param name     the name of the checker
      * @param score    the actual score
      * @param maxScore the maximum possible score
      * @param message  an explanation of the result or the empty string
-     * @see #DEFAULT_VISIBILITY
      */
-    public Result(String name, double score, double maxScore,
-                  String message) {
-        this.name = name;
-        this.score = score;
-        this.maxScore = maxScore;
-        this.message = message;
-        this.visibility = DEFAULT_VISIBILITY;
+    public Result(
+            final String name,
+            final double score,
+            final double maxScore,
+            final String message) {
+        this(name, score, maxScore, message, Autograder.getInstance().visibility);
     }
 
     /**
-     * Gets the name of the result
+     * Gets the name of this result.
      *
      * @return the name
      */
@@ -64,7 +62,7 @@ public class Result {
     }
 
     /**
-     * Gets the score (points earned) of the result.
+     * Gets the score (points earned) of this result.
      *
      * @return the score
      */
@@ -120,18 +118,6 @@ public class Result {
     }
 
     /**
-     * Makes a result indicating a total failure.
-     *
-     * @param name     the name
-     * @param maxScore the number of points not earned
-     * @param output   any output
-     * @return a result
-     */
-    public static Result makeTotalFailure(String name, double maxScore, String output) {
-        return new Result(name, 0, maxScore, output);
-    }
-
-    /**
      * Makes a result indicating an exceptional event occurred
      *
      * @param name      the name
@@ -148,23 +134,73 @@ public class Result {
      * @param name        the name
      * @param actualScore the number of points earned
      * @param maxScore    the number of points possible
-     * @param output      any output
+     * @param message     any message
      * @return a result
      */
-    public static Result makeResult(String name, double actualScore, double maxScore, String output) {
-        return new Result(name, actualScore, maxScore, output);
+    public static Result makeResult(String name, double actualScore, double maxScore, String message) {
+        return new Result(name, actualScore, maxScore, message);
     }
 
     /**
      * Makes a result indicating a total success.
      *
-     * @param name   the name
-     * @param score  the number of points earned
-     * @param output any output
+     * @param name    the name
+     * @param score   the number of points earned
+     * @param message any message
      * @return a result
      */
-    public static Result makeSuccess(String name, double score, String output) {
-        return new Result(name, score, score, output, DEFAULT_VISIBILITY);
+    public static Result makeSuccess(
+            final String name,
+            final double score,
+            final String message) {
+        return new Result(name, score, score, message);
+    }
+
+    /**
+     * Makes a result indicating a total success.
+     *
+     * @param name       the name
+     * @param score      the number of points earned
+     * @param message     any message
+     * @param visibility the visibility level
+     * @return a result
+     */
+    public static Result makeSuccess(
+            final String name,
+            final double score,
+            final String message,
+            final Visibility visibility) {
+        return new Result(name, score, score, message, visibility);
+    }
+
+
+    /**
+     * Makes a result indicating a total failure.
+     *
+     * @param name     the name
+     * @param maxScore the number of points not earned
+     * @param message   any message
+     * @return a result
+     */
+    public static Result makeFailure(String name, double maxScore, String message) {
+        return new Result(name, 0, maxScore, message);
+    }
+
+    /**
+     * Makes a result with the specified visibility level indicating a total failure.
+     *
+     * @param name       the name
+     * @param maxScore   the number of points not earned
+     * @param message     any message
+     * @param visibility the visibility level
+     * @return a result
+     */
+    public static Result makeFailure(
+            final String name,
+            final double maxScore,
+            final String message,
+            final Visibility visibility) {
+        return new Result(name, 0, maxScore, message, visibility);
     }
 
     /**
@@ -174,8 +210,11 @@ public class Result {
      * <p>
      * The message of the new result begins with either {@code
      * allMessage} (for all successful) or {@code nothingMessage}. If
-     * {@code includeOutputs} is true, the outputs of the individual results
-     * will be appended to the output of the produced result.
+     * {@code includeMessages} is true, the messages of the individual results
+     * will be appended to the message of the produced result.
+     * <p>
+     * All of the passed results must have the same visibility level, which
+     * will be used for the created result.
      *
      * @param results        the results to summarize
      * @param name           the name of the created result
@@ -184,8 +223,11 @@ public class Result {
      * @param nothingMessage the message to include if any results are not
      *                       successful
      * @param maxScore       the score if all results are successful
-     * @param includeOutputs whether to include the outputs of the results
+     * @param includeMessages whether to include the messages of the results
      * @return a new result
+     * @throws IllegalArgumentException if all the passed results do not have
+     *                                  the same visibility level or if there
+     *                                  are no passed results
      */
     public static Result makeAllOrNothing(
             final List<Result> results,
@@ -193,18 +235,32 @@ public class Result {
             final String allMessage,
             final String nothingMessage,
             final double maxScore,
-            final boolean includeOutputs) {
-        final String outputs = includeOutputs ? results.
+            final boolean includeMessages) {
+
+        // Verify validity of arguments and set visibility.
+        if (results.size() == 0) {
+            throw new IllegalArgumentException("Results argument is empty");
+        }
+        final Visibility visibility = results.get(0).getVisibility();
+        if (results.stream().anyMatch((Result r) -> r.getVisibility() != visibility)) {
+            throw new IllegalArgumentException(
+                    "All results passed to makeAllOrNothing() must have the same visibility level");
+        }
+
+        // Build the message.
+        final String messages = includeMessages ? results.
                 stream().
                 map(Result::getMessage).
                 collect(Collectors.joining("\n"))
                 : "";
+
+        // Make the final success or failure message.
         if (results.
                 stream().
                 allMatch((Result r) -> r.getScore() == r.getMaxScore())) {
-            return makeSuccess(name, maxScore, allMessage + "\n" + outputs);
+            return makeSuccess(name, maxScore, allMessage + "\n" + messages, visibility);
         }
-        return makeTotalFailure(name, maxScore, nothingMessage + "\n" + outputs);
+        return makeFailure(name, maxScore, nothingMessage + "\n" + messages, visibility);
     }
 
     /**

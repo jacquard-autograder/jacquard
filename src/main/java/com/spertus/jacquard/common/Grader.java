@@ -149,7 +149,7 @@ public abstract class Grader {
      * @return the result
      */
     protected Result makeFailureResult(final double maxPoints, final String message) {
-        return Result.makeTotalFailure(name, maxPoints, message);
+        return Result.makeFailure(name, maxPoints, message);
     }
 
     /**

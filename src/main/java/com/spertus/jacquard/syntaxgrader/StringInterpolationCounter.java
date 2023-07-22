@@ -25,7 +25,7 @@ public class StringInterpolationCounter extends SyntaxCounter {
         super(name, "string interpolations", maxScore, minCount, maxCount, new StringInterpolationAdapter());
     }
 
-    private static class StringInterpolationAdapter extends VoidVisitorAdapter<MutableInteger> {
+    private static class StringInterpolationAdapter extends VoidVisitorAdapter<MutableInteger> { // NOPMD
         @Override
         public void visit(MethodCallExpr node, MutableInteger mi) {
             if (node.getScope().isPresent()) {

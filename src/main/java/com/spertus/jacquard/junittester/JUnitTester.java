@@ -67,7 +67,7 @@ public class JUnitTester extends Tester {
         return listener.results;
     }
 
-    private static class Listener implements TestExecutionListener {
+    private static class Listener implements TestExecutionListener { // NOPMD
         private final List<Result> results = new ArrayList<>();
         // These get set in executionStarted and used/closed in executionFinished.
         private PrintStream ps;
@@ -108,13 +108,13 @@ public class JUnitTester extends Tester {
                                 case SUCCESSFUL ->
                                         Result.makeSuccess(name, gt.points(), baos.toString());
                                 case FAILED, ABORTED ->
-                                        Result.makeTotalFailure(name, gt.points(), makeOutput(testExecutionResult));
+                                        Result.makeFailure(name, gt.points(), makeOutput(testExecutionResult));
                             };
                             results.add(result.changeVisibility(gt.visibility()));
                             ps.close();
                         } catch (NoSuchElementException e) { // if get() failed
                             results.add(
-                                    Result.makeTotalFailure(
+                                    Result.makeFailure(
                                                     name,
                                                     gt.points(),
                                                     "Test failed with no additional information")

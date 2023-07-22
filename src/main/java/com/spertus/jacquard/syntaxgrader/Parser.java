@@ -2,6 +2,7 @@ package com.spertus.jacquard.syntaxgrader;
 
 import com.github.javaparser.*;
 import com.github.javaparser.ast.CompilationUnit;
+import com.spertus.jacquard.common.Autograder;
 import com.spertus.jacquard.exceptions.ClientException;
 
 import java.io.*;
@@ -40,9 +41,10 @@ public class Parser {
     private final JavaParser javaParser;
 
     /**
-     * Constructs a parser with the default language level.
+     * Constructs a parser.
      */
-    public Parser(int javaLevel) throws ClientException {
+    public Parser() throws ClientException {
+        final int javaLevel = Autograder.getInstance().javaLevel;
         if (javaLevel < MIN_JAVA_LEVEL || javaLevel > MAX_JAVA_LEVEL) {
             throw new ClientException(
                     String.format("SyntaxGrader cannot be used with language level %d, only (%d-%d)",

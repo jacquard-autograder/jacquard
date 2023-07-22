@@ -61,9 +61,14 @@ abstract class ModifierChecker extends SyntaxChecker {
         return maxScorePerInstance * itemNames.size();
     }
 
+    /**
+     * An abstract superclass for adapters verifying that nodes have the
+     * required modifiers and do not have forbidden modifiers. Subclasses
+     * should override the visitor for the type of node they are verifying.
+     */
     protected class Adapter extends VoidVisitorAdapter<List<Result>> {
 
-        protected String getEnclosingClassName(Node node) {
+        private String getEnclosingClassName(final Node node) {
             if (node.getParentNode().isPresent() &&
                     node.getParentNode().get() instanceof ClassOrInterfaceDeclaration classOrInterface) {
                 return classOrInterface.getNameAsString();
@@ -72,7 +77,21 @@ abstract class ModifierChecker extends SyntaxChecker {
             }
         }
 
-        protected void process(List<Result> collector, Node node, String name, List<Modifier> modifiers) {
+        /**
+         * Verifies that the passed node has all required modifiers and no
+         * forbidden modifiers.
+         *
+         * @param collector the target of the produced {@link Result}
+         * @param node the node
+         * @param name the name of the node
+         * @param modifiers the node's modifiers
+         */
+        protected void process(
+                final List<Result> collector,
+                final Node node,
+                final String name,
+                final List<Modifier> modifiers) {
+
             if (!missingVars.contains(name)) {
                 return;
             }

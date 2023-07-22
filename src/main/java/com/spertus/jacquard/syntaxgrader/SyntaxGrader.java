@@ -22,7 +22,7 @@ public abstract class SyntaxGrader extends Grader {
 
     @Override
     public Callable<List<Result>> getCallable(final Target target) {
-        final Parser parser = new Parser(Autograder.getInstance().javaLevel);
+        final Parser parser = new Parser();
         return () -> grade(parser.parse(target.toFile()));
     }
 
