@@ -16,10 +16,9 @@ public class StatementCounterTest {
     private static final double MAX_SCORE = 2.5;
     private static Target forTarget;
 
-    private Autograder autograder = new Autograder();
-
     @BeforeAll
     public static void setup() throws URISyntaxException {
+        Autograder.initForTest();
         forTarget = TestUtilities.getTargetFromResource("good/ForStatements.java");
     }
 
@@ -27,7 +26,7 @@ public class StatementCounterTest {
             throws ClientException {
         StatementCounter counter = new StatementCounter(
                 MAX_SCORE, minCount, maxCount, statementType);
-        List<Result> results = autograder.grade(counter, forTarget);
+        List<Result> results = counter.grade(forTarget);
         assertEquals(1, results.size());
         assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).getScore());
     }

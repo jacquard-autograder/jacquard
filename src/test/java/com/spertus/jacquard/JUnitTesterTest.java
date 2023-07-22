@@ -4,7 +4,7 @@ import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.junittester.SampleTest;
 import com.spertus.jacquard.junittester.JUnitTester;
 import com.spertus.jacquard.junittester.visibility.VisibilityLevelsTest;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
@@ -15,6 +15,11 @@ public class JUnitTesterTest {
     private static final double PASSING_TEST_MAX_POINTS = 2.0;
     private static final String FAILING_TEST_NAME = "failingTest";
     private static final double FAILING_TEST_MAX_POINTS = 1.5;
+
+    @BeforeAll()
+    public static void init() {
+        Autograder.initForTest();
+    }
 
     private void checkResultsHelper(Result passingResult, Result failingResult) {
         assertEquals(PASSING_TEST_NAME, passingResult.getName());
@@ -69,7 +74,8 @@ public class JUnitTesterTest {
                 case "afterDueDateTest()" -> Visibility.AFTER_DUE_DATE;
                 case "afterPublishedTest()" -> Visibility.AFTER_PUBLISHED;
                 case "hiddenTest()" -> Visibility.HIDDEN;
-                default -> throw new AssertionError("Test had unexpected name: " + result.getName());
+                default ->
+                        throw new AssertionError("Test had unexpected name: " + result.getName());
             };
             assertEquals(expectedVisibility, result.getVisibility(),
                     "Visibility incorrect for " + result.getName());

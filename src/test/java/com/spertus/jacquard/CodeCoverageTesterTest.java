@@ -3,7 +3,7 @@ package com.spertus.jacquard;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.coverage.*;
 import com.spertus.jacquard.coveragetests.*;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -11,6 +11,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CodeCoverageTesterTest {
+    @BeforeAll()
+    public static void init() {
+        Autograder.initForTest();
+    }
+
     @Test
     public void testLinearScorer() throws URISyntaxException {
         Scorer scorer = new LinearScorer(.5, 10);

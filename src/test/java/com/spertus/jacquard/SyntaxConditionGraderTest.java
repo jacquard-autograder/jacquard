@@ -11,8 +11,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SyntaxConditionGraderTest {
-    Autograder autograder = new Autograder();
     SyntaxConditionGrader overrideGrader;
+
+    @BeforeAll()
+    public static void init() {
+        Autograder.initForTest();
+    }
 
     @BeforeEach
     public void setup() {
@@ -31,7 +35,7 @@ public class SyntaxConditionGraderTest {
 
     @Test
     public void testHasToStringOverrideWhenPresent() throws URISyntaxException {
-        List<Result> results = autograder.grade(overrideGrader, TestUtilities.getTargetFromResource("good/Mob.java"));
+        List<Result> results = overrideGrader.grade(TestUtilities.getTargetFromResource("good/Mob.java"));
         assertEquals(1, results.size());
         assertEquals(5.0, results.get(0).getScore());
         assertEquals(5.0, results.get(0).getMaxScore());
@@ -39,7 +43,7 @@ public class SyntaxConditionGraderTest {
 
     @Test
     public void testHasToStringOverrideWhenAbsent() throws URISyntaxException {
-        List<Result> results = autograder.grade(overrideGrader, TestUtilities.getTargetFromResource("good/NoToStringMethod.java"));
+        List<Result> results = overrideGrader.grade(TestUtilities.getTargetFromResource("good/NoToStringMethod.java"));
         assertEquals(1, results.size());
         assertEquals(0, results.get(0).getScore());
         assertEquals(5.0, results.get(0).getMaxScore());
@@ -47,7 +51,7 @@ public class SyntaxConditionGraderTest {
 
     @Test
     public void testHasToStringOverrideWhenAnnotationMissing() throws URISyntaxException {
-        List<Result> results = autograder.grade(overrideGrader, TestUtilities.getTargetFromResource("good/NoOverrideAnnotation.java"));
+        List<Result> results = overrideGrader.grade(TestUtilities.getTargetFromResource("good/NoOverrideAnnotation.java"));
         assertEquals(1, results.size());
         assertEquals(0, results.get(0).getScore());
         assertEquals(5.0, results.get(0).getMaxScore());

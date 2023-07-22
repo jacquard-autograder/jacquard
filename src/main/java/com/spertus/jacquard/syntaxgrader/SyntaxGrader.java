@@ -22,7 +22,8 @@ public abstract class SyntaxGrader extends Grader {
 
     @Override
     public Callable<List<Result>> getCallable(final Target target) {
-        return () -> grade(target.toCompilationUnit());
+        final Parser parser = new Parser(Autograder.getInstance().javaLevel);
+        return () -> grade(parser.parse(target.toFile()));
     }
 
     /**

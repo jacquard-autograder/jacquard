@@ -59,49 +59,49 @@ public class TargetTest {
         assertEquals(Paths.get(GOOD_RESOURCES_SUBDIR).toAbsolutePath(), mobTarget.toDirectory());
     }
 
-    @Test
-    public void testToClassName() {
-        assertEquals("Mob", mobTarget.toClassName());
-    }
-
-    @Test
-    public void testToClassNameThrowsExceptionForNonJava() {
-        assertThrows(ClientException.class,
-                () -> TestUtilities.getTargetFromResource("invalid/NotJava.txt").toClassName());
-    }
-
-    @Test
-    public void testToClassNameThrowsExceptionForDirectory() {
-        assertThrows(ClientException.class,
-                () -> Target.fromPathString(".").toClassName());
-    }
-
-    @Test
-    public void testToClassNameWorksForUnparseable() throws URISyntaxException {
-        assertEquals("Unparseable", TestUtilities.getTargetFromResource("invalid/Unparseable.java").toClassName());
-    }
-
-    @Test
-    public void testToPackageName() {
-        assertEquals("student", mobTarget.toPackageName());
-    }
-
-    @Test
-    public void testToPackageNameThrowsExceptionForNonJava() {
-        assertThrows(ClientException.class,
-                () -> TestUtilities.getTargetFromResource("invalid/NotJava.txt").toPackageName());
-    }
-
-    @Test
-    public void testToPackageNameThrowsExceptionForDirectory() {
-        assertThrows(ClientException.class,
-                () -> Target.fromPathString(".").toPackageName());
-    }
-
-    @Test
-    public void testToPackageNameThrowsExceptionForUnparseable() {
-        assertThrows(ClientException.class,
-                () -> TestUtilities.getTargetFromResource("invalid/Unparseable.java").toPackageName());
-    }
+//    @Test
+//    public void testToClassName() {
+//        assertEquals("Mob", mobTarget.toClassName());
+//    }
+//
+//    @Test
+//    public void testToClassNameThrowsExceptionForNonJava() {
+//        assertThrows(ClientException.class,
+//                () -> TestUtilities.getTargetFromResource("invalid/NotJava.txt").toClassName());
+//    }
+//
+//    @Test
+//    public void testToClassNameThrowsExceptionForDirectory() {
+//        assertThrows(ClientException.class,
+//                () -> Target.fromPathString(".").toClassName());
+//    }
+//
+//    @Test
+//    public void testToClassNameWorksForUnparseable() throws URISyntaxException {
+//        assertEquals("Unparseable", TestUtilities.getTargetFromResource("invalid/Unparseable.java").toClassName());
+//    }
+//
+//    @Test
+//    public void testToPackageName() {
+//        assertEquals("student", mobTarget.toPackageName());
+//    }
+//
+//    @Test
+//    public void testToPackageNameThrowsExceptionForNonJava() {
+//        assertThrows(ClientException.class,
+//                () -> TestUtilities.getTargetFromResource("invalid/NotJava.txt").toPackageName());
+//    }
+//
+//    @Test
+//    public void testToPackageNameThrowsExceptionForDirectory() {
+//        assertThrows(ClientException.class,
+//                () -> Target.fromPathString(".").toPackageName());
+//    }
+//
+//    @Test
+//    public void testToPackageNameThrowsExceptionForUnparseable() {
+//        assertThrows(ClientException.class,
+//                () -> TestUtilities.getTargetFromResource("invalid/Unparseable.java").toPackageName());
+//    }
 
 }

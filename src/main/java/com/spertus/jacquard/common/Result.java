@@ -139,7 +139,7 @@ public class Result {
      * @return a result
      */
     public static Result makeError(String name, Throwable throwable) {
-        return new Result(name, 0, 0, throwable.getMessage());
+        return new ExceptionResult(name, throwable);
     }
 
     /**

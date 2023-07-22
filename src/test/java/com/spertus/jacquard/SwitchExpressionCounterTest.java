@@ -1,6 +1,5 @@
 package com.spertus.jacquard;
 
-import com.github.javaparser.ast.CompilationUnit;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.exceptions.ClientException;
 import com.spertus.jacquard.syntaxgrader.SwitchExpressionCounter;
@@ -14,8 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SwitchExpressionCounterTest {
     private static final double MAX_SCORE = 10.0;
 
-    private Autograder autograder = new Autograder();
     private SwitchExpressionCounter counter;
+
+    @BeforeAll()
+    public static void init() {
+        Autograder.initForTest();
+    }
 
     @BeforeEach
     public void setup() throws ClientException {
@@ -25,7 +28,7 @@ public class SwitchExpressionCounterTest {
     @Test
     public void scoreIsMaxIfRightNumber() throws URISyntaxException {
         Target target = TestUtilities.getTargetFromResource("good/Mob.java");
-        List<Result> results = autograder.grade(counter, target);
+        List<Result> results = counter.grade(target);
         assertEquals(1, results.size());
         assertEquals(MAX_SCORE, results.get(0).getScore());
     }

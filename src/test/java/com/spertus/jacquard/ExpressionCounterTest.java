@@ -15,9 +15,13 @@ public class ExpressionCounterTest {
     private static final String NAME = "name";
     private static final double MAX_SCORE = 10.0;
 
-    private Autograder autograder = new Autograder();
     private ExpressionCounter counter;
     private Target expressionTarget;
+
+    @BeforeAll()
+    public static void init() {
+        Autograder.initForTest();
+    }
 
     @BeforeEach
     public void setup() throws ClientException, URISyntaxException {
@@ -48,7 +52,7 @@ public class ExpressionCounterTest {
     ) throws ClientException {
         ExpressionCounter counter = new ExpressionCounter(
                 MAX_SCORE, minCount, maxCount, expressionType);
-        List<Result> results = autograder.grade(counter, expressionTarget);
+        List<Result> results = counter.grade(expressionTarget);
         assertEquals(1, results.size());
         assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).getScore());
     }

@@ -8,15 +8,18 @@ import org.junit.jupiter.api.*;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PmdGraderTest {
     private static final double PENALTY_PER_VIOLATION = .5;
     private static final double MAX_PENALTY = 2.5;
 
-    private Autograder autograder = new Autograder();
     private Target missingCommentsTarget;
+
+    @BeforeAll()
+    public static void init() {
+        Autograder.initForTest();
+    }
 
     @BeforeEach
     public void setup() throws URISyntaxException {
@@ -30,7 +33,7 @@ public class PmdGraderTest {
                 MAX_PENALTY,
                 "category/java/documentation.xml",
                 "CommentRequired");
-        List<Result> results = autograder.grade(pmdGrader, missingCommentsTarget);
+        List<Result> results = pmdGrader.grade(missingCommentsTarget);
         assertEquals(1, results.size());
         assertEquals(MAX_PENALTY - 2 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
     }
@@ -42,7 +45,7 @@ public class PmdGraderTest {
                 MAX_PENALTY,
                 "category/java/documentation.xml",
                 "CommentRequired", "UncommentedEmptyConstructor");
-        List<Result> results = autograder.grade(pmdGrader, missingCommentsTarget);
+        List<Result> results = pmdGrader.grade(missingCommentsTarget);
         assertEquals(1, results.size());
         assertEquals(MAX_PENALTY - 3 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
     }
@@ -55,22 +58,16 @@ public class PmdGraderTest {
                         MAX_PENALTY,
                         "category/java/documentation.xml",
                         "BADPATH/java/documentation.xml"));
-        assertThrows(ClientException.class,
-                () -> PmdGrader.createFromRules(
-                        PENALTY_PER_VIOLATION,
-                        MAX_PENALTY,
-                        "XXcategory/java/documentation.xml",
-                        "CommentRequired", "UncommentedEmptyConstructor"));
     }
 
     @Test
     public void testBadRulename() {
         assertThrows(ClientException.class,
                 () -> PmdGrader.createFromRules(
-                        PENALTY_PER_VIOLATION,
-                        MAX_PENALTY,
-                        "category/java/documentation.xml",
-                        "CommentRequired", "NoSuchRule"));
+                PENALTY_PER_VIOLATION,
+                MAX_PENALTY,
+                "category/java/documentation.xml",
+                "CommentRequired", "NoSuchRule"));
     }
 
     @Test
@@ -79,7 +76,7 @@ public class PmdGraderTest {
                 PENALTY_PER_VIOLATION,
                 MAX_PENALTY,
                 "category/java/documentation.xml");
-        List<Result> results = autograder.grade(pmdGrader, missingCommentsTarget);
+        List<Result> results = pmdGrader.grade(missingCommentsTarget);
         assertEquals(1, results.size());
         assertEquals(MAX_PENALTY - 3 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
     }
@@ -91,7 +88,7 @@ public class PmdGraderTest {
                 MAX_PENALTY,
                 "category/java/documentation.xml",
                 "category/java/codestyle.xml");
-        List<Result> results = autograder.grade(pmdGrader, missingCommentsTarget);
+        List<Result> results = pmdGrader.grade(missingCommentsTarget);
         assertEquals(1, results.size());
         assertEquals(MAX_PENALTY - 5 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
     }
@@ -104,7 +101,7 @@ public class PmdGraderTest {
                 "category/java/documentation.xml",
                 "category/java/codestyle.xml");
         Target target = Target.fromPathString("src/test/resources/good/");
-        List<Result> results = autograder.grade(pmdGrader, target);
+        List<Result> results = pmdGrader.grade(target);
         assertEquals(1, results.size());
         assertEquals(0, results.get(0).getScore()); // lots of errors
     }

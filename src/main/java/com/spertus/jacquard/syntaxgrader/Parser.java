@@ -14,6 +14,31 @@ import java.util.stream.Collectors;
  */
 public class Parser {
     /**
+     * The minimum level of Java supported through this class.
+     */
+    public static final int MIN_JAVA_LEVEL = 8;
+
+    /**
+     * The maximum level of Java currently supported through this class.
+     * Preview versions are not supported.
+     */
+    public static final int MAX_JAVA_LEVEL = 17;
+
+    private static final ParserConfiguration.LanguageLevel[] LEVELS =
+            {
+                    ParserConfiguration.LanguageLevel.JAVA_8,
+                    ParserConfiguration.LanguageLevel.JAVA_9,
+                    ParserConfiguration.LanguageLevel.JAVA_10,
+                    ParserConfiguration.LanguageLevel.JAVA_11,
+                    ParserConfiguration.LanguageLevel.JAVA_12,
+                    ParserConfiguration.LanguageLevel.JAVA_13,
+                    ParserConfiguration.LanguageLevel.JAVA_14,
+                    ParserConfiguration.LanguageLevel.JAVA_15,
+                    ParserConfiguration.LanguageLevel.JAVA_16,
+                    ParserConfiguration.LanguageLevel.JAVA_17,
+            };
+
+    /**
      * The default language level for the parser.
      */
     public static final ParserConfiguration.LanguageLevel DEFAULT_LANGUAGE_LEVEL =
@@ -23,20 +48,14 @@ public class Parser {
     /**
      * Constructs a parser with the default language level.
      */
-    public Parser() {
+    public Parser(int javaLevel) throws ClientException {
+        if (javaLevel < MIN_JAVA_LEVEL || javaLevel > MAX_JAVA_LEVEL) {
+            throw new ClientException(
+                    String.format("SyntaxGrader cannot be used with language level %d, only (%d-%d)",
+                            javaLevel, MIN_JAVA_LEVEL, MAX_JAVA_LEVEL));
+        }
         ParserConfiguration config = new ParserConfiguration();
-        config.setLanguageLevel(DEFAULT_LANGUAGE_LEVEL);
-        parser = new JavaParser(config);
-    }
-
-    /**
-     * Constructs a parser with the specified language level.
-     *
-     * @param languageLevel the language level
-     */
-    public Parser(ParserConfiguration.LanguageLevel languageLevel) {
-        ParserConfiguration config = new ParserConfiguration();
-        config.setLanguageLevel(languageLevel);
+        config.setLanguageLevel(LEVELS[javaLevel - MIN_JAVA_LEVEL]);
         parser = new JavaParser(config);
     }
 
@@ -45,33 +64,16 @@ public class Parser {
     }
 
     /**
-     * Parses a snippet of code. This is provided for testing only.
-     *
-     * @param program a snippet of code
-     * @return the parsed representation
-     * @throws ClientException if the code cannot be parsed
-     */
-    @VisibleForTesting
-    public static CompilationUnit parseCode(String program) {
-        Parser parser = new Parser(DEFAULT_LANGUAGE_LEVEL);
-        ParseResult<CompilationUnit> parseResult = parser.parser.parse(program);
-        if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
-            return parseResult.getResult().get();
-        }
-        throw new ClientException(joinProblems(parseResult.getProblems()));
-    }
-
-    /**
      * Parses a file.
      *
-     * @param file the file
+     * @param file      the file
      * @return the parsed representation
      * @throws ClientException if the file cannot be found or cannot be parsed
+     *                         or if the Java level is not in range
      */
-    public static CompilationUnit parse(File file) {
-        Parser parser = new Parser(DEFAULT_LANGUAGE_LEVEL);
+    public CompilationUnit parse(File file) {
         try {
-            ParseResult<CompilationUnit> parseResult = parser.parser.parse(file);
+            ParseResult<CompilationUnit> parseResult = parser.parse(file);
             if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
                 return parseResult.getResult().get();
             }

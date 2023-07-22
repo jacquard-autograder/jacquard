@@ -10,22 +10,6 @@ import java.nio.file.*;
 import java.util.List;
 
 public class TestUtilities {
-    private static final String CODE_TEMPLATE = """
-            public class MyClass {
-                public static void foo(String[] args) {
-                %s
-                }
-            }
-            """;
-
-    static CompilationUnit parseProgramFromStatements(String statements) {
-        return Parser.parseCode(String.format(CODE_TEMPLATE, statements));
-    }
-
-    static CompilationUnit parseProgramFromClass(String statements) {
-        return Parser.parseCode(statements);
-    }
-
     static double getTotalScore(List<Result> results) {
         return results.stream().mapToDouble(Result::getScore).sum();
     }

@@ -10,7 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 public class ScorerTest {
-
     public static final double MAX_POINTS = 100.0;
 
     @Test

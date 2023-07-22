@@ -1,7 +1,7 @@
 package com.spertus.jacquard;
 
+import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.crosstester.*;
-import com.spertus.jacquard.common.Result;
 import com.spertus.jacquard.exceptions.ClientException;
 import org.junit.jupiter.api.*;
 
@@ -11,6 +11,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CrossTesterTest {
+    @BeforeAll()
+    public static void init() {
+        Autograder.initForTest();
+    }
+
     private static final String CSV_FILE = """
             , com.spertus.jacquard.crosstester.CorrectAdder, com.spertus.jacquard.crosstester.BuggyAdder
             addZero, 2, -1
