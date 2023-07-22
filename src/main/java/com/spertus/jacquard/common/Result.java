@@ -188,13 +188,13 @@ public class Result {
      * @return a new result
      */
     public static Result makeAllOrNothing(
-            List<Result> results,
-            String name,
-            String allMessage,
-            String nothingMessage,
-            double maxScore,
-            boolean includeOutputs) {
-        String outputs = includeOutputs ? results.
+            final List<Result> results,
+            final String name,
+            final String allMessage,
+            final String nothingMessage,
+            final double maxScore,
+            final boolean includeOutputs) {
+        final String outputs = includeOutputs ? results.
                 stream().
                 map(Result::getMessage).
                 collect(Collectors.joining("\n"))
@@ -213,7 +213,8 @@ public class Result {
      * @param results    the results
      * @param visibility the new visibility
      */
-    public static void changeVisibility(List<Result> results, Visibility visibility) {
+    public static void changeVisibility(
+            final List<Result> results, final Visibility visibility) {
         results.forEach((Result r) -> r.setVisibility(visibility));
     }
 }

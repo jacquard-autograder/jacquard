@@ -48,7 +48,11 @@ public class CheckstyleGrader extends Grader {
      * @param penalty   the penalty per violation
      * @param maxPoints the maximum number of points if no violations occur
      */
-    public CheckstyleGrader(String name, String ruleFile, double penalty, double maxPoints) {
+    public CheckstyleGrader(
+            final String name,
+            final String ruleFile,
+            final double penalty,
+            final double maxPoints) {
         super(name);
         this.ruleFile = ruleFile;
         this.penalty = penalty;
@@ -62,35 +66,38 @@ public class CheckstyleGrader extends Grader {
      * @param penalty   the penalty per violation
      * @param maxPoints the maximum number of points if no violations occur
      */
-    public CheckstyleGrader(String ruleFile, double penalty, double maxPoints) {
+    public CheckstyleGrader(
+            final String ruleFile,
+            final double penalty,
+            final double maxPoints) {
         this(GRADER_NAME, ruleFile, penalty, maxPoints);
     }
 
     // Taken from JGrade:CheckstyleGrader and modified
-    private static String getAttributeValue(String prefix, Node attribute) {
+    private static String getAttributeValue(final String prefix, final Node attribute) {
         return attribute == null ? "" : String.format("%s%s", prefix, attribute.getNodeValue());
     }
 
-    private static String getAttributeValue(Node attribute) {
+    private static String getAttributeValue(final Node attribute) {
         return getAttributeValue("", attribute);
     }
 
-    private String getOutputForErrorNode(NamedNodeMap attributes) {
+    private String getOutputForErrorNode(final NamedNodeMap attributes) {
         if (attributes == null) {
             throw new InternalError();
         } else {
-            Node lineAttribute = attributes.getNamedItem("line");
-            Node columnAttribute = attributes.getNamedItem("column");
-            Node messageAttribute = attributes.getNamedItem("message");
-            String errorTypeAttribute = getAttributeValue(attributes.getNamedItem("source"));
+            final Node lineAttribute = attributes.getNamedItem("line");
+            final Node columnAttribute = attributes.getNamedItem("column");
+            final Node messageAttribute = attributes.getNamedItem("message");
+            final String errorTypeAttribute = getAttributeValue(attributes.getNamedItem("source"));
             return String.format("\t%-20s - %s [%s]\n", getAttributeValue("line: ", lineAttribute) + getAttributeValue(", column", columnAttribute), getAttributeValue(messageAttribute), errorTypeAttribute);
         }
     }
 
-    private int addOutputForFileNode(StringBuilder sb, Node elementNode) {
-        String fullPath = elementNode.getAttributes().getNamedItem("name").toString();
-        String fileName = fullPath.substring(fullPath.lastIndexOf(System.getProperty("file.separator")) + 1, fullPath.length() - 1);
-        NodeList errorNodes = ((Element) elementNode).getElementsByTagName("error");
+    private int addOutputForFileNode(final StringBuilder sb, final Node elementNode) {
+        final String fullPath = elementNode.getAttributes().getNamedItem("name").toString();
+        final String fileName = fullPath.substring(fullPath.lastIndexOf(System.getProperty("file.separator")) + 1, fullPath.length() - 1);
+        final NodeList errorNodes = ((Element) elementNode).getElementsByTagName("error");
         if (errorNodes.getLength() > 0) {
             sb.append(fileName).append(":\n");
         }
@@ -106,35 +113,37 @@ public class CheckstyleGrader extends Grader {
         // It will already be downloaded if the recommended build.gradle file
         // or Dockerfile is used.
         try {
-            File file = new File(CHECKSTYLE_SUBDIR + "/" + CHECKSTYLE_JAR);
+            final File file = new File(CHECKSTYLE_SUBDIR + "/" + CHECKSTYLE_JAR);
             if (!file.exists()) {
                 // https://www.baeldung.com/java-download-file#using-nio
-                ReadableByteChannel readableByteChannel =
-                        Channels.newChannel(new URL(CHECKSTYLE_URL).openStream());
-                try (FileOutputStream fileOutputStream = new FileOutputStream(CHECKSTYLE_SUBDIR + "/" + CHECKSTYLE_JAR)) {
-                    fileOutputStream.getChannel()
-                            .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+                try (ReadableByteChannel readableByteChannel =
+                        Channels.newChannel(new URL(CHECKSTYLE_URL).openStream())) {
+                    try (FileOutputStream fileOutputStream =
+                                 new FileOutputStream(CHECKSTYLE_SUBDIR + "/" + CHECKSTYLE_JAR)) { // NOPMD
+                        fileOutputStream.getChannel()
+                                .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+                    }
                 }
             }
         } catch (IOException e) {
-            throw new InternalException("Unable to download checkstyle jar");
+            throw new InternalException("Unable to download checkstyle jar", e);
         }
     }
 
-    private void runCheckstyle(Target target) throws InternalException {
+    private void runCheckstyle(final Target target) throws InternalException {
         // Delete old output file.
-        File file = new File(RESULT_FILE_NAME);
+        final File file = new File(RESULT_FILE_NAME);
         file.delete();
 
         // Run checkstyle.
         downloadCheckstyleIfNeeded();
-        List<String> arguments = new ArrayList<>(FIRST_COMMAND_PARTS);
+        final List<String> arguments = new ArrayList<>(FIRST_COMMAND_PARTS);
         arguments.add(String.format(CONFIG_TEMPLATE, ruleFile));
         arguments.add(target.toPathString());
-        ProcessBuilder pb = new ProcessBuilder(arguments);
+        final ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
-            Process p = pb.start();
-            int result = p.waitFor();
+            final Process p = pb.start();
+            final int result = p.waitFor();
             // Positive exit codes mean that checkstyle found problems, not that it failed.
             if (result < 0) {
                 throw new DependencyException("Exit code indicated checkstyle failure");
@@ -146,20 +155,20 @@ public class CheckstyleGrader extends Grader {
 
     private Result interpretOutput() throws
             IOException, SAXException, ParserConfigurationException {
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        File file = new File(RESULT_FILE_NAME);
-        Document doc = builder.parse(file);
-        NodeList filesWithErrors = doc.getElementsByTagName("file");
+        final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        final File file = new File(RESULT_FILE_NAME);
+        final Document doc = builder.parse(file);
+        final NodeList filesWithErrors = doc.getElementsByTagName("file");
         int numErrors = 0;
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < filesWithErrors.getLength(); i++) {
-            Node fileNode = filesWithErrors.item(i);
+            final Node fileNode = filesWithErrors.item(i);
             numErrors += addOutputForFileNode(sb, fileNode);
         }
         if (numErrors == 0) {
             return makeSuccessResult(maxPoints, "No violations");
         } else {
-            double score = Math.max(0.0, maxPoints - numErrors * penalty);
+            final double score = Math.max(0.0, maxPoints - numErrors * penalty);
             return makePartialCreditResult(score, maxPoints, sb.toString());
         }
     }

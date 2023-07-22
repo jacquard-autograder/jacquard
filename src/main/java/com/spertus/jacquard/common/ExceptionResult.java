@@ -1,5 +1,8 @@
 package com.spertus.jacquard.common;
 
+/**
+ * A result encapsulating an exception.
+ */
 public class ExceptionResult extends Result {
     /**
      * Makes a result indicating an exceptional event occurred.

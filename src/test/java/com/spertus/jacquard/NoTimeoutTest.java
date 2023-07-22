@@ -13,7 +13,7 @@ public class NoTimeoutTest {
     @Test
     public void testNoTimeout() throws URISyntaxException {
         Autograder.resetForTest();
-        Autograder.Builder.getInstance().setTimeout(0).build(); // no timeout
+        Autograder.Builder.getInstance().timeout(0).build(); // no timeout
         CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", .5, 20);
         List<Result> results = grader.grade(
                 List.of(

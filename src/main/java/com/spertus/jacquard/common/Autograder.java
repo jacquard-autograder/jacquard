@@ -8,15 +8,22 @@ import com.spertus.jacquard.exceptions.ClientException;
  * initialize the Autograder before calling other Jacquard code. This can
  * be done throw {@link Builder} or {@link #init()}.
  */
-public class Autograder {
+public final class Autograder {
+    private static Autograder instance;
+
+    public final int javaLevel;
+    public final long timeoutMillis;
+    private final Visibility visibility;
+
     /**
      * A singleton class for building the Autograder.
      */
+    @SuppressWarnings({"PMD.AvoidFieldNameMatchingMethodName", "PMD.AvoidFieldNameMatchingTypeName"})
     public static class Builder {
         /**
          * The default timeout for a {@link Grader}, in milliseconds.
          */
-        public static final long DEFAULT_TIMEOUT_MS = 10000L;
+        public static final long DEFAULT_TIMEOUT_MS = 10_000L;
 
         /**
          * The default Java language level.
@@ -28,7 +35,7 @@ public class Autograder {
          */
         public static final Visibility DEFAULT_VISIBILITY = Visibility.VISIBLE;
 
-        private static Builder INSTANCE = new Builder();
+        private static final Builder INSTANCE = new Builder();
 
         private boolean built = false;
         private long timeoutMillis = DEFAULT_TIMEOUT_MS;
@@ -38,6 +45,11 @@ public class Autograder {
         private Builder() {
         }
 
+        /**
+         * Gets the singleton instance of Builder.
+         *
+         * @return the instance
+         */
         public static Builder getInstance() {
             return INSTANCE;
         }
@@ -49,7 +61,7 @@ public class Autograder {
          * @param timeout the timeout in milliseconds or 0 for no timeout
          * @return the builder
          */
-        public Builder setTimeout(long timeout) {
+        public Builder timeout(final long timeout) {
             if (built) {
                 throw new ClientException("The builder must not be modified after build() is called.");
             }
@@ -64,7 +76,7 @@ public class Autograder {
          * @param javaLevel the Java language level
          * @return the builder
          */
-        public Builder setJavaLevel(int javaLevel) {
+        public Builder javaLevel(final int javaLevel) {
             if (built) {
                 throw new ClientException("The builder must not be modified after build() is called.");
             }
@@ -79,7 +91,7 @@ public class Autograder {
          * @param visibility the visibility
          * @return the builder
          */
-        public Builder setVisibility(Visibility visibility) {
+        public Builder visibility(final Visibility visibility) {
             if (built) {
                 throw new ClientException("The builder must not be modified after build() is called.");
             }
@@ -102,27 +114,21 @@ public class Autograder {
 
         private void resetForTest() {
             built = false;
-            setTimeout(DEFAULT_TIMEOUT_MS);
-            setJavaLevel(DEFAULT_JAVA_LEVEL);
-            setVisibility(DEFAULT_VISIBILITY);
+            timeout(DEFAULT_TIMEOUT_MS);
+            javaLevel(DEFAULT_JAVA_LEVEL);
+            visibility(DEFAULT_VISIBILITY);
         }
     }
 
-    private static Autograder instance;
-
-    public final int javaLevel;
-    public final long timeoutMillis;
-    private final Visibility visibility;
-
-    private Autograder(Builder builder) {
+    private Autograder(final Builder builder) {
         javaLevel = builder.javaLevel;
         timeoutMillis = builder.timeoutMillis;
         visibility = builder.visibility;
     }
 
-    private static void makeAutograder(Builder builder) {
+    private static void makeAutograder(final Builder builder) {
         if (instance != null) {
-            throw new RuntimeException();
+            throw new ClientException("Autograder has already been initialized.");
         }
         instance = new Autograder(builder);
     }

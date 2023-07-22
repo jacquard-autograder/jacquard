@@ -60,7 +60,7 @@ public class LinearScorer extends Scorer {
 
     @Override
     public double score(double branchCoverage, double lineCoverage) {
-        return maxScore * ((branchCoverage * branchWeight) + (lineCoverage * (1 - branchWeight)));
+        return maxScore * (branchCoverage * branchWeight + lineCoverage * (1 - branchWeight));
     }
 
     @Override

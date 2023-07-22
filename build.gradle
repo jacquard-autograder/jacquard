@@ -6,6 +6,7 @@ plugins {
     id "signing"
     id "io.github.gradle-nexus.publish-plugin" version "1.3.0"
     id "de.undercouch.download" version "5.4.0"
+    id "pmd"
 }
 
 repositories {
@@ -86,4 +87,12 @@ test {
     useJUnitPlatform {
         excludeTags('IndirectTest')
     }
+}
+
+pmd {
+    consoleOutput = true
+    toolVersion = "6.52.0"
+    rulesMinimumPriority = 5
+    ruleSetConfig = resources.text.fromFile("config/pmd/project-rules.xml")
+    ruleSets = []
 }

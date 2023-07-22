@@ -13,6 +13,7 @@ import org.json.*;
  * @see <a href="https://gradescope-autograders.readthedocs.io/en/latest/specs/">
  * Gradescope Autograder Specifications</a>
  */
+@SuppressWarnings("PMD.EmptyCatchBlock")
 public class GradescopePublisher extends Publisher {
     private static final Path RESULTS_PATH = Path.of("results");
     private static final String RESULTS_FILE_NAME = "results.json";
@@ -45,7 +46,7 @@ public class GradescopePublisher extends Publisher {
 
     @Override
     public void displayResults(List<Result> results) {
-        System.out.println(convertToJson(results)
+        System.out.println(convertToJson(results)   // NOPMD
                 .toString(4));
     }
 

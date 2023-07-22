@@ -2,7 +2,6 @@ package com.spertus.jacquard.syntaxgrader;
 
 import com.github.javaparser.*;
 import com.github.javaparser.ast.CompilationUnit;
-import com.google.common.annotations.VisibleForTesting;
 import com.spertus.jacquard.exceptions.ClientException;
 
 import java.io.*;
@@ -38,12 +37,7 @@ public class Parser {
                     ParserConfiguration.LanguageLevel.JAVA_17,
             };
 
-    /**
-     * The default language level for the parser.
-     */
-    public static final ParserConfiguration.LanguageLevel DEFAULT_LANGUAGE_LEVEL =
-            ParserConfiguration.LanguageLevel.JAVA_17;
-    private final JavaParser parser;
+    private final JavaParser javaParser;
 
     /**
      * Constructs a parser with the default language level.
@@ -56,7 +50,7 @@ public class Parser {
         }
         ParserConfiguration config = new ParserConfiguration();
         config.setLanguageLevel(LEVELS[javaLevel - MIN_JAVA_LEVEL]);
-        parser = new JavaParser(config);
+        javaParser = new JavaParser(config);
     }
 
     private static String joinProblems(List<Problem> problems) {
@@ -73,13 +67,13 @@ public class Parser {
      */
     public CompilationUnit parse(File file) {
         try {
-            ParseResult<CompilationUnit> parseResult = parser.parse(file);
+            ParseResult<CompilationUnit> parseResult = javaParser.parse(file);
             if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
                 return parseResult.getResult().get();
             }
             throw new ClientException(joinProblems(parseResult.getProblems()));
         } catch (FileNotFoundException e) {
-            throw new ClientException(e.getMessage());
+            throw new ClientException("Unable to find file " + file, e);
         }
     }
 }

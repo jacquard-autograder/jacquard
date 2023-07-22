@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * A grader that makes use of the linked <a href="https://docs.pmd-code.org/latest/index.html">
  * PMD Source Code Analyzer Project</a>.
  */
-public class PmdGrader extends Grader {
+public final class PmdGrader extends Grader {
     private static final String GRADER_NAME = "PMD Grader";
     private static final String JAVA_VERSION = "17";
     private final double penaltyPerViolation;
@@ -33,7 +33,7 @@ public class PmdGrader extends Grader {
         return config;
     }
 
-    private PmdGrader(double penaltyPerViolation, double maxPenalty, String[] ruleSetPaths)
+    private PmdGrader(double penaltyPerViolation, double maxPenalty, String... ruleSetPaths)
             throws ClientException {
         super(GRADER_NAME);
         this.penaltyPerViolation = penaltyPerViolation;
@@ -55,7 +55,7 @@ public class PmdGrader extends Grader {
     }
 
     private PmdGrader(double penaltyPerViolation, double maxPenalty, String
-            ruleSetPath, String[] ruleNames) throws ClientException {
+            ruleSetPath, String... ruleNames) throws ClientException {
         super(GRADER_NAME);
         this.penaltyPerViolation = penaltyPerViolation;
         this.maxPenalty = maxPenalty;
@@ -168,7 +168,6 @@ public class PmdGrader extends Grader {
     private List<Result> produceResults(Report report) {
         List<Result> results = new ArrayList<>();
         List<Report.ProcessingError> errors = report.getProcessingErrors();
-        List<RuleViolation> violations = report.getViolations();
 
         if (!errors.isEmpty()) {
             // For now, just print information about the first error.
@@ -180,10 +179,11 @@ public class PmdGrader extends Grader {
             return results;
         }
 
+        List<RuleViolation> violations = report.getViolations();
         if (violations.isEmpty()) {
             results.add(Result.makeSuccess("Static analysis (PMD)", maxPenalty, "No problems detected"));
         } else {
-            String message = violations.stream()
+            final String message = violations.stream()
                     .map(this::violationToString)
                     .collect(Collectors.joining("\r\n"));
             results.add(Result.makeResult(

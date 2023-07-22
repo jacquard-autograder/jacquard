@@ -2,8 +2,6 @@ package com.spertus.jacquard.syntaxgrader;
 
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.google.common.base.Preconditions;
 import com.spertus.jacquard.common.Result;
 
 import java.util.*;
@@ -13,7 +11,7 @@ import java.util.*;
  * static). For example, this could be used to verify that certain methods
  * are declared {@code public} or {@code static}.
  */
-public class MethodModifierChecker extends ModifierChecker {
+public final class MethodModifierChecker extends ModifierChecker {
     private static final String DEFAULT_GRADER_NAME = "method modifier checker";
 
     private MethodModifierChecker(String name, double maxScorePerInstance, List<String> methodNames, List<Modifier> requiredModifiers, List<Modifier> optionalModifiers,

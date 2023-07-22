@@ -2,7 +2,6 @@ package com.spertus.jacquard.syntaxgrader;
 
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.google.common.base.Preconditions;
 import com.spertus.jacquard.common.Result;
 
@@ -13,7 +12,7 @@ import java.util.*;
  * static variables/constants). For example, this could be used to verify
  * that certain instance variables are declared {@code private} or {@code final}.
  */
-public class FieldModifierChecker extends ModifierChecker {
+public final class FieldModifierChecker extends ModifierChecker {
     private static final String DEFAULT_GRADER_NAME = "field modifier checker";
 
     private FieldModifierChecker(

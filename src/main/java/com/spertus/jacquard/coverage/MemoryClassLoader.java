@@ -13,8 +13,8 @@ package com.spertus.jacquard.coverage;
  *
  *******************************************************************************/
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A class loader that loads classes from in-memory data.
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class MemoryClassLoader extends ClassLoader {
 
-    private final Map<String, byte[]> definitions = new HashMap<>();
+    private final Map<String, byte[]> definitions = new ConcurrentHashMap<>();
 
     /**
      * Add a in-memory representation of a class.

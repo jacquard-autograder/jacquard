@@ -556,11 +556,13 @@ public class SyntaxConditionCounter extends SyntaxCounter {
             super.visit(n, mi);
         }
 
+        @Override
         public void visit(final ModuleDeclaration n, final MutableInteger mi) {
             count(n, mi);
             super.visit(n, mi);
         }
 
+        @Override
         public void visit(final ModuleRequiresDirective n, final MutableInteger mi) {
             count(n, mi);
             super.visit(n, mi);

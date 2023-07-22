@@ -14,7 +14,7 @@ public class TimeoutTest {
     @Test
     public void testTimeout() throws URISyntaxException {
         Autograder.resetForTest();
-        Autograder.Builder.getInstance().setTimeout(1).build(); // 1 ms timeout
+        Autograder.Builder.getInstance().timeout(1).build(); // 1 ms timeout
         CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", .5, 20);
         List<Result> results = grader.grade(
                 List.of(

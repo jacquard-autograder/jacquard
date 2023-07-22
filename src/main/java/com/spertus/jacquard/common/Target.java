@@ -1,17 +1,13 @@
 package com.spertus.jacquard.common;
 
-import com.github.javaparser.ast.*;
-import com.spertus.jacquard.exceptions.ClientException;
-import com.spertus.jacquard.syntaxgrader.Parser;
-
 import java.io.File;
 import java.nio.file.*;
-import java.util.*;
+import java.util.Objects;
 
 /**
  * The target of a {@link Grader}, such as a file or a directory.
  */
-public class Target {
+public final class Target {
     private final Path path;
     private String packageName; // lazy initialization
     private String className; // lazy initialization
@@ -159,6 +155,11 @@ public class Target {
                     this.toDirectory().equals(other.toDirectory());
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path);
     }
 
 }

@@ -19,6 +19,7 @@ import org.junit.platform.commons.JUnitException;
 /**
  * @since 1.0
  */
+@SuppressWarnings("PMD")
 class CustomContextClassLoaderExecutor {
 
     private final Optional<ClassLoader> customClassLoader;

@@ -57,7 +57,7 @@ public class JUnitTester extends Tester {
         Launcher launcher = LauncherFactory.create();
         JUnitTester.Listener listener = new Listener();
         launcher.registerTestExecutionListeners(listener);
-        PrintStream originalOut = System.out;
+        PrintStream originalOut = System.out; // NOPMD
         LauncherDiscoveryRequestBuilder builder = request().selectors(selectors);
         if (filter != null) {
             builder = builder.filters(filter);

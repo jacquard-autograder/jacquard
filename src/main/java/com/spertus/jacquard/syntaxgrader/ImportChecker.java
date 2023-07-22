@@ -10,7 +10,6 @@ import java.util.List;
  * Checks whether a specified library is imported.
  */
 public class ImportChecker extends SyntaxChecker {
-    private final String name;
     private final double maxPoints;
     private final String substring;
     private final boolean required;
@@ -28,7 +27,6 @@ public class ImportChecker extends SyntaxChecker {
      */
     public ImportChecker(String name, double maxPoints, String substring, boolean required) {
         super(name, maxPoints, null);
-        this.name = name;
         this.maxPoints = maxPoints;
         this.substring = substring;
         this.required = required;

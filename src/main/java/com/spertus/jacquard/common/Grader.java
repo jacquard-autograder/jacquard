@@ -41,21 +41,21 @@ public abstract class Grader {
      * @return the results
      * @throws ClientException if {@link Autograder} has not been initialized
      */
-    public List<Result> grade(List<Target> targets) throws ClientException {
+    public List<Result> grade(final List<Target> targets) throws ClientException {
         if (!Autograder.isInitialized()) {
             throw new ClientException("Autograder must be initialized before grading.");
         }
-        List<Result> results = new ArrayList<>();
-        for (Target target : targets) {
+        final List<Result> results = new ArrayList<>();
+        for (final Target target : targets) {
             results.addAll(grade(target));
         }
         return results;
     }
 
-    private List<Result> gradeUntimed(Target... targets) {
-        List<Result> results = new ArrayList<>();
+    private List<Result> gradeUntimed(final Target... targets) {
+        final List<Result> results = new ArrayList<>();
         try {
-            for (Target target : targets) {
+            for (final Target target : targets) {
                 results.addAll(getCallable(target).call());
             }
         } catch (Exception e) {
@@ -65,10 +65,10 @@ public abstract class Grader {
     }
 
     private List<Result> gradeTimed(Target... targets) {
-        List<Result> results = new ArrayList<>();
+        final List<Result> results = new ArrayList<>();
         try {
-            for (Target target : targets) {
-                Future<List<Result>> future = executor.submit(getCallable(target));
+            for (final Target target : targets) {
+                final Future<List<Result>> future = executor.submit(getCallable(target));
                 results.addAll(future.get(Autograder.getInstance().timeoutMillis, TimeUnit.MILLISECONDS));
             }
         } catch (java.util.concurrent.TimeoutException e) {
@@ -95,7 +95,7 @@ public abstract class Grader {
      * @param targets the targets
      * @return the results
      */
-    public List<Result> grade(Target... targets) {
+    public List<Result> grade(final Target... targets) {
         if (Autograder.getInstance().timeoutMillis == 0) {
             return gradeUntimed(targets);
         } else {
@@ -110,8 +110,9 @@ public abstract class Grader {
      * @param message   any message to include
      * @return the result
      */
-    protected List<Result> makeSuccessResultList(double maxPoints, String
-            message) {
+    protected List<Result> makeSuccessResultList(
+            final double maxPoints,
+            final String message) {
         return List.of(makeSuccessResult(maxPoints, message));
     }
 
@@ -134,8 +135,9 @@ public abstract class Grader {
      * @param message   any message to include
      * @return the result
      */
-    protected List<Result> makeFailureResultList(double maxPoints, String
-            message) {
+    protected List<Result> makeFailureResultList(
+            final double maxPoints,
+            final String message) {
         return List.of(makeFailureResult(maxPoints, message));
     }
 
@@ -146,7 +148,7 @@ public abstract class Grader {
      * @param message   any message to include
      * @return the result
      */
-    protected Result makeFailureResult(double maxPoints, String message) {
+    protected Result makeFailureResult(final double maxPoints, final String message) {
         return Result.makeTotalFailure(name, maxPoints, message);
     }
 
@@ -157,7 +159,7 @@ public abstract class Grader {
      * @param throwable the unhandled throwable
      * @return the result
      */
-    protected List<Result> makeExceptionResultList(Throwable throwable) {
+    protected List<Result> makeExceptionResultList(final Throwable throwable) {
         return List.of(makeExceptionResult(throwable));
     }
 
@@ -168,7 +170,7 @@ public abstract class Grader {
      * @param throwable the unhandled throwable
      * @return the result
      */
-    protected Result makeExceptionResult(Throwable throwable) {
+    protected Result makeExceptionResult(final Throwable throwable) {
         return Result.makeError(name, throwable);
     }
 
@@ -180,8 +182,10 @@ public abstract class Grader {
      * @param message   any message
      * @return the result
      */
-    protected Result makePartialCreditResult(double points,
-                                             double maxPoints, String message) {
+    protected Result makePartialCreditResult(
+            final double points,
+            final double maxPoints,
+            final String message) {
         return Result.makeResult(name, points, maxPoints, message);
     }
 }

@@ -13,21 +13,21 @@ public class DependencyInjector implements TestInstanceFactory {
     private static Class<?> classToInject;
     private static Integer intToInject;
 
-    static void reset() {
+    /* default */ static void reset() {
         generalizedTestClass = null;
         classToInject = null;
         intToInject = null;
     }
 
-    static void setGeneralizedTestClass(Class<?> generalizedTestClass) {
+    /* default */ static void setGeneralizedTestClass(Class<?> generalizedTestClass) {
         DependencyInjector.generalizedTestClass = generalizedTestClass;
     }
 
-    static void setClassToInject(Class<?> classToInject) {
+    /* default */ static void setClassToInject(Class<?> classToInject) {
         DependencyInjector.classToInject = classToInject;
     }
 
-    static void setIntToInject(int i) {
+    /* default */ static void setIntToInject(int i) {
         intToInject = i;
     }
 

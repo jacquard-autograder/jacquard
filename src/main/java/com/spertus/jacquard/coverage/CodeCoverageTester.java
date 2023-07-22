@@ -85,7 +85,7 @@ public class CodeCoverageTester extends Tester {
     // and made available under
     // the terms of the Eclipse Public License 2.0 which is available at
     // http://www.eclipse.org/legal/epl-2.0
-    private IClassCoverage calculateCoverage() throws Exception {
+    private IClassCoverage calculateCoverage() throws Exception { // NOPMD
         final String cutName = classUnderTest.getName();
         final String testClassName = testClass.getName();
         final IRuntime runtime = new LoggerRuntime();
@@ -98,7 +98,7 @@ public class CodeCoverageTester extends Tester {
 
         // Start data recording and run tests.
         final RuntimeData data = new RuntimeData(); // throws Exception
-        runtime.startup(data);
+        runtime.startup(data); // throws Exception
         final Class<?> instrumentedTestClass = memoryClassLoader.loadClass(testClassName);
         runJUnitTests(memoryClassLoader, instrumentedTestClass);
 
@@ -126,9 +126,9 @@ public class CodeCoverageTester extends Tester {
     @Override
     public List<Result> run() {
         try {
-            IClassCoverage cc = calculateCoverage();
-            double branchCoverage = cc.getBranchCounter().getCoveredRatio();
-            double lineCoverage = cc.getLineCounter().getCoveredRatio();
+            final IClassCoverage cc = calculateCoverage();
+            final double branchCoverage = cc.getBranchCounter().getCoveredRatio();
+            final double lineCoverage = cc.getLineCounter().getCoveredRatio();
             return List.of(scorer.getResult(branchCoverage, lineCoverage));
         } catch (Exception e) {
             return List.of(Result.makeError("Unable to test code coverage (jacoco)", e));

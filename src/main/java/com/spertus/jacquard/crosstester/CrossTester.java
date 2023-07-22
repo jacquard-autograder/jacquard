@@ -89,7 +89,7 @@ public class CrossTester {
                     }
                 }
             } else {
-                throw new RuntimeException("File is empty");
+                throw new ClientException("CSV file is empty");
             }
         }
 
@@ -99,7 +99,7 @@ public class CrossTester {
         for (int i = 0; i < methodNames.length; i++) {
             String[] row = rows.get(i);
             if (row.length != cutNames.length + 1) {
-                throw new RuntimeException(String.format("Row %d has length %d, not expected length %d",
+                throw new ClientException(String.format("Row %d has length %d, not expected length %d",
                         i, row.length, cutNames.length + 1));
             }
             methodNames[i] = row[0];
