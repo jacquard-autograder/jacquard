@@ -12,7 +12,6 @@ import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.core.LauncherFactory;
 
 import java.io.*;
-import java.nio.file.*;
 import java.util.*;
 
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -131,11 +130,8 @@ public class CodeCoverageTester extends Tester {
             double branchCoverage = cc.getBranchCounter().getCoveredRatio();
             double lineCoverage = cc.getLineCounter().getCoveredRatio();
             return List.of(scorer.getResult(branchCoverage, lineCoverage));
-        } catch (IOException e) {
-        } catch (InternalException e) {
         } catch (Exception e) {
-
+            return List.of(Result.makeError("Unable to test code coverage (jacoco)", e));
         }
-        return null;
     }
 }

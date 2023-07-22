@@ -5,7 +5,6 @@ import com.spertus.jacquard.coverage.*;
 import com.spertus.jacquard.coveragetests.*;
 import org.junit.jupiter.api.*;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +16,7 @@ public class CodeCoverageTesterTest {
     }
 
     @Test
-    public void testLinearScorer() throws URISyntaxException {
+    public void testLinearScorer() {
         Scorer scorer = new LinearScorer(.5, 10);
         CodeCoverageTester tester = new CodeCoverageTester(scorer, PrimeChecker.class, PrimeCheckerTest.class);
         List<Result> results = tester.run();
