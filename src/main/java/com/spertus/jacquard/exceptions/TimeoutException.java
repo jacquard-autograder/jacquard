@@ -1,10 +1,10 @@
 package com.spertus.jacquard.exceptions;
 
 /**
- * An exception due to a test timing out.
+ * A checked exception due to a test timing out.
  * @see com.spertus.jacquard.common.Autograder.Builder#timeout(long)
  */
-public class TimeoutException extends AutograderException {
+public class TimeoutException extends Exception implements AutograderException {
 
     /**
      * Creates a new TimeoutException.

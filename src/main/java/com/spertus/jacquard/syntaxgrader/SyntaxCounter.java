@@ -33,12 +33,12 @@ public abstract class SyntaxCounter extends SyntaxGrader {
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public SyntaxCounter(
-            String name,
-            String countedName,
-            double maxScore,
-            int minCount,
-            int maxCount,
-            VoidVisitorAdapter<MutableInteger> adapter
+            final String name,
+            final String countedName,
+            final double maxScore,
+            final int minCount,
+            final int maxCount,
+            final VoidVisitorAdapter<MutableInteger> adapter
     ) throws ClientException {
         super(name);
         if (minCount < 0) {
@@ -61,7 +61,7 @@ public abstract class SyntaxCounter extends SyntaxGrader {
     }
 
     @Override
-    protected List<Result> grade(CompilationUnit cu) {
+    protected List<Result> grade(final CompilationUnit cu) {
         final MutableInteger mi = new MutableInteger();
         adapter.visit(cu, mi);
         return List.of(getResult(mi));
@@ -95,7 +95,7 @@ public abstract class SyntaxCounter extends SyntaxGrader {
      * @param mi the number of occurrences of the syntactic element.
      * @return the result
      */
-    protected Result getResult(MutableInteger mi) {
+    protected Result getResult(final MutableInteger mi) {
         if (mi.getValue() < minCount) {
             return makeFailureResult(maxScore,
                     String.format("%s but had %d", getPrefix(), mi.getValue()));

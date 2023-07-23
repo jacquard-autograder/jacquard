@@ -3,7 +3,7 @@ package com.spertus.jacquard.syntaxgrader;
 import com.github.javaparser.*;
 import com.github.javaparser.ast.CompilationUnit;
 import com.spertus.jacquard.common.Autograder;
-import com.spertus.jacquard.exceptions.ClientException;
+import com.spertus.jacquard.exceptions.*;
 
 import java.io.*;
 import java.util.List;
@@ -62,20 +62,20 @@ public class Parser {
     /**
      * Parses a file.
      *
-     * @param file      the file
+     * @param file the file
      * @return the parsed representation
-     * @throws ClientException if the file cannot be found or cannot be parsed
-     *                         or if the Java level is not in range
+     * @throws SubmissionException if the file cannot be found or cannot be parsed
      */
-    public CompilationUnit parse(File file) {
+    public CompilationUnit parse(File file) throws SubmissionException {
         try {
             ParseResult<CompilationUnit> parseResult = javaParser.parse(file);
             if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
                 return parseResult.getResult().get();
             }
-            throw new ClientException(joinProblems(parseResult.getProblems()));
+            throw new SubmissionException(
+                    "Unable to parse " + file + ":\n" + joinProblems(parseResult.getProblems()));
         } catch (FileNotFoundException e) {
-            throw new ClientException("Unable to find file " + file, e);
+            throw new SubmissionException("Unable to find file " + file);
         }
     }
 }

@@ -1,9 +1,14 @@
 package com.spertus.jacquard.exceptions;
 
+import com.spertus.jacquard.common.Autograder;
+
 /**
- * Signals that an error occurred within the autograder due to misconfiguration.
+ * Signals that an error occurred within the autograder due to misuse of the
+ * API, such as calling {@link Autograder#init()} repeatedly or passing an
+ * invalid argument.
  */
-public class ClientException extends AutograderException {
+public class ClientException extends RuntimeException
+        implements AutograderException {
     /**
      * Constructs a {@code ClientException} with the specified
      * message and cause.

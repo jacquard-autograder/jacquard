@@ -19,7 +19,7 @@ public abstract class Grader {
      * @param name the name of the grader
      * @throws ClientException if {@link Autograder} has not been initialized
      */
-    public Grader(String name) throws ClientException {
+    public Grader(String name) {
         if (!Autograder.isInitialized()) {
             throw new ClientException("Autograder must be initialized before creating a grader.");
         }
@@ -41,10 +41,7 @@ public abstract class Grader {
      * @return the results
      * @throws ClientException if {@link Autograder} has not been initialized
      */
-    public List<Result> grade(final List<Target> targets) throws ClientException {
-        if (!Autograder.isInitialized()) {
-            throw new ClientException("Autograder must be initialized before grading.");
-        }
+    public List<Result> grade(final List<Target> targets) {
         final List<Result> results = new ArrayList<>();
         for (final Target target : targets) {
             results.addAll(grade(target));
@@ -77,14 +74,7 @@ public abstract class Grader {
         } catch (InterruptedException | ExecutionException e) {
             // This currently returns after the first exception is thrown,
             // rather than continuing to other targets.
-            if (e instanceof ExecutionException ee && ee.getCause() != null) {
-                results.add(makeExceptionResult(ee.getCause()));
-            } else {
-                results.add(
-                        makeExceptionResult(
-                                new InternalException(
-                                        "Internal error", e.getCause())));
-            }
+            results.add(makeExceptionResult(e.getCause() == null ? e : e.getCause()));
         }
         return results;
     }

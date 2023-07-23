@@ -1,7 +1,7 @@
 package com.spertus.jacquard.common;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.spertus.jacquard.exceptions.ClientException;
+import com.spertus.jacquard.exceptions.*;
 
 /**
  * A singleton class containing configuration information. The client must
@@ -65,17 +65,21 @@ public final class Autograder {
             return INSTANCE;
         }
 
+        private void verifyMutability() {
+            if (built) {
+                throw new ClientException("The builder must not be modified after build() is called.");
+            }
+        }
         /**
          * Sets the timeout for {@link Grader} execution (or 0 for no timeout).
          * If this method is not called, {@link #DEFAULT_TIMEOUT_MS} is used.
          *
          * @param timeout the timeout in milliseconds or 0 for no timeout
          * @return the builder
+         * @throws ClientException if this builder has already been built
          */
         public Builder timeout(final long timeout) {
-            if (built) {
-                throw new ClientException("The builder must not be modified after build() is called.");
-            }
+            verifyMutability();
             timeoutMillis = timeout;
             return this;
         }
@@ -86,11 +90,10 @@ public final class Autograder {
          *
          * @param javaLevel the Java language level
          * @return the builder
+         * @throws ClientException if this builder has already been built
          */
         public Builder javaLevel(final int javaLevel) {
-            if (built) {
-                throw new ClientException("The builder must not be modified after build() is called.");
-            }
+            verifyMutability();
             this.javaLevel = javaLevel;
             return this;
         }
@@ -101,11 +104,10 @@ public final class Autograder {
          *
          * @param visibility the visibility
          * @return the builder
+         * @throws ClientException if this builder has already been built
          */
         public Builder visibility(final Visibility visibility) {
-            if (built) {
-                throw new ClientException("The builder must not be modified after build() is called.");
-            }
+            verifyMutability();
             this.visibility = visibility;
             return this;
         }
@@ -114,6 +116,8 @@ public final class Autograder {
          * Builds the Autograder using information from this builder. This
          * may be called only once per program execution (unless
          * {@code VisibleForTesting} methods are used).
+         *
+         * @throws ClientException if this builder has already been built
          */
         public void build() {
             if (built) {
@@ -150,7 +154,7 @@ public final class Autograder {
      *
      * @throws ClientException if the Autograder is initialized more than once
      */
-    public static void init() throws ClientException {
+    public static void init() {
         if (instance != null) {
             throw new ClientException("Autograder.init() cannot be called after the autograder has been built.");
         }
@@ -163,7 +167,7 @@ public final class Autograder {
      * @return the singleton Autograder instance
      * @throws ClientException if the Autograder has not been initialized
      */
-    public static Autograder getInstance() throws ClientException {
+    public static Autograder getInstance() {
         if (instance == null) {
             throw new ClientException("Autograder not initialized.");
         }

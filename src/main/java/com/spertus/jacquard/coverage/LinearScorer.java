@@ -53,7 +53,7 @@ public class LinearScorer extends Scorer {
     public LinearScorer(double branchWeight, double maxPoints) {
         super(maxPoints);
         if (branchWeight < 0 || branchWeight > 1) {
-            throw new InternalException("Argument to LinearScore(double) is not in range [0-1].");
+            throw new ClientException("Argument to LinearScore(double) is not in range [0-1].");
         }
         this.branchWeight = branchWeight;
     }

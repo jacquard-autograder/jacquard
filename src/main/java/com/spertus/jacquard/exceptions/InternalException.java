@@ -3,7 +3,8 @@ package com.spertus.jacquard.exceptions;
 /**
  * Signals that an internal error occurred within the autograder.
  */
-public class InternalException extends AutograderException {
+public class InternalException extends Exception
+        implements AutograderException {
     /**
      * Constructs an {@code InternalException} with the specified
      * message.
@@ -19,7 +20,7 @@ public class InternalException extends AutograderException {
      * message and cause.
      *
      * @param message an explanation
-     * @param cause the underlying cause
+     * @param cause   the underlying cause
      */
     public InternalException(String message, Throwable cause) {
         super(message, cause);

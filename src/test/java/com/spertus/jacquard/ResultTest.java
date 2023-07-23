@@ -6,8 +6,8 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResultTest {
-    @BeforeAll
-    public static void setup() {
+    @BeforeEach
+    public void setup() {
         Autograder.initForTest();
     }
 
@@ -30,6 +30,7 @@ public class ResultTest {
             Autograder.Builder.getInstance().visibility(v).build();
             Result result = Result.makeSuccess("test", 5, "message");
             assertEquals(v, result.getVisibility());
+            Autograder.resetForTest(); // keep from affecting downstream tests
         }
     }
 }

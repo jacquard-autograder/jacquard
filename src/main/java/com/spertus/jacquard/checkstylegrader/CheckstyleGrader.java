@@ -142,14 +142,14 @@ public class CheckstyleGrader extends Grader {
         arguments.add(target.toPathString());
         final ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
-            final Process p = pb.start();
-            final int result = p.waitFor();
+            final Process p = pb.start(); // IOException
+            final int result = p.waitFor(); // InterruptedException
             // Positive exit codes mean that checkstyle found problems, not that it failed.
             if (result < 0) {
-                throw new DependencyException("Exit code indicated checkstyle failure");
+                throw new InternalException("Exit code indicated checkstyle failure");
             }
         } catch (InterruptedException | IOException e) {
-            throw new DependencyException("Error running checkstyle ", e);
+            throw new InternalException("Error running checkstyle ", e);
         }
     }
 
@@ -176,6 +176,9 @@ public class CheckstyleGrader extends Grader {
     @Override
     public Callable<List<Result>> getCallable(final Target target) {
         return () -> {
+            // Either of the next two method calls could throw
+            // InternalException. If so, it will be caught in
+            // Grader.gradeTimed() or Grader.gradeUntimed().
             runCheckstyle(target);
             return List.of(interpretOutput());
         };
