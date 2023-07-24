@@ -1,6 +1,5 @@
 package com.spertus.jacquard;
 
-import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.stmt.*;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.exceptions.ClientException;

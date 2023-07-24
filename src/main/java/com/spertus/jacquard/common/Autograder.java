@@ -222,11 +222,11 @@ public final class Autograder {
 
     /**
      * Resets and reinitializes the Autograder. This is a convenience method
-     * to make testing more convenient.
+     * to make testing more convenient. Timeout is set to 0 (no timeout).
      */
     @VisibleForTesting
     public static void initForTest() {
         resetForTest();
-        init();
+        Builder.getInstance().timeout(0).build();
     }
 }
