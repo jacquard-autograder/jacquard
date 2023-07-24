@@ -9,7 +9,7 @@ import java.util.function.Predicate;
  * A grader to test whether exactly one parse node satisfies a
  * given predicate.
  */
-public class SyntaxConditionGrader extends SyntaxConditionCounter {
+public class SyntaxConditionGrader extends SyntaxConditionCountGrader {
     /**
      * Creates a new counter to test whether the number of parse nodes
      * satisfying the predicate is within the specified range.

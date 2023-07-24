@@ -2,7 +2,6 @@ package com.spertus.jacquard.syntaxgrader;
 
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.google.common.annotations.VisibleForTesting;
 import com.spertus.jacquard.common.Result;
 import com.spertus.jacquard.exceptions.ClientException;
 
@@ -12,10 +11,10 @@ import java.util.*;
  * Checks whether required imports appear in a submission. This is
  * one of several graders checking imports.
  *
- * @see ForbiddenImportChecker
- * @see RestrictedImportChecker
+ * @see ForbiddenImportGrader
+ * @see RestrictedImportGrader
  */
-public class RequiredImportChecker extends SyntaxChecker {
+public class RequiredImportGrader extends SyntaxCheckGrader {
     private static final String GRADER_NAME = "required import checker";
     private final int numRequirements;
 
@@ -30,7 +29,7 @@ public class RequiredImportChecker extends SyntaxChecker {
      * @param requiredImports required imports
      * @throws ClientException if requiredImports is empty or has malformed entries
      */
-    public RequiredImportChecker(
+    public RequiredImportGrader(
             final String name,
             final double pointsPerImport,
             final List<String> requiredImports) {
@@ -55,7 +54,7 @@ public class RequiredImportChecker extends SyntaxChecker {
      * @param requiredImports required imports
      * @throws ClientException if requiredImports is empty or has malformed entries
      */
-    public RequiredImportChecker(
+    public RequiredImportGrader(
             final double pointsPerImport,
             final List<String> requiredImports) {
         this(GRADER_NAME, pointsPerImport, requiredImports);
@@ -66,8 +65,7 @@ public class RequiredImportChecker extends SyntaxChecker {
         return numRequirements * maxScorePerInstance;
     }
 
-    @VisibleForTesting
-    public static boolean importMatches(ImportDeclaration importDecl, String requirement) {
+    private static boolean importMatches(ImportDeclaration importDecl, String requirement) {
         String importName = importDecl.getNameAsString();
         if (importDecl.isAsterisk()) {
             // both are wildcards

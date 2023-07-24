@@ -10,7 +10,7 @@ import java.util.List;
  * A counter to test whether the number of occurrences of a given statement
  * type is within the specified range.
  */
-public class StatementCounter extends ExpressionStatementCounter {
+public class StatementCountGrader extends ExpressionStatementCountGrader {
 
     /**
      * Creates a new counter with the given name to test whether the number of
@@ -25,7 +25,7 @@ public class StatementCounter extends ExpressionStatementCounter {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public StatementCounter(
+    public StatementCountGrader(
             String name,
             double maxScore,
             int minCount,
@@ -47,7 +47,7 @@ public class StatementCounter extends ExpressionStatementCounter {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public StatementCounter(
+    public StatementCountGrader(
             double maxScore,
             int minCount,
             int maxCount,

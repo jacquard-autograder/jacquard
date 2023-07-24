@@ -13,12 +13,12 @@ import com.spertus.jacquard.exceptions.ClientException;
 import java.util.function.Predicate;
 
 /**
- * A counter to test whether the number of parse nodes satisfying a given
+ * A grader that counts whether the number of parse nodes satisfying a given
  * predicate is in the specified range.
  *
  * @see com.github.javaparser.ast.Node
  */
-public class SyntaxConditionCounter extends SyntaxCounter {
+public abstract class SyntaxConditionCountGrader extends SyntaxCountGrader {
     /**
      * Creates a new counter to test whether the number of parse nodes
      * satisfying the predicate is within the specified range.
@@ -33,7 +33,7 @@ public class SyntaxConditionCounter extends SyntaxCounter {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public SyntaxConditionCounter(
+    public SyntaxConditionCountGrader(
             final String name,
             final String countedName,
             final double maxScore,

@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Superclass for classes checking modifiers of syntactic elements.
  */
-abstract class ModifierChecker extends SyntaxChecker {
+abstract class ModifierGrader extends SyntaxCheckGrader {
     private final List<String> itemNames;
     private final boolean penalizeMissing;
     private final Set<String> missingVars;
@@ -30,7 +30,7 @@ abstract class ModifierChecker extends SyntaxChecker {
      * @param optionalModifiers    modifiers that may be used on items
      * @param penalizeMissingItems whether to apply a penalty to missing items
      */
-    protected ModifierChecker(
+    protected ModifierGrader(
             String name,
             double maxScorePerInstance,
             List<String> itemNames,

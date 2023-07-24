@@ -1,4 +1,4 @@
 /**
- * Grader that scores based on Checkstyle performance.
+ * Checkstyle-based grader.
  */
 package com.spertus.jacquard.checkstylegrader;

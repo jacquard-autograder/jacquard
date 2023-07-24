@@ -3,7 +3,7 @@ package com.spertus.jacquard;
 import com.github.javaparser.ast.expr.*;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.exceptions.*;
-import com.spertus.jacquard.syntaxgrader.ExpressionCounter;
+import com.spertus.jacquard.syntaxgrader.ExpressionCountGrader;
 import org.junit.jupiter.api.*;
 
 import java.net.URISyntaxException;
@@ -11,11 +11,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ExpressionCounterTest {
+public class ExpressionCountGraderTest {
     private static final String NAME = "name";
     private static final double MAX_SCORE = 10.0;
 
-    private ExpressionCounter counter;
+    private ExpressionCountGrader counter;
     private Target expressionTarget;
 
     @BeforeAll()
@@ -25,7 +25,7 @@ public class ExpressionCounterTest {
 
     @BeforeEach
     public void setup() throws ClientException, URISyntaxException {
-        counter = new ExpressionCounter(NAME, MAX_SCORE, 1, 2, InstanceOfExpr.class);
+        counter = new ExpressionCountGrader(NAME, MAX_SCORE, 1, 2, InstanceOfExpr.class);
         expressionTarget = TestUtilities.getTargetFromResource("good/Expressions.java");
     }
 
@@ -33,15 +33,15 @@ public class ExpressionCounterTest {
     public void constructorThrowsExceptions() {
         // minimum is too low
         assertThrows(ClientException.class,
-                () -> new ExpressionCounter(NAME, MAX_SCORE, -1, 2, SwitchExpr.class));
+                () -> new ExpressionCountGrader(NAME, MAX_SCORE, -1, 2, SwitchExpr.class));
 
         // maximum is lower than minimum
         assertThrows(ClientException.class,
-                () -> new ExpressionCounter(NAME, MAX_SCORE, 3, 2, SwitchExpr.class));
+                () -> new ExpressionCountGrader(NAME, MAX_SCORE, 3, 2, SwitchExpr.class));
 
         // any count is allowed
         assertThrows(ClientException.class,
-                () -> new ExpressionCounter(NAME, MAX_SCORE, 0, Integer.MAX_VALUE, SwitchExpr.class));
+                () -> new ExpressionCountGrader(NAME, MAX_SCORE, 0, Integer.MAX_VALUE, SwitchExpr.class));
     }
 
     private void testHelper(
@@ -50,7 +50,7 @@ public class ExpressionCounterTest {
             int maxCount,
             Class<? extends Expression> expressionType
     ) throws ClientException {
-        ExpressionCounter counter = new ExpressionCounter(
+        ExpressionCountGrader counter = new ExpressionCountGrader(
                 MAX_SCORE, minCount, maxCount, expressionType);
         List<Result> results = counter.grade(expressionTarget);
         assertEquals(1, results.size());

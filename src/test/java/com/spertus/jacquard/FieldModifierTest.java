@@ -2,7 +2,7 @@ package com.spertus.jacquard;
 
 import com.github.javaparser.ast.Modifier;
 import com.spertus.jacquard.common.*;
-import com.spertus.jacquard.syntaxgrader.FieldModifierChecker;
+import com.spertus.jacquard.syntaxgrader.FieldModifierGrader;
 import org.junit.jupiter.api.*;
 
 import java.net.URISyntaxException;
@@ -18,7 +18,7 @@ public class FieldModifierTest {
 
     @Test
     public void testWithPenalizeMissingFields() throws URISyntaxException {
-        FieldModifierChecker checker = FieldModifierChecker.makeChecker("Private/final check", 1.0,
+        FieldModifierGrader checker = FieldModifierGrader.makeChecker("Private/final check", 1.0,
                 List.of("behavior", "maxHearts", "maxDamage", "minDamage", "type", "nosuchfield"),
                 List.of(Modifier.finalModifier(), Modifier.privateModifier()),
                 List.of(),
@@ -31,7 +31,7 @@ public class FieldModifierTest {
 
     @Test
     public void testWithoutPenalizeMissingFields() throws URISyntaxException {
-        FieldModifierChecker checker = FieldModifierChecker.makeChecker("Private/final check", 1.0,
+        FieldModifierGrader checker = FieldModifierGrader.makeChecker("Private/final check", 1.0,
                 List.of("behavior", "maxHearts", "maxDamage", "minDamage", "type", "nosuchfield"),
                 List.of(Modifier.finalModifier(), Modifier.privateModifier()),
                 List.of(),

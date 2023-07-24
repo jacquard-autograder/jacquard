@@ -20,7 +20,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
  * A grader that uses Jacoco to measure code coverage of tests.
  */
 public class CodeCoverageTester extends Tester {
-    private static final String GRADER_NAME = "Code Coverage Grader";
+    private static final String GRADER_NAME = "code coverage grader";
 
     private final Scorer scorer;
     private final Class<?> classUnderTest;
@@ -47,7 +47,7 @@ public class CodeCoverageTester extends Tester {
      * the {@code scorer} and how much of the class under test is covered by the
      * test class.
      *
-     * @param scorer a scorer, which converts the outcome to a point value
+     * @param scorer         a scorer, which converts the outcome to a point value
      * @param classUnderTest the class under test
      * @param testClass      the test class
      */
@@ -56,11 +56,12 @@ public class CodeCoverageTester extends Tester {
     }
 
     private void instrument(
-            Instrumenter instrumenter,
-            MemoryClassLoader memoryClassLoader,
-            Class<?> clazz) throws IOException {
+            final Instrumenter instrumenter,
+            final MemoryClassLoader memoryClassLoader,
+            final Class<?> clazz)
+            throws IOException {
         try (InputStream is = readClassFile(clazz.getName())) {
-            byte[] instrumented = instrumenter.instrument(is, clazz.getName());
+            final byte[] instrumented = instrumenter.instrument(is, clazz.getName());
             memoryClassLoader.addDefinition(clazz.getName(), instrumented);
         }
     }
@@ -70,7 +71,9 @@ public class CodeCoverageTester extends Tester {
         return CodeCoverageTester.class.getResourceAsStream(resource);
     }
 
-    private void runJUnitTests(MemoryClassLoader memoryClassLoader, Class<?>... testClasses) {
+    private void runJUnitTests(
+            final MemoryClassLoader memoryClassLoader,
+            final Class<?>... testClasses) {
         final List<? extends DiscoverySelector> selectors =
                 Arrays.stream(testClasses)
                         .map(DiscoverySelectors::selectClass)
@@ -79,8 +82,8 @@ public class CodeCoverageTester extends Tester {
         executor.invoke(() -> executeTests(selectors));
     }
 
-    private static int executeTests(List<? extends DiscoverySelector> selectors) {
-        Launcher launcher = LauncherFactory.create();
+    private static int executeTests(final List<? extends DiscoverySelector> selectors) {
+        final Launcher launcher = LauncherFactory.create();
         launcher.execute(request().selectors(selectors).build());
         return 0;
     }

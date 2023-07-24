@@ -7,13 +7,13 @@ import com.spertus.jacquard.exceptions.ClientException;
 import java.util.List;
 
 /**
- * A counter to test whether the number of occurrences of a given expression
+ * A grader to test whether the number of occurrences of a given expression
  * type is within the specified range.
  */
-public class ExpressionCounter extends ExpressionStatementCounter {
+public class ExpressionCountGrader extends ExpressionStatementCountGrader {
 
     /**
-     * Creates a new counter with the given name to test whether the number of
+     * Creates a new grader with the given name to test whether the number of
      * occurrences of an expression type is within the specified range.
      *
      * @param name     the name of this processor (for the {@link Result})
@@ -25,7 +25,7 @@ public class ExpressionCounter extends ExpressionStatementCounter {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public ExpressionCounter(String name, double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz)
+    public ExpressionCountGrader(String name, double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz)
             throws ClientException {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount, List.of(clazz), List.of());
     }
@@ -42,8 +42,8 @@ public class ExpressionCounter extends ExpressionStatementCounter {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public ExpressionCounter(double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz)
+    public ExpressionCountGrader(double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz)
             throws ClientException {
-        this(clazz.getSimpleName() + "counter", maxScore, minCount, maxCount, clazz);
+        this(clazz.getSimpleName() + " counter", maxScore, minCount, maxCount, clazz);
     }
 }

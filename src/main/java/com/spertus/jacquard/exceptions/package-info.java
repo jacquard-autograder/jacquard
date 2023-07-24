@@ -1,4 +1,4 @@
 /**
- * Parser exceptions, all of which are checked.
+ * Jacquard exceptions.
  */
 package com.spertus.jacquard.exceptions;

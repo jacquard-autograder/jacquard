@@ -11,45 +11,31 @@ import java.util.*;
  * static). For example, this could be used to verify that certain methods
  * are declared {@code public} or {@code static}.
  */
-public final class MethodModifierChecker extends ModifierChecker {
-    private static final String DEFAULT_GRADER_NAME = "method modifier checker";
-
-    private MethodModifierChecker(String name, double maxScorePerInstance, List<String> methodNames, List<Modifier> requiredModifiers, List<Modifier> optionalModifiers,
-                                  boolean penalizeMissingMethods) {
-        super(name, maxScorePerInstance, methodNames, requiredModifiers, optionalModifiers, penalizeMissingMethods);
-        adapter = new Adapter();
-    }
+public final class MethodModifierGrader extends ModifierGrader {
+    private static final String GRADER_NAME = "method modifier grader";
 
     /**
-     * Creates a method modifier checker. If {@code penalizeMissingMethods} is
+     * Creates a method modifier grader. If {@code penalizeMissingMethods} is
      * true and a method is not found, a {@link Result} will be created with a
      * score of 0 and a maximum score of {@code maxScorePerInstance}. Otherwise,
      * no {@code Result} will be created for missing methods.
      *
      * @param name                   the name, which is used in the {@link Result}
      * @param maxScorePerInstance    the maximum score for each method
-     * @param varNames               the names of the methods to check
+     * @param methodNames            the names of the methods to check
      * @param requiredModifiers      modifiers that must be used on each method
      * @param optionalModifiers      modifiers that may be used on methods
      * @param penalizeMissingMethods whether to apply a penalty to missing methods
-     * @return a new instance
      */
-    public static MethodModifierChecker makeChecker(
-            String name,
-            double maxScorePerInstance,
-            List<String> varNames,
-            List<Modifier> requiredModifiers,
-            List<Modifier> optionalModifiers,
-            boolean penalizeMissingMethods
-    ) {
-        return new MethodModifierChecker(
-                name,
-                maxScorePerInstance,
-                varNames,
-                requiredModifiers,
-                optionalModifiers,
-                penalizeMissingMethods
-        );
+    public MethodModifierGrader(
+            final String name,
+            final double maxScorePerInstance,
+            final List<String> methodNames,
+            final List<Modifier> requiredModifiers,
+            final List<Modifier> optionalModifiers,
+            final boolean penalizeMissingMethods) {
+        super(name, maxScorePerInstance, methodNames, requiredModifiers, optionalModifiers, penalizeMissingMethods);
+        adapter = new Adapter();
     }
 
     /**
@@ -64,25 +50,19 @@ public final class MethodModifierChecker extends ModifierChecker {
      * @param requiredModifiers      modifiers that must be used on each method
      * @param optionalModifiers      modifiers that may be used on methods
      * @param penalizeMissingMethods whether to apply a penalty to missing methods
-     * @return a new instance
      */
-    public static MethodModifierChecker makeChecker(
-            double maxScorePerInstance,
-            List<String> varNames,
-            List<Modifier> requiredModifiers,
-            List<Modifier> optionalModifiers,
-            boolean penalizeMissingMethods
+    public MethodModifierGrader(
+            final double maxScorePerInstance,
+            final List<String> varNames,
+            final List<Modifier> requiredModifiers,
+            final List<Modifier> optionalModifiers,
+            final boolean penalizeMissingMethods
     ) {
-        return makeChecker(
-                DEFAULT_GRADER_NAME,
-                maxScorePerInstance,
-                varNames, requiredModifiers, optionalModifiers,
-                penalizeMissingMethods
-        );
+        this(GRADER_NAME, maxScorePerInstance, varNames, requiredModifiers,
+                optionalModifiers, penalizeMissingMethods);
     }
 
-
-    private class Adapter extends ModifierChecker.Adapter { // NOPMD
+    private class Adapter extends ModifierGrader.Adapter { // NOPMD
         @Override
         public void visit(MethodDeclaration md, List<Result> collector) {
             process(collector, md, md.getNameAsString(), md.getModifiers());

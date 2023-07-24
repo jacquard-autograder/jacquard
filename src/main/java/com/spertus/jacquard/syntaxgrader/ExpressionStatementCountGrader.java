@@ -10,9 +10,9 @@ import java.util.List;
  * A grader to test whether the number of occurrences of the given
  * expression and statement types are in the specified numeric range.
  */
-public class ExpressionStatementCounter extends SyntaxConditionCounter {
+public class ExpressionStatementCountGrader extends SyntaxConditionCountGrader {
     /**
-     * Creates agrader to test whether the number of occurrences of the given
+     * Creates a grader to test whether the number of occurrences of the given
      * expression and statement types are in the specified numeric range.
      *
      * @param name              the name of this grader
@@ -26,7 +26,7 @@ public class ExpressionStatementCounter extends SyntaxConditionCounter {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public ExpressionStatementCounter(
+    public ExpressionStatementCountGrader(
             String name,
             String countedName,
             double maxScore,

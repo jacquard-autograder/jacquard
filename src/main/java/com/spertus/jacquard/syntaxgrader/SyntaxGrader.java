@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * Syntax-based graders that make use of the linked
+ * The base class for syntax-based graders that make use of the linked
  * <a href="https://javaparser.org/">Java parser</a>.
  */
 public abstract class SyntaxGrader extends Grader {

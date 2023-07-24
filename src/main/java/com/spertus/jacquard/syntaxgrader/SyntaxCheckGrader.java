@@ -7,11 +7,16 @@ import com.spertus.jacquard.common.Result;
 import java.util.*;
 
 /**
- * The base class for syntax-based checkers involving multiple items of the
- * same type, such as {@link MethodModifierChecker}, which checks whether
- * each of a list of methods has the correct modifiers.
+ * The base class for syntax-based graders involving multiple items of the
+ * same type. Examples include:
+ * <ul>
+ *     <li> {@link MethodModifierGrader}, which checks whether
+ *      each of a list of methods has the correct modifiers</li>
+ *     <li> {@link RequiredImportGrader}, which checks whether
+ *     all required imports are present</li>
+ * </ul>
  */
-public abstract class SyntaxChecker extends SyntaxGrader {
+public abstract class SyntaxCheckGrader extends SyntaxGrader {
     /**
      * The maximum score per instance checked.
      */
@@ -34,7 +39,7 @@ public abstract class SyntaxChecker extends SyntaxGrader {
      * @param maxScorePerInstance the maximum score per application
      * @param adapter             the adapter or {@code null}
      */
-    protected SyntaxChecker(String name, double maxScorePerInstance, VoidVisitorAdapter<List<Result>> adapter) {
+    protected SyntaxCheckGrader(String name, double maxScorePerInstance, VoidVisitorAdapter<List<Result>> adapter) {
         super(name);
         this.maxScorePerInstance = maxScorePerInstance;
         this.adapter = adapter;

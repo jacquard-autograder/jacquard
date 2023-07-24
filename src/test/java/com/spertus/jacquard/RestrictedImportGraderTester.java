@@ -10,7 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class RestrictedImportCheckerTester {
+public class RestrictedImportGraderTester {
     @BeforeAll
     public static void setup() {
         Autograder.initForTest();
@@ -18,7 +18,7 @@ public class RestrictedImportCheckerTester {
 
     @Test
     public void testNoneForbidden() throws URISyntaxException {
-        RestrictedImportChecker checker = new RestrictedImportChecker(
+        RestrictedImportGrader checker = new RestrictedImportGrader(
                 1.0, List.of("java.util", "java.lang"));
         List<Result> results = checker.grade(TestUtilities.getTargetFromResource("good/Import.java"));
         TestUtilities.assertResultsMatch(results, 1, 1.0, 1.0);
@@ -26,7 +26,7 @@ public class RestrictedImportCheckerTester {
 
     @Test
     public void testOneForbidden() throws URISyntaxException {
-        RestrictedImportChecker checker = new RestrictedImportChecker(
+        RestrictedImportGrader checker = new RestrictedImportGrader(
                 1.0, List.of("java.util", "java.lang"));
         List<Result> results = checker.grade(TestUtilities.getTargetFromResource("good/ImportWildcards.java"));
         TestUtilities.assertResultsMatch(results, 1, 0.0, 1.0);

@@ -18,8 +18,8 @@ public class MethodModifierTest {
 
     @Test
     public void testWithPenalizeMissingMethods() throws URISyntaxException {
-       MethodModifierChecker checker = MethodModifierChecker.makeChecker(
-               "Public method check", 1.0,
+       MethodModifierGrader checker = new MethodModifierGrader(
+                1.0,
                 List.of("getMinDamage", "getNumHearts", "methodDoesNotExist"),
                 List.of(Modifier.publicModifier()),
                 List.of(Modifier.finalModifier()),
@@ -32,8 +32,8 @@ public class MethodModifierTest {
 
     @Test
     public void testWithoutPenalizeMissingMethods() throws URISyntaxException {
-        MethodModifierChecker checker = MethodModifierChecker.makeChecker(
-                "Public method check", 1.0,
+        MethodModifierGrader checker = new MethodModifierGrader(
+                1.0,
                 List.of("getMinDamage", "getNumHearts", "methodDoesNotExist"),
                 List.of(Modifier.publicModifier()),
                 List.of(Modifier.finalModifier()),

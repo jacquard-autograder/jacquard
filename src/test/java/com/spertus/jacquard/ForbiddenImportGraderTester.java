@@ -7,7 +7,7 @@ import org.junit.jupiter.api.*;
 import java.net.URISyntaxException;
 import java.util.List;
 
-public class ForbiddenImportCheckerTester {
+public class ForbiddenImportGraderTester {
     @BeforeAll
     public static void setup() {
         Autograder.initForTest();
@@ -15,7 +15,7 @@ public class ForbiddenImportCheckerTester {
 
     @Test
     public void testNoForbiddenImports() throws URISyntaxException {
-        ForbiddenImportChecker checker = new ForbiddenImportChecker(
+        ForbiddenImportGrader checker = new ForbiddenImportGrader(
                 1.0, List.of("javax"));
         List<Result> results = checker.grade(TestUtilities.getTargetFromResource("good/Import.java"));
         TestUtilities.assertResultsMatch(results, 1, 1.0, 1.0);
@@ -23,7 +23,7 @@ public class ForbiddenImportCheckerTester {
 
     @Test
     public void testSomeForbiddenImports() throws URISyntaxException {
-        ForbiddenImportChecker checker = new ForbiddenImportChecker(
+        ForbiddenImportGrader checker = new ForbiddenImportGrader(
                 1.0, List.of("java.util", "javax"));
         List<Result> results = checker.grade(TestUtilities.getTargetFromResource("good/Import.java"));
         TestUtilities.assertResultsMatch(results, 1, 0.0, 1.0);
@@ -31,7 +31,7 @@ public class ForbiddenImportCheckerTester {
 
     @Test
     public void testAllForbiddenImports() throws URISyntaxException {
-        ForbiddenImportChecker checker = new ForbiddenImportChecker(
+        ForbiddenImportGrader checker = new ForbiddenImportGrader(
                 1.0, List.of("java.util", "javax"));
         List<Result> results = checker.grade(TestUtilities.getTargetFromResource("good/Import.java"));
         TestUtilities.assertResultsMatch(results, 1, 0.0, 1.0);

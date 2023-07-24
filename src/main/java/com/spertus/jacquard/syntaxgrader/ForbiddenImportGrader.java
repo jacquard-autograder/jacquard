@@ -10,21 +10,21 @@ import java.util.*;
  * Checks whether forbidden imports appear in a submission. This is
  * one of several graders checking imports.
  *
- * @see RestrictedImportChecker
- * @see RequiredImportChecker
+ * @see RestrictedImportGrader
+ * @see RequiredImportGrader
  */
-public class ForbiddenImportChecker extends SyntaxChecker {
-    private static final String GRADER_NAME = "forbidden import checker";
+public class ForbiddenImportGrader extends SyntaxCheckGrader {
+    private static final String GRADER_NAME = "forbidden import grader";
 
     /**
-     * Creates an import checker that tests whether any forbidden packages
+     * Creates an import grader that tests whether any forbidden packages
      * are imported.
      *
      * @param name              the name of this checker
      * @param maxPoints         the number of points to award if none are included
      * @param forbiddenPackages forbidden package names
      */
-    public ForbiddenImportChecker(
+    public ForbiddenImportGrader(
             final String name,
             final double maxPoints,
             final List<String> forbiddenPackages) {
@@ -39,7 +39,7 @@ public class ForbiddenImportChecker extends SyntaxChecker {
      * @param maxPoints         the number of points to award if none are included
      * @param forbiddenPackages forbidden package names
      */
-    public ForbiddenImportChecker(
+    public ForbiddenImportGrader(
             final double maxPoints,
             final List<String> forbiddenPackages) {
         this(GRADER_NAME, maxPoints, forbiddenPackages);

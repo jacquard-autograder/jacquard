@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class StringInterpolationCounterTest {
+public class StringInterpolationCountGraderTest {
     @BeforeEach
     public void setup() {
         Autograder.initForTest();
@@ -17,7 +17,7 @@ public class StringInterpolationCounterTest {
 
     @Test
     public void counterTest() throws URISyntaxException {
-        SyntaxCounter counter = new StringInterpolationCounter("String interpolation counter", 1, 2, Integer.MAX_VALUE);
+        SyntaxCountGrader counter = new StringInterpolationCountGrader("String interpolation counter", 1, 2, Integer.MAX_VALUE);
         Target target = TestUtilities.getTargetFromResource("good/Mob.java");
         List<Result> results = counter.grade(target);
         assertEquals(1, results.size());

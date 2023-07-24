@@ -10,10 +10,10 @@ import java.util.*;
  * Checks whether all imports are within a list of permitted packages.
  * This is one of several graders checking imports.
  *
- * @see ForbiddenImportChecker
- * @see RequiredImportChecker
+ * @see ForbiddenImportGrader
+ * @see RequiredImportGrader
  */
-public class RestrictedImportChecker extends SyntaxChecker {
+public class RestrictedImportGrader extends SyntaxCheckGrader {
     private static final String GRADER_NAME = "restricted import checker";
 
     /**
@@ -24,7 +24,7 @@ public class RestrictedImportChecker extends SyntaxChecker {
      * @param maxPoints         the number of points to award if none are included
      * @param permittedPackages permitted package names
      */
-    public RestrictedImportChecker(
+    public RestrictedImportGrader(
             final String name,
             final double maxPoints,
             final List<String> permittedPackages) {
@@ -39,7 +39,7 @@ public class RestrictedImportChecker extends SyntaxChecker {
      * @param maxPoints         the number of points to award if none are included
      * @param permittedPackages permitted package names
      */
-    public RestrictedImportChecker(
+    public RestrictedImportGrader(
             final double maxPoints,
             final List<String> permittedPackages) {
         this(GRADER_NAME, maxPoints, permittedPackages);

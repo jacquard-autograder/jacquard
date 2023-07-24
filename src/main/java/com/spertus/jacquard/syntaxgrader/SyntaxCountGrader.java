@@ -11,7 +11,7 @@ import java.util.*;
  * The base class for counters to test whether the number of occurrences of a
  * syntactic element is within the specified range.
  */
-public abstract class SyntaxCounter extends SyntaxGrader {
+public abstract class SyntaxCountGrader extends SyntaxGrader {
     private final String countedName;
     private final double maxScore;
     private final int minCount;
@@ -32,7 +32,7 @@ public abstract class SyntaxCounter extends SyntaxGrader {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public SyntaxCounter(
+    public SyntaxCountGrader(
             final String name,
             final String countedName,
             final double maxScore,
@@ -49,7 +49,7 @@ public abstract class SyntaxCounter extends SyntaxGrader {
         }
         if (minCount == 0 && maxCount == Integer.MAX_VALUE) {
             throw new ClientException(
-                    "There is no reason to create a SyntaxCounter of 0 or more elements");
+                    "There is no reason to create a SyntaxCountGrader of 0 or more elements");
         }
 
         this.countedName = countedName;

@@ -12,22 +12,22 @@ import java.util.*;
  * static variables/constants). For example, this could be used to verify
  * that certain instance variables are declared {@code private} or {@code final}.
  */
-public final class FieldModifierChecker extends ModifierChecker {
-    private static final String DEFAULT_GRADER_NAME = "field modifier checker";
+public final class FieldModifierGrader extends ModifierGrader {
+    private static final String DEFAULT_GRADER_NAME = "field modifier grader";
 
-    private FieldModifierChecker(
-            String name,
-            double maxScorePerInstance,
-            List<String> fieldNames,
-            List<Modifier> requiredModifiers,
-            List<Modifier> optionalModifiers,
-            boolean penalizeMissingFields) {
+    private FieldModifierGrader(
+            final String name,
+            final double maxScorePerInstance,
+            final List<String> fieldNames,
+            final List<Modifier> requiredModifiers,
+            final List<Modifier> optionalModifiers,
+            final boolean penalizeMissingFields) {
         super(name, maxScorePerInstance, fieldNames, requiredModifiers, optionalModifiers, penalizeMissingFields);
         adapter = new Adapter();
     }
 
     /**
-     * Creates a field modifier checker. If {@code penalizeMissingFields} is
+     * Creates a field modifier grader. If {@code penalizeMissingFields} is
      * true and a field is not found, a {@link Result} will be created with a
      * score of 0 and a maximum score of {@code maxScorePerInstance}. Otherwise,
      * no {@code Result} will be created for missing fields.
@@ -40,15 +40,15 @@ public final class FieldModifierChecker extends ModifierChecker {
      * @param penalizeMissingFields whether to apply a penalty to missing fields
      * @return a new instance
      */
-    public static FieldModifierChecker makeChecker(
-            String name,
-            double maxScorePerInstance,
-            List<String> varNames,
-            List<Modifier> requiredModifiers,
-            List<Modifier> optionalModifiers,
+    public static FieldModifierGrader makeChecker(
+            final String name,
+            final double maxScorePerInstance,
+            final List<String> varNames,
+            final List<Modifier> requiredModifiers,
+            final List<Modifier> optionalModifiers,
             boolean penalizeMissingFields
     ) {
-        return new FieldModifierChecker(
+        return new FieldModifierGrader(
                 name,
                 maxScorePerInstance,
                 varNames,
@@ -59,7 +59,7 @@ public final class FieldModifierChecker extends ModifierChecker {
     }
 
     /**
-     * Creates a field modifier checker with a default name. If
+     * Creates a field modifier grader with a default name. If
      * {@code penalizeMissingFields} is true and a field is not found, a
      * {@link Result} will be created with a score of 0 and a maximum score of
      * {@code maxScorePerInstance}. Otherwise, no {@code Result} will be created
@@ -72,12 +72,12 @@ public final class FieldModifierChecker extends ModifierChecker {
      * @param penalizeMissingFields whether to apply a penalty to missing fields
      * @return a new instance
      */
-    public static FieldModifierChecker makeChecker(
-            double maxScorePerInstance,
-            List<String> varNames,
-            List<Modifier> requiredModifiers,
-            List<Modifier> optionalModifiers,
-            boolean penalizeMissingFields
+    public static FieldModifierGrader makeChecker(
+            final double maxScorePerInstance,
+            final List<String> varNames,
+            final List<Modifier> requiredModifiers,
+            final List<Modifier> optionalModifiers,
+            final boolean penalizeMissingFields
     ) {
         return makeChecker(
                 DEFAULT_GRADER_NAME,
@@ -87,9 +87,9 @@ public final class FieldModifierChecker extends ModifierChecker {
         );
     }
 
-    private class Adapter extends ModifierChecker.Adapter { // NOPMD
+    private class Adapter extends ModifierGrader.Adapter { // NOPMD
         @Override
-        public void visit(VariableDeclarator vd, List<Result> collector) {
+        public void visit(final VariableDeclarator vd, final List<Result> collector) {
             if (isField(vd)) {
                 final FieldDeclaration fd = getFieldDeclaration(vd);
                 process(collector, fd, vd.getNameAsString(), fd.getModifiers());
@@ -99,13 +99,13 @@ public final class FieldModifierChecker extends ModifierChecker {
         }
     }
 
-    private boolean isField(VariableDeclarator vd) {
+    private boolean isField(final VariableDeclarator vd) {
         return vd.getParentNode().isPresent()
                 && vd.getParentNode().get() instanceof FieldDeclaration;
     }
 
     // This should be called only if isField() is true.
-    private FieldDeclaration getFieldDeclaration(VariableDeclarator vd) {
+    private FieldDeclaration getFieldDeclaration(final VariableDeclarator vd) {
         Preconditions.checkState(isField(vd));
         // The precondition guarantees the safety of the get() and cast.
         return (FieldDeclaration) vd.getParentNode().get();

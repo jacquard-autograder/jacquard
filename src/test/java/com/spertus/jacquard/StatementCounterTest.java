@@ -3,7 +3,7 @@ package com.spertus.jacquard;
 import com.github.javaparser.ast.stmt.*;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.exceptions.ClientException;
-import com.spertus.jacquard.syntaxgrader.StatementCounter;
+import com.spertus.jacquard.syntaxgrader.StatementCountGrader;
 import org.junit.jupiter.api.*;
 
 import java.net.URISyntaxException;
@@ -23,7 +23,7 @@ public class StatementCounterTest {
 
     private void testHelper(int actualCount, int minCount, int maxCount, Class<? extends Statement> statementType)
             throws ClientException {
-        StatementCounter counter = new StatementCounter(
+        StatementCountGrader counter = new StatementCountGrader(
                 MAX_SCORE, minCount, maxCount, statementType);
         List<Result> results = counter.grade(forTarget);
         assertEquals(1, results.size());
