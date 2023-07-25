@@ -34,8 +34,7 @@ public class PmdGraderTest {
                 "category/java/documentation.xml",
                 "CommentRequired");
         List<Result> results = pmdGrader.grade(missingCommentsTarget);
-        assertEquals(1, results.size());
-        assertEquals(MAX_PENALTY - 2 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
+        TestUtilities.assertResultsMatch(results, 1, MAX_PENALTY - 2 * PENALTY_PER_VIOLATION, MAX_PENALTY);
     }
 
     @Test
@@ -46,8 +45,7 @@ public class PmdGraderTest {
                 "category/java/documentation.xml",
                 "CommentRequired", "UncommentedEmptyConstructor");
         List<Result> results = pmdGrader.grade(missingCommentsTarget);
-        assertEquals(1, results.size());
-        assertEquals(MAX_PENALTY - 3 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
+        TestUtilities.assertResultsMatch(results, 1, MAX_PENALTY - 3 * PENALTY_PER_VIOLATION, MAX_PENALTY);
     }
 
     @Test
@@ -89,8 +87,7 @@ public class PmdGraderTest {
                 "category/java/documentation.xml",
                 "category/java/codestyle.xml");
         List<Result> results = pmdGrader.grade(missingCommentsTarget);
-        assertEquals(1, results.size());
-        assertEquals(MAX_PENALTY - 5 * PENALTY_PER_VIOLATION, TestUtilities.getTotalScore(results));
+        TestUtilities.assertResultsMatch(results, 1, MAX_PENALTY - 5 * PENALTY_PER_VIOLATION, MAX_PENALTY);
     }
 
     @Test
@@ -101,8 +98,21 @@ public class PmdGraderTest {
                 "category/java/documentation.xml",
                 "category/java/codestyle.xml");
         Target target = Target.fromPathString("src/test/resources/good/");
+        List<Result> results = pmdGrader.grade(target); // lots of errors
+        TestUtilities.assertResultsMatch(results, 1, 0, MAX_PENALTY);
+    }
+
+    @Test
+    public void testFormatting() throws URISyntaxException {
+        PmdGrader pmdGrader = PmdGrader.createFromRules(
+                1.0,
+                5.0,
+                "category/java/bestpractices.xml",
+                "MissingOverride");
+        Target target = TestUtilities.getTargetFromResource("good/FavoritesIterator.java");
         List<Result> results = pmdGrader.grade(target);
-        assertEquals(1, results.size());
-        assertEquals(0, results.get(0).getScore()); // lots of errors
+        TestUtilities.assertResultsMatch(results, 1, 4.0, 5.0);
+        assertTrue(results.get(0).getMessage().contains(
+                "The method 'hasNext()' is missing an @Override annotation."));
     }
 }

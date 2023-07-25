@@ -102,7 +102,7 @@ public final class PmdGrader extends Grader {
      * Creates a PMD-based grader for the specified rule sets. The ruleSetPaths
      * argument should be one or more paths to rule sets in <a
      * href="https://github.com/pmd/pmd/tree/master/pmd-java/src/main/resources">
-     * the PMD resource directory</a> (such as "category/java/documentation.xml")
+     * the PMD resource directory</a> (such as "category/java/quickstart.xml")
      * or in one of the client project's resource directories.
      *
      * @param penaltyPerViolation the penalty per violation, which should be a
@@ -122,13 +122,15 @@ public final class PmdGrader extends Grader {
      * Creates a PMD-based grader for the specified rules. The ruleSetPath
      * argument should be the path to a rule set in <a
      * href="https://github.com/pmd/pmd/tree/master/pmd-java/src/main/resources">
-     * the PMD resource directory</a> (such as "category/java/documentation.xml")
-     * or in one of the client project's resource directories.
+     * the PMD resource directory</a> (such as "category/java/quickstart.xml")
+     * or in one of the client project's resource directories. The ruleNames
+     * argument should give rule names without a preceding path, such as
+     * "MissingOverride".
      *
      * @param penaltyPerViolation the penalty per violation, which should be a
      *                            positive number
      * @param maxPenalty          the maximum penalty
-     * @param ruleSetPath         the path to a rule sets
+     * @param ruleSetPath         the path to a rule set
      * @param ruleNames           the names of the rules in the rule set to use
      * @return new PMD grader
      * @throws ClientException if any rule set path is invalid or a rule cannot be found
@@ -157,12 +159,14 @@ public final class PmdGrader extends Grader {
     }
 
     private String violationToString(RuleViolation violation) {
-        return String.format("Problem: %s (%s)\n%s: lines %s-%s\n",
-                violation.getRule().getMessage(),
+        String lineString = violation.getBeginLine() == violation.getEndLine() ?
+                "line " + violation.getBeginLine() :
+                String.format("lines %d-%d", violation.getBeginLine(), violation.getEndLine());
+        return String.format("Problem: %s (%s)\n%s: %s\n",
+                violation.getDescription(),
                 violation.getRule().getExternalInfoUrl(),
                 violation.getFileId(),
-                violation.getBeginLine(),
-                violation.getEndLine());
+                lineString);
     }
 
     private List<Result> produceResults(Report report) {
