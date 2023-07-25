@@ -22,6 +22,7 @@ public class SyntaxConditionGraderTest {
     public void setup() {
         overrideGrader = new SyntaxConditionGrader(
                 "toString() override test",
+                1,
                 "toString() method with override annotation",
                 5.0,
                 node -> {
