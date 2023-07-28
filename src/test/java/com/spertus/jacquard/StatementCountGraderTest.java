@@ -1,7 +1,6 @@
 package com.spertus.jacquard;
 
 import com.github.javaparser.ast.stmt.*;
-import com.spertus.jacquard.checkstylegrader.CheckstyleGrader;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.exceptions.ClientException;
 import com.spertus.jacquard.syntaxgrader.StatementCountGrader;
@@ -25,7 +24,7 @@ public class StatementCountGraderTest {
     @Test
     public void testRepeatability() {
         Grader grader = new StatementCountGrader(MAX_SCORE, 1, 3, ForEachStmt.class);
-        TestUtilities.testTwice(grader, forTarget);
+        TestUtilities.testRepeatability(grader, forTarget);
     }
 
     private void testHelper(int actualCount, int minCount, int maxCount, Class<? extends Statement> statementType)

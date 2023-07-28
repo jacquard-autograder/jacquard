@@ -33,7 +33,7 @@ public class PmdGraderTest {
                 MAX_PENALTY,
                 "category/java/documentation.xml",
                 "CommentRequired");
-        TestUtilities.testTwice(grader, missingCommentsTarget);
+        TestUtilities.testRepeatability(grader, missingCommentsTarget);
     }
 
     @Test

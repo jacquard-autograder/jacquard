@@ -24,7 +24,7 @@ public class FieldModifierGraderTest {
                 List.of(Modifier.finalModifier(), Modifier.privateModifier()),
                 List.of(),
                 true);
-        TestUtilities.testTwice(grader, mobTarget);
+        TestUtilities.testRepeatability(grader, mobTarget);
     }
 
     @Test

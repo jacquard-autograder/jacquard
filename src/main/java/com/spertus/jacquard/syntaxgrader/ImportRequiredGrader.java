@@ -65,6 +65,11 @@ public class ImportRequiredGrader extends SyntaxCheckGrader {
         return numRequirements * maxScorePerInstance;
     }
 
+    @Override
+    public void initialize() {
+        ((ImportCheckerAdapter) adapter).initialize();
+    }
+
     private static boolean importMatches(ImportDeclaration importDecl, String requirement) {
         String importName = importDecl.getNameAsString();
         if (importDecl.isAsterisk()) {
@@ -103,6 +108,10 @@ public class ImportRequiredGrader extends SyntaxCheckGrader {
 
         private ImportCheckerAdapter(final List<String> requiredImports) {
             this.requiredImports = requiredImports;
+        }
+
+        private void initialize() {
+            matchedImports.clear();
         }
 
         @Override

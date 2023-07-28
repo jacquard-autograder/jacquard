@@ -31,9 +31,9 @@ public class ExpressionCountGraderTest {
     }
 
     @Test
-    public void testRepeatability() throws URISyntaxException {
+    public void testRepeatability() {
         CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 1.0, 5);
-        TestUtilities.testTwice(grader, expressionTarget);
+        TestUtilities.testRepeatability(grader, expressionTarget);
     }
 
     @Test

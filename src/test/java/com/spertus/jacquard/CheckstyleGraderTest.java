@@ -16,8 +16,7 @@ public class CheckstyleGraderTest {
     @Test
     public void testRepeatability() throws URISyntaxException {
         CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 1.0, 5);
-        TestUtilities.testTwice(grader,
-                TestUtilities.getTargetFromResource("good/BadFormatting.java"));
+        TestUtilities.testRepeatability(grader, "good/BadFormatting.java");
     }
 
     @Test

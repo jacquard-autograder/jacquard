@@ -20,7 +20,7 @@ public class StringInterpolationCountGraderTest {
 
     @Test
     public void testRepeatability() {
-        TestUtilities.testTwice(grader, mobTarget);
+        TestUtilities.testRepeatability(grader, mobTarget);
     }
 
     @Test

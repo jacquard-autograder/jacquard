@@ -33,12 +33,16 @@ public class TestUtilities {
     }
 
     // Makes sure the same result is returned by repeated calls.
-    static void testTwice(Grader grader, Target target) {
+    static void testRepeatability(Grader grader, Target target) {
         List<Result> results1 = grader.grade(target);
         List<Result> results2 = grader.grade(target);
         // Only the last call is required, but earlier ones may give
         // more useful messages.
         assertEquals(results1.size(), results2.size());
         assertEquals(results1, results2);
+    }
+
+    static void testRepeatability(Grader grader, String filename) throws URISyntaxException {
+        testRepeatability(grader, getTargetFromResource(filename));
     }
 }
