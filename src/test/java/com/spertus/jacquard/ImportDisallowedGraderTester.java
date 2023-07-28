@@ -10,7 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class RestrictedImportGraderTester {
+public class ImportDisallowedGraderTester {
     @BeforeAll
     public static void setup() {
         Autograder.initForTest();
@@ -18,7 +18,7 @@ public class RestrictedImportGraderTester {
 
     @Test
     public void testNoneForbidden() throws URISyntaxException {
-        RestrictedImportGrader checker = new RestrictedImportGrader(
+        ImportDisallowedGrader checker = new ImportDisallowedGrader(
                 1.0, List.of("java.util", "java.lang"));
         List<Result> results = checker.grade(TestUtilities.getTargetFromResource("good/Import.java"));
         TestUtilities.assertResultsMatch(results, 1, 1.0, 1.0);
@@ -26,12 +26,12 @@ public class RestrictedImportGraderTester {
 
     @Test
     public void testOneForbidden() throws URISyntaxException {
-        RestrictedImportGrader checker = new RestrictedImportGrader(
+        ImportDisallowedGrader checker = new ImportDisallowedGrader(
                 1.0, List.of("java.util", "java.lang"));
         List<Result> results = checker.grade(TestUtilities.getTargetFromResource("good/ImportWildcards.java"));
         TestUtilities.assertResultsMatch(results, 1, 0.0, 1.0);
         String message = results.get(0).getMessage();
-        assertTrue(message.contains("javax.ejb"));  // not whitelisted
-        assertFalse(message.contains("java.util")); // whitelisted
+        assertTrue(message.contains("javax.ejb"));  // not permitted
+        assertFalse(message.contains("java.util")); // permitted
     }
 }

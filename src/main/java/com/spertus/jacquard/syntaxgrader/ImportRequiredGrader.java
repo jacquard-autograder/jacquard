@@ -11,10 +11,10 @@ import java.util.*;
  * Checks whether required imports appear in a submission. This is
  * one of several graders checking imports.
  *
- * @see ForbiddenImportGrader
- * @see RestrictedImportGrader
+ * @see ImportBlocklistedGrader
+ * @see ImportDisallowedGrader
  */
-public class RequiredImportGrader extends SyntaxCheckGrader {
+public class ImportRequiredGrader extends SyntaxCheckGrader {
     private static final String GRADER_NAME = "required import checker";
     private final int numRequirements;
 
@@ -29,7 +29,7 @@ public class RequiredImportGrader extends SyntaxCheckGrader {
      * @param requiredImports required imports
      * @throws ClientException if requiredImports is empty or has malformed entries
      */
-    public RequiredImportGrader(
+    public ImportRequiredGrader(
             final String name,
             final double pointsPerImport,
             final List<String> requiredImports) {
@@ -54,7 +54,7 @@ public class RequiredImportGrader extends SyntaxCheckGrader {
      * @param requiredImports required imports
      * @throws ClientException if requiredImports is empty or has malformed entries
      */
-    public RequiredImportGrader(
+    public ImportRequiredGrader(
             final double pointsPerImport,
             final List<String> requiredImports) {
         this(GRADER_NAME, pointsPerImport, requiredImports);
