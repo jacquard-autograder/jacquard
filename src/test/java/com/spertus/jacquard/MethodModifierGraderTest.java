@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MethodModifierTest {
+public class MethodModifierGraderTest {
     @BeforeAll()
     public static void init() {
         Autograder.initForTest();
@@ -18,28 +18,28 @@ public class MethodModifierTest {
 
     @Test
     public void testWithPenalizeMissingMethods() throws URISyntaxException {
-       MethodModifierGrader checker = new MethodModifierGrader(
+       MethodModifierGrader grader = new MethodModifierGrader(
                 1.0,
                 List.of("getMinDamage", "getNumHearts", "methodDoesNotExist"),
                 List.of(Modifier.publicModifier()),
                 List.of(Modifier.finalModifier()),
                true);
         Target target = TestUtilities.getTargetFromResource("good/Mob.java");
-        List<Result> results = checker.grade(target);
+        List<Result> results = grader.grade(target);
         assertEquals(3, results.size());
         assertEquals(1.0, TestUtilities.getTotalScore(results));
     }
 
     @Test
     public void testWithoutPenalizeMissingMethods() throws URISyntaxException {
-        MethodModifierGrader checker = new MethodModifierGrader(
+        MethodModifierGrader grader = new MethodModifierGrader(
                 1.0,
                 List.of("getMinDamage", "getNumHearts", "methodDoesNotExist"),
                 List.of(Modifier.publicModifier()),
                 List.of(Modifier.finalModifier()),
                 false);
         Target target = TestUtilities.getTargetFromResource("good/Mob.java");
-        List<Result> results = checker.grade(target);
+        List<Result> results = grader.grade(target);
         assertEquals(2, results.size());
         assertEquals(1.0, TestUtilities.getTotalScore(results));
     }

@@ -5,6 +5,7 @@ import com.spertus.jacquard.exceptions.TimeoutException;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * The superclass of all graders.
@@ -91,6 +92,22 @@ public abstract class Grader {
         } else {
             return gradeTimed(targets);
         }
+    }
+
+    /**
+     * Runs all graders on the provided target.
+     *
+     * @param target  the target for each of the graders
+     * @param graders graders, in the order they should be run
+     * @return the collected results
+     */
+    public static List<Result> gradeAll(Target target, Grader... graders) {
+        List<Result> results = new ArrayList<>();
+        for (Grader grader : graders) {
+            List<Result> r = grader.grade(target);
+            results.addAll(r);
+        }
+        return results;
     }
 
     /**

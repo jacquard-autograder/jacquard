@@ -1,6 +1,7 @@
 package com.spertus.jacquard;
 
 import com.github.javaparser.ast.stmt.*;
+import com.spertus.jacquard.checkstylegrader.CheckstyleGrader;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.exceptions.ClientException;
 import com.spertus.jacquard.syntaxgrader.StatementCountGrader;
@@ -11,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class StatementCounterTest {
+public class StatementCountGraderTest {
     private static final double MAX_SCORE = 2.5;
     private static Target forTarget;
 
@@ -21,11 +22,17 @@ public class StatementCounterTest {
         forTarget = TestUtilities.getTargetFromResource("good/ForStatements.java");
     }
 
+    @Test
+    public void testRepeatability() {
+        Grader grader = new StatementCountGrader(MAX_SCORE, 1, 3, ForEachStmt.class);
+        TestUtilities.testTwice(grader, forTarget);
+    }
+
     private void testHelper(int actualCount, int minCount, int maxCount, Class<? extends Statement> statementType)
             throws ClientException {
-        StatementCountGrader counter = new StatementCountGrader(
+        StatementCountGrader grader = new StatementCountGrader(
                 MAX_SCORE, minCount, maxCount, statementType);
-        List<Result> results = counter.grade(forTarget);
+        List<Result> results = grader.grade(forTarget);
         assertEquals(1, results.size());
         assertEquals(actualCount >= minCount && actualCount <= maxCount ? MAX_SCORE : 0, results.get(0).getScore());
     }

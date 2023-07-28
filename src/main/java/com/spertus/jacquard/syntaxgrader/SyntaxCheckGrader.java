@@ -12,7 +12,7 @@ import java.util.*;
  * <ul>
  *     <li> {@link MethodModifierGrader}, which checks whether
  *      each of a list of methods has the correct modifiers</li>
- *     <li> {@link RequiredImportGrader}, which checks whether
+ *     <li> {@link ImportRequiredGrader}, which checks whether
  *     all required imports are present</li>
  * </ul>
  */

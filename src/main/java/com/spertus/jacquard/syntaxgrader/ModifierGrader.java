@@ -13,9 +13,11 @@ import java.util.*;
 abstract class ModifierGrader extends SyntaxCheckGrader {
     private final List<String> itemNames;
     private final boolean penalizeMissing;
-    private final Set<String> missingVars;
     private final List<Modifier> requiredModifiers;
     private final List<Modifier> optionalModifiers;
+
+    // set in initialize()
+    private Set<String> missingVars;
 
     /**
      * Creates a modifier checker. If {@code penalizeMissingItems} is
@@ -31,19 +33,23 @@ abstract class ModifierGrader extends SyntaxCheckGrader {
      * @param penalizeMissingItems whether to apply a penalty to missing items
      */
     protected ModifierGrader(
-            String name,
-            double maxScorePerInstance,
-            List<String> itemNames,
-            List<Modifier> requiredModifiers,
-            List<Modifier> optionalModifiers,
-            boolean penalizeMissingItems) {
+            final String name,
+            final double maxScorePerInstance,
+            final List<String> itemNames,
+            final List<Modifier> requiredModifiers,
+            final List<Modifier> optionalModifiers,
+            final boolean penalizeMissingItems) {
         super(name, maxScorePerInstance, null);
         this.itemNames = itemNames;
         this.requiredModifiers = requiredModifiers;
         this.optionalModifiers = optionalModifiers;
         this.penalizeMissing = penalizeMissingItems;
-        missingVars = new HashSet<>(itemNames);
         // concrete subclass sets adapter
+    }
+
+    @Override
+    public void initialize() {
+        missingVars = new HashSet<>(itemNames);
     }
 
     @Override

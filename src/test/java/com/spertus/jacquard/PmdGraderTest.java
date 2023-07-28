@@ -27,6 +27,16 @@ public class PmdGraderTest {
     }
 
     @Test
+    public void testRepeatability() {
+        Grader grader =  PmdGrader.createFromRules(
+                PENALTY_PER_VIOLATION,
+                MAX_PENALTY,
+                "category/java/documentation.xml",
+                "CommentRequired");
+        TestUtilities.testTwice(grader, missingCommentsTarget);
+    }
+
+    @Test
     public void testSingleRule() throws ClientException {
         PmdGrader pmdGrader = PmdGrader.createFromRules(
                 PENALTY_PER_VIOLATION,

@@ -1,6 +1,7 @@
 package com.spertus.jacquard;
 
 import com.github.javaparser.ast.expr.*;
+import com.spertus.jacquard.checkstylegrader.CheckstyleGrader;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.exceptions.*;
 import com.spertus.jacquard.syntaxgrader.ExpressionCountGrader;
@@ -15,7 +16,7 @@ public class ExpressionCountGraderTest {
     private static final String NAME = "name";
     private static final double MAX_SCORE = 10.0;
 
-    private ExpressionCountGrader counter;
+    private ExpressionCountGrader grader;
     private Target expressionTarget;
 
     @BeforeAll()
@@ -25,8 +26,14 @@ public class ExpressionCountGraderTest {
 
     @BeforeEach
     public void setup() throws ClientException, URISyntaxException {
-        counter = new ExpressionCountGrader(NAME, MAX_SCORE, 1, 2, InstanceOfExpr.class);
+        grader = new ExpressionCountGrader(NAME, MAX_SCORE, 1, 2, InstanceOfExpr.class);
         expressionTarget = TestUtilities.getTargetFromResource("good/Expressions.java");
+    }
+
+    @Test
+    public void testRepeatability() throws URISyntaxException {
+        CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 1.0, 5);
+        TestUtilities.testTwice(grader, expressionTarget);
     }
 
     @Test

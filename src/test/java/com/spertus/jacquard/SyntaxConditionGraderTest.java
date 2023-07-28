@@ -1,8 +1,9 @@
 package com.spertus.jacquard;
 
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.stmt.ForEachStmt;
 import com.spertus.jacquard.common.*;
-import com.spertus.jacquard.syntaxgrader.SyntaxConditionGrader;
+import com.spertus.jacquard.syntaxgrader.*;
 import org.junit.jupiter.api.*;
 
 import java.net.URISyntaxException;
@@ -32,6 +33,11 @@ public class SyntaxConditionGraderTest {
                     }
                     return false;
                 });
+    }
+
+    @Test
+    public void testRepeatability() throws URISyntaxException {
+        TestUtilities.testTwice(overrideGrader, TestUtilities.getTargetFromResource("good/Mob.java"));
     }
 
     @Test

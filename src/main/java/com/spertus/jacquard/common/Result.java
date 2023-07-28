@@ -1,6 +1,6 @@
 package com.spertus.jacquard.common;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -115,6 +115,22 @@ public class Result {
     public Result changeVisibility(Visibility visibility) {
         this.visibility = visibility;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Result result) {
+            return name.equals(result.name) &&
+                    score == result.score &&
+                    maxScore == result.maxScore &&
+                    message.equals(result.message);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, score, maxScore, message);
     }
 
     /**
