@@ -5,14 +5,13 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.spertus.jacquard.common.Result;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * Abstract superclass of graders that check whether there are any imports
  * of packages that are not allowed.
  */
 public abstract class ImportForbiddenGrader extends SyntaxCheckGrader {
-    protected double maxScore;
+    private double maxScore;
 
     /**
      * Creates an import grader that tests whether there are any imports
