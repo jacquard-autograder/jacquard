@@ -187,8 +187,7 @@ public final class PmdGrader extends Grader {
         if (!errors.isEmpty()) {
             // For now, just print information about the first error.
             final Report.ProcessingError error = errors.get(0);
-            results.add(Result.makeFailure(
-                    "Error during static analysis",
+            results.add(makeFailureResult(
                     maxPenalty,
                     error.getMsg() + ": " + error.getError().getCause().getMessage()));
             return results;
@@ -201,8 +200,7 @@ public final class PmdGrader extends Grader {
             final String message = violations.stream()
                     .map(this::violationToString)
                     .collect(Collectors.joining("\r\n"));
-            results.add(Result.makeResult(
-                    "Problems identified during static analysis",
+            results.add(makePartialCreditResult(
                     Math.max(maxPenalty - violations.size() * penaltyPerViolation, 0),
                     maxPenalty,
                     message));
