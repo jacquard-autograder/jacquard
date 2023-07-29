@@ -47,7 +47,7 @@ public class ImportBlocklistedGrader extends ImportForbiddenGrader {
 
     private class ImportBlocklistAdapter extends ImportForbiddenGrader.ImportCheckerAdapter { // NOPMD
         @Override
-        boolean isImportForbidden(ImportDeclaration importDecl) {
+        protected boolean isImportForbidden(final ImportDeclaration importDecl) {
             return blocklistedPackages.contains(importToPackageName(importDecl));
         }
 

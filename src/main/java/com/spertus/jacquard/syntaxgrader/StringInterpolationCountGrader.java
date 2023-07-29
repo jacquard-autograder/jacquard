@@ -22,8 +22,11 @@ public class StringInterpolationCountGrader extends SyntaxCountGrader {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public StringInterpolationCountGrader(String name, int maxScore, int minCount, int maxCount)
-            throws ClientException {
+    public StringInterpolationCountGrader(
+            final String name,
+            final int maxScore,
+            final int minCount,
+            final int maxCount) {
         super(name, "string interpolations", maxScore, minCount, maxCount, new StringInterpolationAdapter());
     }
 
@@ -37,14 +40,16 @@ public class StringInterpolationCountGrader extends SyntaxCountGrader {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public StringInterpolationCountGrader(int maxScore, int minCount, int maxCount)
-            throws ClientException {
+    public StringInterpolationCountGrader(
+            final int maxScore,
+            final int minCount,
+            final int maxCount) {
         this(GRADER_NAME, maxScore, minCount, maxCount);
     }
 
     private static class StringInterpolationAdapter extends VoidVisitorAdapter<MutableInteger> { // NOPMD
         @Override
-        public void visit(MethodCallExpr node, MutableInteger mi) {
+        public void visit(final MethodCallExpr node, final MutableInteger mi) {
             if (node.getScope().isPresent()) {
                 final String fullMethodName = node.getScope().get() + "." + node.getNameAsString();
                 if (("System.out.printf".equals(fullMethodName) || "String.format".equals(fullMethodName))

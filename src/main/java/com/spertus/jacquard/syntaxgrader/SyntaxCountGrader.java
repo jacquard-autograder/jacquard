@@ -39,7 +39,7 @@ public abstract class SyntaxCountGrader extends SyntaxGrader {
             final int minCount,
             final int maxCount,
             final VoidVisitorAdapter<MutableInteger> adapter
-    ) throws ClientException {
+    ) {
         super(name);
         if (minCount < 0) {
             throw new ClientException("minCount must be >= 0");

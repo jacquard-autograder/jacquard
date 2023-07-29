@@ -10,7 +10,7 @@ public class SubmissionException extends Exception
      *
      * @param message the message
      */
-    public SubmissionException(String message) {
+    public SubmissionException(final String message) {
         super(message);
     }
 }

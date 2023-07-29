@@ -21,7 +21,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
  */
 public class CodeCoverageTester extends Tester {
     private static final String GRADER_NAME = "code coverage grader";
-
+    private final String name;
     private final Scorer scorer;
     private final Class<?> classUnderTest;
     private final Class<?> testClass;
@@ -35,8 +35,13 @@ public class CodeCoverageTester extends Tester {
      * @param classUnderTest the class under test
      * @param testClass      the test class
      */
-    public CodeCoverageTester(String name, Scorer scorer, Class<?> classUnderTest, Class<?> testClass) {
-        super(name);
+    public CodeCoverageTester(
+            final String name,
+            final Scorer scorer,
+            final Class<?> classUnderTest,
+            final Class<?> testClass) {
+        super();
+        this.name = name;
         this.scorer = scorer;
         this.classUnderTest = classUnderTest;
         this.testClass = testClass;
@@ -51,7 +56,10 @@ public class CodeCoverageTester extends Tester {
      * @param classUnderTest the class under test
      * @param testClass      the test class
      */
-    public CodeCoverageTester(Scorer scorer, Class<?> classUnderTest, Class<?> testClass) {
+    public CodeCoverageTester(
+            final Scorer scorer,
+            final Class<?> classUnderTest,
+            final Class<?> testClass) {
         this(GRADER_NAME, scorer, classUnderTest, testClass);
     }
 
@@ -78,7 +86,8 @@ public class CodeCoverageTester extends Tester {
                 Arrays.stream(testClasses)
                         .map(DiscoverySelectors::selectClass)
                         .toList();
-        CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(Optional.ofNullable(memoryClassLoader));
+        final CustomContextClassLoaderExecutor executor =
+                new CustomContextClassLoaderExecutor(Optional.ofNullable(memoryClassLoader));
         executor.invoke(() -> executeTests(selectors));
     }
 
@@ -139,8 +148,9 @@ public class CodeCoverageTester extends Tester {
             final IClassCoverage cc = calculateCoverage();
             final double branchCoverage = cc.getBranchCounter().getCoveredRatio();
             final double lineCoverage = cc.getLineCounter().getCoveredRatio();
-            return List.of(scorer.getResult(branchCoverage, lineCoverage));
-        } catch (Exception e) {
+            return List.of(
+                    scorer.getResult(name, branchCoverage, lineCoverage));
+        } catch (Exception e) { // NOPMD
             return List.of(Result.makeError("Unable to test code coverage (jacoco)", e));
         }
     }

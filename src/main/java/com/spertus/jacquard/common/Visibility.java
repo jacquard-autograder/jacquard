@@ -28,7 +28,7 @@ public enum Visibility {
 
     private final String gradescopeText;
 
-    Visibility(String gradescopeText) {
+    Visibility(final String gradescopeText) {
         this.gradescopeText = gradescopeText;
     }
 

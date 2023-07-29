@@ -25,8 +25,12 @@ public class ExpressionCountGrader extends ExpressionStatementCountGrader {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public ExpressionCountGrader(String name, double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz)
-            throws ClientException {
+    public ExpressionCountGrader(
+            final String name,
+            final double maxScore,
+            final int minCount,
+            final int maxCount,
+            final Class<? extends Expression> clazz) {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount, List.of(clazz), List.of());
     }
 
@@ -42,8 +46,11 @@ public class ExpressionCountGrader extends ExpressionStatementCountGrader {
      * @throws ClientException if minCount &lt; 0, maxCount &lt; minCount,
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
-    public ExpressionCountGrader(double maxScore, int minCount, int maxCount, Class<? extends Expression> clazz)
-            throws ClientException {
+    public ExpressionCountGrader(
+            final double maxScore,
+            final int minCount,
+            final int maxCount,
+            final Class<? extends Expression> clazz) {
         this(clazz.getSimpleName() + " counter", maxScore, minCount, maxCount, clazz);
     }
 }

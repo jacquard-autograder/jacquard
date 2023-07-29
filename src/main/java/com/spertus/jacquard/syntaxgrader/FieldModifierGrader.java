@@ -46,7 +46,7 @@ public final class FieldModifierGrader extends ModifierGrader {
             final List<String> varNames,
             final List<Modifier> requiredModifiers,
             final List<Modifier> optionalModifiers,
-            boolean penalizeMissingFields
+            final boolean penalizeMissingFields
     ) {
         return new FieldModifierGrader(
                 name,

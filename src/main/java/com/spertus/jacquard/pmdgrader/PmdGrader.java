@@ -26,15 +26,18 @@ public final class PmdGrader extends Grader {
     private String[] ruleNames;
 
     private static PMDConfiguration createConfiguration() {
-        PMDConfiguration config = new PMDConfiguration();
-        PMDConfiguration configuration = new PMDConfiguration();
-        LanguagePropertyBundle properties = configuration.getLanguageProperties(LanguageRegistry.PMD.getLanguageById("java"));
+        final PMDConfiguration config = new PMDConfiguration();
+        final PMDConfiguration configuration = new PMDConfiguration();
+        final LanguagePropertyBundle properties =
+                configuration.getLanguageProperties(LanguageRegistry.PMD.getLanguageById("java"));
         properties.setLanguageVersion(JAVA_VERSION);
         return config;
     }
 
-    private PmdGrader(double penaltyPerViolation, double maxPenalty, String... ruleSetPaths)
-            throws ClientException {
+    private PmdGrader(
+            final double penaltyPerViolation,
+            final double maxPenalty,
+            final String... ruleSetPaths) {
         super(GRADER_NAME);
         this.penaltyPerViolation = penaltyPerViolation;
         this.maxPenalty = maxPenalty;
@@ -42,8 +45,8 @@ public final class PmdGrader extends Grader {
 
         // Build (and discard) analysis here to fail fast if any paths are invalid.
         try (PmdAnalysis analysis = PmdAnalysis.create(configuration)) {
-            RuleSetLoader loader = analysis.newRuleSetLoader();
-            for (String ruleSetPath : ruleSetPaths) {
+            final RuleSetLoader loader = analysis.newRuleSetLoader();
+            for (final String ruleSetPath : ruleSetPaths) {
                 try {
                     loader.loadFromResource(ruleSetPath);
                 } catch (RuleSetLoadException e) {
@@ -54,8 +57,11 @@ public final class PmdGrader extends Grader {
         }
     }
 
-    private PmdGrader(double penaltyPerViolation, double maxPenalty, String
-            ruleSetPath, String... ruleNames) throws ClientException {
+    private PmdGrader(
+            final double penaltyPerViolation,
+            final double maxPenalty,
+            final String ruleSetPath,
+            final String... ruleNames) {
         super(GRADER_NAME);
         this.penaltyPerViolation = penaltyPerViolation;
         this.maxPenalty = maxPenalty;
@@ -68,7 +74,8 @@ public final class PmdGrader extends Grader {
         createAnalysisWithRuleNames().close();
     }
 
-    private PmdAnalysis createAnalysis() throws ClientException {
+    // throws ClientException
+    private PmdAnalysis createAnalysis() {
         if (ruleSetPath == null) {
             return PmdAnalysis.create(configuration);
         } else {
@@ -77,13 +84,14 @@ public final class PmdGrader extends Grader {
     }
 
     // It is the caller's responsibility to call close().
-    private PmdAnalysis createAnalysisWithRuleNames() throws ClientException {
+    // throws ClientException
+    private PmdAnalysis createAnalysisWithRuleNames() {
         try {
-            PmdAnalysis analysis = PmdAnalysis.create(configuration);
-            RuleSetLoader loader = analysis.newRuleSetLoader();
-            RuleSet ruleSet = loader.loadFromResource(ruleSetPath);
-            for (String ruleName : ruleNames) {
-                Rule rule = ruleSet.getRuleByName(ruleName);
+            final PmdAnalysis analysis = PmdAnalysis.create(configuration);
+            final RuleSetLoader loader = analysis.newRuleSetLoader();
+            final RuleSet ruleSet = loader.loadFromResource(ruleSetPath);
+            for (final String ruleName : ruleNames) {
+                final Rule rule = ruleSet.getRuleByName(ruleName);
                 if (rule == null) {
                     throw new ClientException(String.format(
                             "Did not find rule %s in %s",
@@ -113,8 +121,9 @@ public final class PmdGrader extends Grader {
      * @throws ClientException if any rule set path is invalid
      */
     public static PmdGrader createFromRuleSetPaths(
-            double penaltyPerViolation, double maxPenalty, String... ruleSetPaths)
-            throws ClientException {
+            final double penaltyPerViolation,
+            final double maxPenalty,
+            final String... ruleSetPaths) {
         return new PmdGrader(penaltyPerViolation, maxPenalty, ruleSetPaths);
     }
 
@@ -136,8 +145,10 @@ public final class PmdGrader extends Grader {
      * @throws ClientException if any rule set path is invalid or a rule cannot be found
      */
     public static PmdGrader createFromRules(
-            double penaltyPerViolation, double maxPenalty, String
-            ruleSetPath, String... ruleNames) throws ClientException {
+            final double penaltyPerViolation,
+            final double maxPenalty,
+            final String ruleSetPath,
+            final String... ruleNames) {
         return new PmdGrader(penaltyPerViolation, maxPenalty, ruleSetPath, ruleNames);
     }
 
@@ -145,11 +156,11 @@ public final class PmdGrader extends Grader {
     public Callable<List<Result>> getCallable(final Target target) {
         return () -> {
             try (PmdAnalysis analysis = createAnalysis()) {
-                boolean added = analysis.files().addFileOrDirectory(target.toPath());
+                final boolean added = analysis.files().addFileOrDirectory(target.toPath());
                 if (!added) {
                     throw new ClientException("File or directory cannot be found: " + target.toPathString());
                 }
-                Report report = analysis.performAnalysisAndCollectReport();
+                final Report report = analysis.performAnalysisAndCollectReport();
                 return produceResults(report);
             } catch (IOException e) {
                 return makeExceptionResultList(
@@ -158,8 +169,8 @@ public final class PmdGrader extends Grader {
         };
     }
 
-    private String violationToString(RuleViolation violation) {
-        String lineString = violation.getBeginLine() == violation.getEndLine() ?
+    private String violationToString(final RuleViolation violation) {
+        final String lineString = violation.getBeginLine() == violation.getEndLine() ?
                 "line " + violation.getBeginLine() :
                 String.format("lines %d-%d", violation.getBeginLine(), violation.getEndLine());
         return String.format("Problem: %s (%s)\n%s: %s\n",
@@ -169,13 +180,13 @@ public final class PmdGrader extends Grader {
                 lineString);
     }
 
-    private List<Result> produceResults(Report report) {
-        List<Result> results = new ArrayList<>();
-        List<Report.ProcessingError> errors = report.getProcessingErrors();
+    private List<Result> produceResults(final Report report) {
+        final List<Result> results = new ArrayList<>();
+        final List<Report.ProcessingError> errors = report.getProcessingErrors();
 
         if (!errors.isEmpty()) {
             // For now, just print information about the first error.
-            Report.ProcessingError error = errors.get(0);
+            final Report.ProcessingError error = errors.get(0);
             results.add(Result.makeFailure(
                     "Error during static analysis",
                     maxPenalty,
@@ -183,7 +194,7 @@ public final class PmdGrader extends Grader {
             return results;
         }
 
-        List<RuleViolation> violations = report.getViolations();
+        final List<RuleViolation> violations = report.getViolations();
         if (violations.isEmpty()) {
             results.add(Result.makeSuccess("Static analysis (PMD)", maxPenalty, "No problems detected"));
         } else {

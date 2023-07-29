@@ -16,7 +16,6 @@ import java.util.*;
  */
 public class ImportRequiredGrader extends SyntaxCheckGrader {
     private static final String GRADER_NAME = "required import checker";
-    private final int numRequirements;
 
     /**
      * Creates an import checker that awards points per required import that is
@@ -34,7 +33,6 @@ public class ImportRequiredGrader extends SyntaxCheckGrader {
             final double pointsPerImport,
             final List<String> requiredImports) {
         super(name, pointsPerImport, null);
-        this.numRequirements = requiredImports.size();
         requiredImports.forEach(
                 s -> {
                     if (s.endsWith(";") || s.startsWith("import ")) {
@@ -65,8 +63,8 @@ public class ImportRequiredGrader extends SyntaxCheckGrader {
         ((ImportCheckerAdapter) adapter).initialize();
     }
 
-    private static boolean importMatches(ImportDeclaration importDecl, String requirement) {
-        String importName = importDecl.getNameAsString();
+    private static boolean importMatches(final ImportDeclaration importDecl, final String requirement) {
+        final String importName = importDecl.getNameAsString();
         if (importDecl.isAsterisk()) {
             // both are wildcards
             if (requirement.equals(importName + ".*")) {
@@ -102,16 +100,17 @@ public class ImportRequiredGrader extends SyntaxCheckGrader {
         private final Set<String> matchedImports = new HashSet<>();
 
         private ImportCheckerAdapter(final List<String> requiredImports) {
+            super();
             this.requiredImports = requiredImports;
         }
 
-        private void initialize() {
+        private void initialize() { // NOPMD (false positive)
             matchedImports.clear();
         }
 
         @Override
         public void visit(final ImportDeclaration importDecl, final List<Result> results) {
-            for (String requirement : requiredImports) {
+            for (final String requirement : requiredImports) {
                 if (matchedImports.contains(requirement)) {
                     continue;
                 }
@@ -129,8 +128,8 @@ public class ImportRequiredGrader extends SyntaxCheckGrader {
             super.visit(importDecl, results);
         }
 
-        public void finalizeResults(List<Result> results) {
-            for (String requirement : requiredImports) {
+        private void finalizeResults(List<Result> results) { // NOPMD (false positive)
+            for (final String requirement : requiredImports) {
                 if (!matchedImports.contains(requirement)) {
                     results.add(makeFailingResult("Expected import " + requirement + " not found."));
                 }

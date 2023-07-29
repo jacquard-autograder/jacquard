@@ -18,21 +18,21 @@ public class GradescopePublisher extends Publisher {
     private static final Path RESULTS_PATH = Path.of("results");
     private static final String RESULTS_FILE_NAME = "results.json";
 
-    private JSONObject convertToJson(List<Result> results) {
-        JSONArray testResults = new JSONArray();
-        for (Result result : results) {
+    private JSONObject convertToJson(final List<Result> results) {
+        final JSONArray testResults = new JSONArray();
+        for (final Result result : results) {
             testResults.put(assemble(result));
         }
         return new JSONObject().put("tests", testResults);
     }
 
     @Override
-    public String serializeResults(List<Result> results) {
+    public String serializeResults(final List<Result> results) {
         return convertToJson(results).toString();
     }
 
     @Override
-    public boolean publishResults(List<Result> results) {
+    public boolean publishResults(final List<Result> results) {
         try {
             if (Files.exists(RESULTS_PATH)) {
                 Files.write(RESULTS_PATH.resolve(RESULTS_FILE_NAME), serializeResults(results).getBytes());
@@ -45,12 +45,12 @@ public class GradescopePublisher extends Publisher {
     }
 
     @Override
-    public void displayResults(List<Result> results) {
+    public void displayResults(final List<Result> results) {
         System.out.println(convertToJson(results)   // NOPMD
                 .toString(4));
     }
 
-    private JSONObject assemble(Result result) {
+    private JSONObject assemble(final Result result) {
         try {
             return new JSONObject()
                     .put("name", result.getName())

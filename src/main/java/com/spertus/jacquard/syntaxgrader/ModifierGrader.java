@@ -53,11 +53,11 @@ abstract class ModifierGrader extends SyntaxCheckGrader {
     }
 
     @Override
-    public void finalizeResults(List<Result> results) {
+    public void finalizeResults(final List<Result> results) {
         if (!penalizeMissing) {
             return;
         }
-        for (String var : missingVars) {
+        for (final String var : missingVars) {
             results.add(makeFailingResult("Did not find expected variable " + var));
         }
     }

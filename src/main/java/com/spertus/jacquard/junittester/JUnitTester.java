@@ -19,7 +19,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
  * A tester that runs JUnit tests having the {@link GradedTest} annotation.
  */
 public class JUnitTester extends Tester {
-    private static final String TESTER_NAME = "JUnit Tester";
     private final List<? extends DiscoverySelector> selectors;
     private final DiscoveryFilter<String> filter;
 
@@ -28,8 +27,8 @@ public class JUnitTester extends Tester {
      *
      * @param classes the classes containing the tests
      */
-    public JUnitTester(Class<?>... classes) {
-        super(TESTER_NAME);
+    public JUnitTester(final Class<?>... classes) {
+        super();
         selectors = Arrays.stream(classes)
                 .map(DiscoverySelectors::selectClass)
                 .toList();
@@ -44,8 +43,8 @@ public class JUnitTester extends Tester {
      * @param includeSubpackages whether to include tests in subpackages of the
      *                           package
      */
-    public JUnitTester(String packageName, boolean includeSubpackages) {
-        super(TESTER_NAME);
+    public JUnitTester(final String packageName, final boolean includeSubpackages) {
+        super();
         selectors = List.of(selectPackage(packageName));
         filter = includeSubpackages ? null :
                 ClassNameFilter.excludeClassNamePatterns(
@@ -54,10 +53,10 @@ public class JUnitTester extends Tester {
 
     @Override
     public List<Result> run() {
-        Launcher launcher = LauncherFactory.create();
-        JUnitTester.Listener listener = new Listener();
+        final Launcher launcher = LauncherFactory.create();
+        final JUnitTester.Listener listener = new Listener();
         launcher.registerTestExecutionListeners(listener);
-        PrintStream originalOut = System.out; // NOPMD
+        final PrintStream originalOut = System.out; // NOPMD
         LauncherDiscoveryRequestBuilder builder = request().selectors(selectors);
         if (filter != null) {
             builder = builder.filters(filter);
@@ -74,7 +73,7 @@ public class JUnitTester extends Tester {
         private ByteArrayOutputStream baos;
 
         @Override
-        public void executionStarted(TestIdentifier testIdentifier) {
+        public void executionStarted(final TestIdentifier testIdentifier) {
             baos = new ByteArrayOutputStream();
             if (ps != null) {
                 ps.close();
@@ -83,9 +82,9 @@ public class JUnitTester extends Tester {
             System.setOut(ps);
         }
 
-        private String makeOutput(TestExecutionResult teResult) {
-            Optional<Throwable> throwable = teResult.getThrowable();
-            String s = baos.toString();
+        private String makeOutput(final TestExecutionResult teResult) {
+            final Optional<Throwable> throwable = teResult.getThrowable();
+            final String s = baos.toString();
             if (throwable.isEmpty()) {
                 return s;
             } else if (s.isEmpty()) {
@@ -96,15 +95,17 @@ public class JUnitTester extends Tester {
         }
 
         @Override
-        public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+        public void executionFinished(
+                final TestIdentifier testIdentifier,
+                final TestExecutionResult testExecutionResult) {
             if (testIdentifier.getSource().isPresent()) {
-                TestSource source = testIdentifier.getSource().get();
+                final TestSource source = testIdentifier.getSource().get();
                 if (source instanceof MethodSource methodSource) {
-                    GradedTest gt = methodSource.getJavaMethod().getAnnotation(GradedTest.class);
+                    final GradedTest gt = methodSource.getJavaMethod().getAnnotation(GradedTest.class);
                     if (gt != null) {
-                        String name = gt.name().isEmpty() ? testIdentifier.getDisplayName() : gt.name();
+                        final String name = gt.name().isEmpty() ? testIdentifier.getDisplayName() : gt.name();
                         try {
-                            Result result = switch (testExecutionResult.getStatus()) {
+                            final Result result = switch (testExecutionResult.getStatus()) {
                                 case SUCCESSFUL ->
                                         Result.makeSuccess(name, gt.points(), baos.toString());
                                 case FAILED, ABORTED ->

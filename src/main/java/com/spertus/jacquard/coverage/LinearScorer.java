@@ -21,7 +21,10 @@ public class LinearScorer extends Scorer {
      * @throws ClientException if either weight is not in the range [0, 1] or
      *                         they do not add up to 1
      */
-    public LinearScorer(double branchWeight, double lineWeight, double maxPoints) throws ClientException {
+    public LinearScorer(
+            final double branchWeight,
+            final double lineWeight,
+            final double maxPoints) {
         super(maxPoints);
         if (branchWeight < 0.0 || branchWeight > 1.0) {
             throw new ClientException(
@@ -50,7 +53,9 @@ public class LinearScorer extends Scorer {
      * @param maxPoints    the maximum number of points
      * @throws ClientException if either weight is not in the range [0, 1]
      */
-    public LinearScorer(double branchWeight, double maxPoints) {
+    public LinearScorer(
+            final double branchWeight,
+            final double maxPoints) {
         super(maxPoints);
         if (branchWeight < 0 || branchWeight > 1) {
             throw new ClientException("Argument to LinearScore(double) is not in range [0-1].");
@@ -59,15 +64,20 @@ public class LinearScorer extends Scorer {
     }
 
     @Override
-    public double score(double branchCoverage, double lineCoverage) {
+    public double score(
+            final double branchCoverage,
+            final double lineCoverage) {
         return maxScore * (branchCoverage * branchWeight + lineCoverage * (1 - branchWeight));
     }
 
     @Override
-    public Result getResult(double branchCoverage, double lineCoverage) {
-        double points = score(branchCoverage, lineCoverage);
+    public Result getResult(
+            final String name,
+            final double branchCoverage,
+            final double lineCoverage) {
+        final double points = score(branchCoverage, lineCoverage);
         return new Result(
-                "Code coverage",
+                name,
                 points,
                 maxScore,
                 getMessage(branchCoverage, lineCoverage));
@@ -80,7 +90,9 @@ public class LinearScorer extends Scorer {
      * @param lineCoverage   the line coverage ratio [0, 1]
      * @return a message
      */
-    protected String getMessage(double branchCoverage, double lineCoverage) {
+    protected String getMessage(
+            final double branchCoverage,
+            final double lineCoverage) {
         return String.format("Branch coverage is %.0f%% and line coverage is %.0f%%",
                 100 * branchCoverage, 100 * lineCoverage);
     }

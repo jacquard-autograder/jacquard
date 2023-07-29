@@ -12,7 +12,7 @@ public class TimeoutException extends Exception implements AutograderException {
      * @param message the message
      * @param cause the cause
      */
-    public TimeoutException(String message, Throwable cause) {
+    public TimeoutException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -21,7 +21,7 @@ public class TimeoutException extends Exception implements AutograderException {
      *
      * @param message the message
      */
-    public TimeoutException(String message) {
+    public TimeoutException(final String message) {
         super(message);
     }
 }

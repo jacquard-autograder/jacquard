@@ -18,6 +18,7 @@ import java.util.function.Predicate;
  *
  * @see com.github.javaparser.ast.Node
  */
+@SuppressWarnings("PMD.ExcessivePublicCount")
 public abstract class SyntaxConditionCountGrader extends SyntaxCountGrader {
     /**
      * Creates a new counter to test whether the number of parse nodes
@@ -39,8 +40,7 @@ public abstract class SyntaxConditionCountGrader extends SyntaxCountGrader {
             final double maxScore,
             final int minCount,
             final int maxCount,
-            final Predicate<Node> predicate)
-            throws ClientException {
+            final Predicate<Node> predicate) {
         super(name, countedName, maxScore, minCount, maxCount, new Adapter(predicate));
     }
 

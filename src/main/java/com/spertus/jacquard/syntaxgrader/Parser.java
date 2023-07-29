@@ -41,21 +41,24 @@ public class Parser {
     private final JavaParser javaParser;
 
     /**
-     * Constructs a parser.
+     * Constructs a parser for the Java language level specified in
+     * {@link Autograder#javaLevel}.
+     *
+     * @throws ClientException if the language level is not supported
      */
-    public Parser() throws ClientException {
+    public Parser() {
         final int javaLevel = Autograder.getInstance().javaLevel;
         if (javaLevel < MIN_JAVA_LEVEL || javaLevel > MAX_JAVA_LEVEL) {
             throw new ClientException(
                     String.format("SyntaxGrader cannot be used with language level %d, only (%d-%d)",
                             javaLevel, MIN_JAVA_LEVEL, MAX_JAVA_LEVEL));
         }
-        ParserConfiguration config = new ParserConfiguration();
+        final ParserConfiguration config = new ParserConfiguration();
         config.setLanguageLevel(LEVELS[javaLevel - MIN_JAVA_LEVEL]);
         javaParser = new JavaParser(config);
     }
 
-    private static String joinProblems(List<Problem> problems) {
+    private static String joinProblems(final List<Problem> problems) {
         return problems.stream().map(Problem::getVerboseMessage).collect(Collectors.joining(" \n"));
     }
 
@@ -66,9 +69,9 @@ public class Parser {
      * @return the parsed representation
      * @throws SubmissionException if the file cannot be found or cannot be parsed
      */
-    public CompilationUnit parse(File file) throws SubmissionException {
+    public CompilationUnit parse(final File file) throws SubmissionException {
         try {
-            ParseResult<CompilationUnit> parseResult = javaParser.parse(file);
+            final ParseResult<CompilationUnit> parseResult = javaParser.parse(file);
             if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
                 return parseResult.getResult().get();
             }

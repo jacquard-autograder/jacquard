@@ -4,11 +4,16 @@ record TestResult(String testName, boolean passed,
                   String methodUnderTestName, String message) {
     private static final String SUCCESS_MESSAGE = "PASSED";
 
-    static TestResult makeFailure(String testName, String methodUnderTestName, String message) {
+    static TestResult makeFailure(
+            final String testName,
+            final String methodUnderTestName,
+            final String message) {
         return new TestResult(testName, false, methodUnderTestName, message);
     }
 
-    static TestResult makeSuccess(String testName, String methodUnderTestName) {
+    static TestResult makeSuccess(
+            final String testName,
+            final String methodUnderTestName) {
         return new TestResult(testName, true, methodUnderTestName, SUCCESS_MESSAGE);
     }
 }

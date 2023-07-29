@@ -10,7 +10,7 @@ public class ExceptionResult extends Result {
      * @param name      the name
      * @param throwable the underlying {@link Error} or {@link Exception}
      */
-    public ExceptionResult(String name, Throwable throwable) {
+    public ExceptionResult(final String name, final Throwable throwable) {
         super(name, 0, 0, throwable.getMessage());
     }
 }

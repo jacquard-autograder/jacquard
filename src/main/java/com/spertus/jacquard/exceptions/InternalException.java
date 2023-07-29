@@ -11,7 +11,7 @@ public class InternalException extends Exception
      *
      * @param message an explanation
      */
-    public InternalException(String message) {
+    public InternalException(final String message) {
         super(message);
     }
 
@@ -22,7 +22,7 @@ public class InternalException extends Exception
      * @param message an explanation
      * @param cause   the underlying cause
      */
-    public InternalException(String message, Throwable cause) {
+    public InternalException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -31,7 +31,7 @@ public class InternalException extends Exception
      *
      * @param cause the underlying cause
      */
-    public InternalException(Throwable cause) {
+    public InternalException(final Throwable cause) {
         super("An internal autograder error occurred.", cause);
     }
 }

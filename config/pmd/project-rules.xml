@@ -55,7 +55,9 @@
     </exclude-pattern>
 
     <rule ref="category/java/bestpractices.xml">
+        <exclude name="PreserveStackTrace" />
     </rule>
+
     <rule ref="category/java/codestyle.xml">
         <exclude name="AtLeastOneConstructor"/>
         <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
@@ -67,6 +69,20 @@
 
     <rule ref="category/java/design.xml">
         <exclude name="LawOfDemeter"/>
+    </rule>
+
+    <rule ref="category/java/design.xml/CognitiveComplexity">
+        <properties>
+            <property name="reportLevel" value="18" />
+        </properties>
+    </rule>
+
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="classReportLevel" value="80" />
+            <property name="methodReportLevel" value="15" />
+            <property name="cycloOptions" value="" />
+        </properties>
     </rule>
 
     <rule ref="category/java/documentation.xml">
@@ -88,7 +104,8 @@
 
     <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
         <properties>
-            <property name="ignoreMagicNumbers" value="-1,0,1,2"/>
+            <property name="ignoreMagicNumbers" value="-1,0,1,2,1.0"/>
+            <property name="ignoreExpressions" value="true" />
         </properties>
     </rule>
 

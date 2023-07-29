@@ -16,7 +16,7 @@ public class ClientException extends RuntimeException
      * @param message an explanation
      * @param cause   the underlying cause
      */
-    public ClientException(String message, Throwable cause) {
+    public ClientException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -26,7 +26,7 @@ public class ClientException extends RuntimeException
      *
      * @param message an explanation
      */
-    public ClientException(String message) {
+    public ClientException(final String message) {
         super(message);
     }
 }

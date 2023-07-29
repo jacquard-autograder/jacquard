@@ -16,7 +16,7 @@ public abstract class SyntaxGrader extends Grader {
      *
      * @param name the name
      */
-    public SyntaxGrader(String name) {
+    public SyntaxGrader(final String name) {
         super(name);
     }
 

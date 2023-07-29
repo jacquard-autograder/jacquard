@@ -64,7 +64,7 @@ public final class MethodModifierGrader extends ModifierGrader {
 
     private class Adapter extends ModifierGrader.Adapter { // NOPMD
         @Override
-        public void visit(MethodDeclaration md, List<Result> collector) {
+        public void visit(final MethodDeclaration md, final List<Result> collector) {
             process(collector, md, md.getNameAsString(), md.getModifiers());
             super.visit(md, collector);
         }

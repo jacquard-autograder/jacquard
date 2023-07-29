@@ -9,10 +9,10 @@ import java.util.Objects;
  */
 public final class Target {
     private final Path path;
-    private String packageName; // lazy initialization
-    private String className; // lazy initialization
+    //private String packageName; // lazy initialization
+    //private String className; // lazy initialization
 
-    private Target(Path path) {
+    private Target(final Path path) {
         this.path = path;
     }
 
@@ -22,7 +22,7 @@ public final class Target {
      * @param path the path
      * @return the target
      */
-    public static Target fromPath(Path path) {
+    public static Target fromPath(final Path path) {
         return new Target(path);
     }
 
@@ -33,9 +33,9 @@ public final class Target {
      * @param s a relative path string
      * @return the target
      */
-    public static Target fromPathString(String s) {
+    public static Target fromPathString(final String s) {
         // https://stackoverflow.com/a/40163941/631051
-        Path absPath = FileSystems.getDefault().getPath(s).normalize().toAbsolutePath();
+        final Path absPath = FileSystems.getDefault().getPath(s).normalize().toAbsolutePath();
         return new Target(absPath);
     }
 
@@ -125,7 +125,7 @@ public final class Target {
      * @return the directory
      */
     public Path toDirectory() {
-        File file = toFile();
+        final File file = toFile();
         if (file.isDirectory()) {
             return file.toPath();
         } else {
@@ -148,7 +148,7 @@ public final class Target {
 //    }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o instanceof Target other) {
             return this.toPath().equals(other.toPath()) &&
                     this.toFile().equals(other.toFile()) &&
@@ -161,5 +161,4 @@ public final class Target {
     public int hashCode() {
         return Objects.hash(path);
     }
-
 }

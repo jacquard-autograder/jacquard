@@ -13,12 +13,12 @@ public class LinearBranchScorer extends LinearScorer {
      *
      * @param maxPoints the maximum number of points
      */
-    public LinearBranchScorer(double maxPoints) {
+    public LinearBranchScorer(final double maxPoints) {
         super(1.0, maxPoints);
     }
 
     @Override
-    protected String getMessage(double branchCoverage, double lineCoverage) {
+    protected String getMessage(final double branchCoverage, final double lineCoverage) {
         return String.format("Branch coverage is %.0f%%",
                 branchCoverage);
     }

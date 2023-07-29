@@ -27,24 +27,23 @@ public class ExpressionStatementCountGrader extends SyntaxConditionCountGrader {
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public ExpressionStatementCountGrader(
-            String name,
-            String countedName,
-            double maxScore,
-            int minCount,
-            int maxCount,
-            List<Class<? extends Expression>> expressionClasses,
-            List<Class<? extends Statement>> statementClasses)
-            throws ClientException {
+            final String name,
+            final String countedName,
+            final double maxScore,
+            final int minCount,
+            final int maxCount,
+            final List<Class<? extends Expression>> expressionClasses,
+            final List<Class<? extends Statement>> statementClasses) {
         super(name, countedName, maxScore, minCount, maxCount,
                 node -> {
                     if (node instanceof Expression) {
-                        for (Class<?> clazz : expressionClasses) {
+                        for (final Class<?> clazz : expressionClasses) {
                             if (clazz.isInstance(node)) {
                                 return true;
                             }
                         }
                     } else if (node instanceof Statement) {
-                        for (Class<?> clazz : statementClasses) {
+                        for (final Class<?> clazz : statementClasses) {
                             if (clazz.isInstance(node)) {
                                 return true;
                             }

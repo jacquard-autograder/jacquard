@@ -5,11 +5,11 @@ import com.spertus.jacquard.exceptions.TimeoutException;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 /**
  * The superclass of all graders.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public abstract class Grader {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final String name;
@@ -20,7 +20,7 @@ public abstract class Grader {
      * @param name the name of the grader
      * @throws ClientException if {@link Autograder} has not been initialized
      */
-    public Grader(String name) {
+    public Grader(final String name) {
         if (!Autograder.isInitialized()) {
             throw new ClientException("Autograder must be initialized before creating a grader.");
         }
@@ -56,13 +56,13 @@ public abstract class Grader {
             for (final Target target : targets) {
                 results.addAll(getCallable(target).call());
             }
-        } catch (Exception e) {
+        } catch (Exception e) { // NOPMD
             results.add(makeExceptionResult(new InternalException(e)));
         }
         return results;
     }
 
-    private List<Result> gradeTimed(Target... targets) {
+    private List<Result> gradeTimed(final Target... targets) {
         final List<Result> results = new ArrayList<>();
         try {
             for (final Target target : targets) {
@@ -101,10 +101,10 @@ public abstract class Grader {
      * @param graders graders, in the order they should be run
      * @return the collected results
      */
-    public static List<Result> gradeAll(Target target, Grader... graders) {
-        List<Result> results = new ArrayList<>();
-        for (Grader grader : graders) {
-            List<Result> r = grader.grade(target);
+    public static List<Result> gradeAll(final Target target, final Grader... graders) {
+        final List<Result> results = new ArrayList<>();
+        for (final Grader grader : graders) {
+            final List<Result> r = grader.grade(target);
             results.addAll(r);
         }
         return results;
@@ -130,7 +130,7 @@ public abstract class Grader {
      * @param message   any message to include
      * @return the result
      */
-    protected Result makeSuccessResult(double maxPoints, String message) {
+    protected Result makeSuccessResult(final double maxPoints, final String message) {
         return Result.makeSuccess(name, maxPoints, message);
     }
 

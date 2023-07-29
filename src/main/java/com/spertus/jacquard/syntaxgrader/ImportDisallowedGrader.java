@@ -1,8 +1,6 @@
 package com.spertus.jacquard.syntaxgrader;
 
 import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.spertus.jacquard.common.Result;
 
 import java.util.*;
 
@@ -49,8 +47,8 @@ public class ImportDisallowedGrader extends ImportForbiddenGrader {
 
     private class ImportCheckerAdapter extends ImportForbiddenGrader.ImportCheckerAdapter { // NOPMD
         @Override
-        boolean isImportForbidden(ImportDeclaration importDecl) {
-            String name = importToPackageName(importDecl);
+        protected boolean isImportForbidden(final ImportDeclaration importDecl) {
+            final String name = importToPackageName(importDecl);
             return !allowedPackages.contains(name);
         }
     }

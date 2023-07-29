@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 /**
  * The result of an evaluation of student code.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class Result {
     private final String name;
     private final double score;
@@ -102,7 +103,7 @@ public class Result {
      *
      * @param visibility the visibility
      */
-    public void setVisibility(Visibility visibility) {
+    public void setVisibility(final Visibility visibility) {
         this.visibility = visibility;
     }
 
@@ -112,13 +113,13 @@ public class Result {
      * @param visibility the visibility
      * @return this result with the new visibility
      */
-    public Result changeVisibility(Visibility visibility) {
+    public Result changeVisibility(final Visibility visibility) {
         this.visibility = visibility;
         return this;
     }
 
     @Override
-    public boolean equals(Object other) {
+    public boolean equals(final Object other) {
         if (other instanceof Result result) {
             return name.equals(result.name) &&
                     score == result.score &&
@@ -140,7 +141,7 @@ public class Result {
      * @param throwable the underlying {@link Error} or {@link Exception}
      * @return a result
      */
-    public static Result makeError(String name, Throwable throwable) {
+    public static Result makeError(final String name, final Throwable throwable) {
         return new ExceptionResult(name, throwable);
     }
 
@@ -153,7 +154,11 @@ public class Result {
      * @param message     any message
      * @return a result
      */
-    public static Result makeResult(String name, double actualScore, double maxScore, String message) {
+    public static Result makeResult(
+            final String name,
+            final double actualScore,
+            final double maxScore,
+            final String message) {
         return new Result(name, actualScore, maxScore, message);
     }
 
@@ -177,7 +182,7 @@ public class Result {
      *
      * @param name       the name
      * @param score      the number of points earned
-     * @param message     any message
+     * @param message    any message
      * @param visibility the visibility level
      * @return a result
      */
@@ -195,10 +200,13 @@ public class Result {
      *
      * @param name     the name
      * @param maxScore the number of points not earned
-     * @param message   any message
+     * @param message  any message
      * @return a result
      */
-    public static Result makeFailure(String name, double maxScore, String message) {
+    public static Result makeFailure(
+            final String name,
+            final double maxScore,
+            final String message) {
         return new Result(name, 0, maxScore, message);
     }
 
@@ -207,7 +215,7 @@ public class Result {
      *
      * @param name       the name
      * @param maxScore   the number of points not earned
-     * @param message     any message
+     * @param message    any message
      * @param visibility the visibility level
      * @return a result
      */
@@ -232,13 +240,13 @@ public class Result {
      * All of the passed results must have the same visibility level, which
      * will be used for the created result.
      *
-     * @param results        the results to summarize
-     * @param name           the name of the created result
-     * @param allMessage     the message to include if all results are
-     *                       successful
-     * @param nothingMessage the message to include if any results are not
-     *                       successful
-     * @param maxScore       the score if all results are successful
+     * @param results         the results to summarize
+     * @param name            the name of the created result
+     * @param allMessage      the message to include if all results are
+     *                        successful
+     * @param nothingMessage  the message to include if any results are not
+     *                        successful
+     * @param maxScore        the score if all results are successful
      * @param includeMessages whether to include the messages of the results
      * @return a new result
      * @throws IllegalArgumentException if all the passed results do not have
@@ -254,7 +262,7 @@ public class Result {
             final boolean includeMessages) {
 
         // Verify validity of arguments and set visibility.
-        if (results.size() == 0) {
+        if (results.isEmpty()) {
             throw new IllegalArgumentException("Results argument is empty");
         }
         final Visibility visibility = results.get(0).getVisibility();

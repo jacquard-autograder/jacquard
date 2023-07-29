@@ -13,12 +13,12 @@ public class LinearLineScorer extends LinearScorer {
      *
      * @param maxPoints the maximum number of points
      */
-    public LinearLineScorer(double maxPoints) {
+    public LinearLineScorer(final double maxPoints) {
        super(0, maxPoints);
     }
 
     @Override
-    protected String getMessage(double branchCoverage, double lineCoverage) {
+    protected String getMessage(final double branchCoverage, final double lineCoverage) {
         return String.format("Line coverage is %.0f%%", lineCoverage);
     }
 }

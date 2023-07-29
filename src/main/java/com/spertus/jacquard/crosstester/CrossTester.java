@@ -69,21 +69,21 @@ public class CrossTester {
      * @param scoringData a source of CSV data with the names of classes under
      *                    test, methods under tests, and scoring information
      */
-    public CrossTester(Class<?> testClass, InputStream scoringData) {
+    public CrossTester(final Class<?> testClass, final InputStream scoringData) {
         generalizedTestClass = testClass;
         processCsvFile(scoringData);
     }
 
     // helper method for initialization
-    private void processCsvFile(InputStream is) {
+    private void processCsvFile(final InputStream is) {
         // Read in file so we know size (number of methods).
-        List<String[]> rows = new ArrayList<>();
+        final List<String[]> rows = new ArrayList<>();
         try (Scanner scanner = new Scanner(is)) {
             if (scanner.hasNextLine()) {
-                String[] fields = scanner.nextLine().split(DELIM);
+                final String[] fields = scanner.nextLine().split(DELIM);
                 cutNames = Arrays.copyOfRange(fields, 1, fields.length);
                 while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine().trim();
+                    final String line = scanner.nextLine().trim();
                     if (!line.isEmpty()) {
                         rows.add(line.split(DELIM));
                     }
@@ -97,7 +97,7 @@ public class CrossTester {
         methodNames = new String[rows.size()];
         points = new double[rows.size()][cutNames.length];
         for (int i = 0; i < methodNames.length; i++) {
-            String[] row = rows.get(i);
+            final String[] row = rows.get(i);
             if (row.length != cutNames.length + 1) {
                 throw new ClientException(String.format("Row %d has length %d, not expected length %d",
                         i, row.length, cutNames.length + 1));
@@ -115,30 +115,32 @@ public class CrossTester {
      * @return the results of the tests
      * @throws ClientException if an error occurs due to misconfiguration
      */
-    public List<Result> run() throws ClientException{
-        List<Result> results = new ArrayList<>();
+    public List<Result> run() {
+        final List<Result> results = new ArrayList<>();
         for (int i = 0; i < cutNames.length; i++) {
             results.addAll(grade(i));
         }
         return results;
     }
 
-    private List<Result> grade(int cutIndex) throws ClientException {
+    private List<Result> grade(final int cutIndex) {
         DependencyInjector.reset(); // clear previous injected values
         DependencyInjector.setGeneralizedTestClass(generalizedTestClass);
         final String cutField = cutNames[cutIndex];
         final List<TestResult> testResults = new ArrayList<>();
-        String[] cutFields = cutField.split("#");
+        final String[] cutFields = cutField.split("#");
         try {
-            Class<?> classUnderTest = Class.forName(cutFields[0]);
+            final Class<?> classUnderTest = Class.forName(cutFields[0]);
             DependencyInjector.setClassToInject(classUnderTest);
             if (cutFields.length > 1) {
                 DependencyInjector.setIntToInject(Integer.parseInt(cutFields[1]));
             }
-            Launcher launcher = LauncherFactory.create();
+            final Launcher launcher = LauncherFactory.create();
             launcher.registerTestExecutionListeners(new TestExecutionListener() {
                 @Override
-                public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+                public void executionFinished(
+                        final TestIdentifier testIdentifier,
+                        final TestExecutionResult testExecutionResult) {
                     final String mutName =
                             Arrays.stream(methodNames)
                                     .filter((String name) -> testIdentifier.getDisplayName().startsWith(name))
@@ -169,8 +171,8 @@ public class CrossTester {
         }
     }
 
-    private List<Result> generateResults(int cutIndex, List<TestResult> testResults) {
-        List<Result> results = new ArrayList<>(methodNames.length);
+    private List<Result> generateResults(final int cutIndex, final List<TestResult> testResults) {
+        final List<Result> results = new ArrayList<>(methodNames.length);
         for (int mutIndex = 0; mutIndex < methodNames.length; mutIndex++) {
             // Skip cases where points is 0.
             if (points[mutIndex][cutIndex] != 0) {
@@ -180,18 +182,18 @@ public class CrossTester {
         return results;
     }
 
-    private Result generateResult(int cutIndex, int mutIndex, List<TestResult> testResults) {
-        String mutName = methodNames[mutIndex];
-        List<TestResult> mutTestResults = testResults
+    private Result generateResult(final int cutIndex, final int mutIndex, final List<TestResult> testResults) {
+        final String mutName = methodNames[mutIndex];
+        final List<TestResult> mutTestResults = testResults
                 .stream()
                 .filter((TestResult tr) ->
                         tr.methodUnderTestName().equals(mutName))
                 .toList();
-        String name = String.format("Tests of %s.%s()", cutNames[cutIndex], mutName);
-        StringBuilder sb = new StringBuilder();
+        final String name = String.format("Tests of %s.%s()", cutNames[cutIndex], mutName);
+        final StringBuilder sb = new StringBuilder();
         int successes = 0;
         int failures = 0;
-        for (TestResult tr : mutTestResults) {
+        for (final TestResult tr : mutTestResults) {
             if (tr.passed()) {
                 sb.append(String.format("Test %s PASSED\n", tr.testName()));
                 successes++;
@@ -202,7 +204,7 @@ public class CrossTester {
         }
         // If maxPoints is positive, full credit is earned for success.
         // If maxPoints is negative, full credit is earned for failure.
-        double maxPoints = points[mutIndex][cutIndex];
+        final double maxPoints = points[mutIndex][cutIndex];
         double points;
         if (failures > 0) {
             points = maxPoints > 0 ? 0 : -maxPoints;

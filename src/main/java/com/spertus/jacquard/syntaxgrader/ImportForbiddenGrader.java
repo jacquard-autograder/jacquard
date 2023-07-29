@@ -45,9 +45,10 @@ public abstract class ImportForbiddenGrader extends SyntaxCheckGrader {
          * Constructs an adapter.
          */
         protected ImportCheckerAdapter() {
+            super();
         }
 
-        private void initialize() {
+        private void initialize() { // NOPMD (false positive)
             foundForbiddenPackages.clear();
         }
 
@@ -57,8 +58,8 @@ public abstract class ImportForbiddenGrader extends SyntaxCheckGrader {
          * @param importDecl an import declaration
          * @return the package name
          */
-        protected static String importToPackageName(ImportDeclaration importDecl) {
-            String name = importDecl.getNameAsString();
+        protected static String importToPackageName(final ImportDeclaration importDecl) {
+            final String name = importDecl.getNameAsString();
             if (importDecl.isAsterisk()) {
                 return name;
             }
@@ -71,7 +72,7 @@ public abstract class ImportForbiddenGrader extends SyntaxCheckGrader {
          * @param importDecl the import declaration
          * @return true if it is forbidden, false if it is permitted
          */
-        abstract boolean isImportForbidden(final ImportDeclaration importDecl);
+        abstract protected boolean isImportForbidden(ImportDeclaration importDecl);
 
         @Override
         public void visit(final ImportDeclaration importDecl, final List<Result> results) {
@@ -81,7 +82,7 @@ public abstract class ImportForbiddenGrader extends SyntaxCheckGrader {
             super.visit(importDecl, results);
         }
 
-        private void finalizeResults(List<Result> results) {
+        private void finalizeResults(List<Result> results) {  // NOPMD (false positive)
             if (foundForbiddenPackages.isEmpty()) {
                 results.add(makeSuccessResult("No forbidden packages imported."));
             } else {

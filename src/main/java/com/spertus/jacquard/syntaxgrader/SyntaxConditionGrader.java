@@ -10,7 +10,7 @@ import java.util.function.Predicate;
  * satisfy a predicate.
  */
 public class SyntaxConditionGrader extends SyntaxConditionCountGrader {
-    private static String GRADER_FORMAT_STRING = "%s checker";
+    private static final String GRADER_FORMAT_STRING = "%s checker";
 
     /**
      * Creates a grader to test whether the specified number of parse nodes
@@ -21,14 +21,15 @@ public class SyntaxConditionGrader extends SyntaxConditionCountGrader {
      * @param countedName the name of the element being checked
      * @param maxScore    the score if the condition holds
      * @param predicate   the condition
+     *
+     * @throws ClientException if {@code count} is negative
      */
     public SyntaxConditionGrader(
             final String name,
             final int count,
             final String countedName,
             final double maxScore,
-            final Predicate<Node> predicate)
-            throws ClientException {
+            final Predicate<Node> predicate) {
         super(name, countedName, maxScore, count, count, predicate);
     }
 
@@ -40,13 +41,14 @@ public class SyntaxConditionGrader extends SyntaxConditionCountGrader {
      * @param countedName the name of the element being checked
      * @param maxScore    the score if the condition holds
      * @param predicate   the condition
+     *
+     * @throws ClientException if {@code count} is negative
      */
     public SyntaxConditionGrader(
             final int count,
             final String countedName,
             final double maxScore,
-            final Predicate<Node> predicate)
-            throws ClientException {
+            final Predicate<Node> predicate) {
         this(String.format(GRADER_FORMAT_STRING, countedName),
                 count,
                 countedName,

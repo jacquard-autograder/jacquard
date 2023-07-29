@@ -19,28 +19,30 @@ public class DependencyInjector implements TestInstanceFactory {
         intToInject = null;
     }
 
-    /* default */ static void setGeneralizedTestClass(Class<?> generalizedTestClass) {
+    /* default */ static void setGeneralizedTestClass(final Class<?> generalizedTestClass) {
         DependencyInjector.generalizedTestClass = generalizedTestClass;
     }
 
-    /* default */ static void setClassToInject(Class<?> classToInject) {
+    /* default */ static void setClassToInject(final Class<?> classToInject) {
         DependencyInjector.classToInject = classToInject;
     }
 
-    /* default */ static void setIntToInject(int i) {
+    /* default */ static void setIntToInject(final int i) {
         intToInject = i;
     }
 
     @Override
-    public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) throws TestInstantiationException {
+    public Object createTestInstance(
+            final TestInstanceFactoryContext factoryContext,
+            final ExtensionContext extensionContext) {
         // This local variable simplifies exception reporting.
-        String argTypes = intToInject == null ? "Class<?>" : "Class<?>, int";
+        final String argTypes = intToInject == null ? "Class<?>" : "Class<?>, int";
         try {
             if (intToInject == null) {
-                Constructor<?> constructor = generalizedTestClass.getConstructor(Class.class);
+                final Constructor<?> constructor = generalizedTestClass.getConstructor(Class.class);
                 return constructor.newInstance(classToInject);
             } else {
-                Constructor<?> constructor = generalizedTestClass.getConstructor(Class.class, int.class);
+                final Constructor<?> constructor = generalizedTestClass.getConstructor(Class.class, int.class);
                 return constructor.newInstance(classToInject, intToInject);
             }
         } catch (NoSuchMethodException e) {
@@ -68,9 +70,6 @@ public class DependencyInjector implements TestInstanceFactory {
                             generalizedTestClass.getName(),
                             argTypes),
                     e);
-        } catch (Exception e) {
-            throw new TestInstantiationException(
-                    "Crossgrading failed due to an internal autograder error. ", e);
         }
     }
 }

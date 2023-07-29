@@ -26,12 +26,12 @@ public class StatementCountGrader extends ExpressionStatementCountGrader {
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public StatementCountGrader(
-            String name,
-            double maxScore,
-            int minCount,
-            int maxCount,
-            Class<? extends Statement> clazz
-    ) throws ClientException {
+            final String name,
+            final double maxScore,
+            final int minCount,
+            final int maxCount,
+            final Class<? extends Statement> clazz
+    ) {
         super(name, clazz.getSimpleName(), maxScore, minCount, maxCount, List.of(), List.of(clazz));
     }
 
@@ -48,11 +48,11 @@ public class StatementCountGrader extends ExpressionStatementCountGrader {
      *                         or minCount is 0 when maxCount is {@link Integer#MAX_VALUE}
      */
     public StatementCountGrader(
-            double maxScore,
-            int minCount,
-            int maxCount,
-            Class<? extends Statement> clazz
-    ) throws ClientException {
+            final double maxScore,
+            final int minCount,
+            final int maxCount,
+            final Class<? extends Statement> clazz
+    ) {
         this(clazz.getSimpleName() + " counter", maxScore, minCount, maxCount, clazz);
     }
 }
