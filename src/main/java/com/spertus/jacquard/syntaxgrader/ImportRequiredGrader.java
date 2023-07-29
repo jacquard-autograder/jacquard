@@ -61,11 +61,6 @@ public class ImportRequiredGrader extends SyntaxCheckGrader {
     }
 
     @Override
-    public double getTotalMaxScore() {
-        return numRequirements * maxScorePerInstance;
-    }
-
-    @Override
     public void initialize() {
         ((ImportCheckerAdapter) adapter).initialize();
     }

@@ -62,11 +62,6 @@ abstract class ModifierGrader extends SyntaxCheckGrader {
         }
     }
 
-    @Override
-    public double getTotalMaxScore() {
-        return maxScorePerInstance * itemNames.size();
-    }
-
     /**
      * An abstract superclass for adapters verifying that nodes have the
      * required modifiers and do not have forbidden modifiers. Subclasses

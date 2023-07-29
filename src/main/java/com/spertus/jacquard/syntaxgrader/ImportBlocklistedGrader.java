@@ -50,5 +50,6 @@ public class ImportBlocklistedGrader extends ImportForbiddenGrader {
         boolean isImportForbidden(ImportDeclaration importDecl) {
             return blocklistedPackages.contains(importToPackageName(importDecl));
         }
+
     }
 }

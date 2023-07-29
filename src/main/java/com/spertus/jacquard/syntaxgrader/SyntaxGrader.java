@@ -34,10 +34,4 @@ public abstract class SyntaxGrader extends Grader {
      */
     protected abstract List<Result> grade(CompilationUnit cu);
 
-    /**
-     * The maximum possible score achievable with this grader.
-     *
-     * @return the maximum possible score
-     */
-    public abstract double getTotalMaxScore();
 }

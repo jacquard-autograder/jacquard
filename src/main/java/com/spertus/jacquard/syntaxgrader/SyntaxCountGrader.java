@@ -67,11 +67,6 @@ public abstract class SyntaxCountGrader extends SyntaxGrader {
         return List.of(getResult(mi));
     }
 
-    @Override
-    public double getTotalMaxScore() {
-        return this.maxScore;
-    }
-
     private String getPrefix() {
         if (maxCount == Integer.MAX_VALUE) {
             return String.format("Code was required to have at least %d %s", minCount, countedName);

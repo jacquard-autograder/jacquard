@@ -11,8 +11,6 @@ import java.util.*;
  * of packages that are not allowed.
  */
 public abstract class ImportForbiddenGrader extends SyntaxCheckGrader {
-    private double maxScore;
-
     /**
      * Creates an import grader that tests whether there are any imports
      * involving blocklisted (forbidden) packages.
@@ -25,11 +23,6 @@ public abstract class ImportForbiddenGrader extends SyntaxCheckGrader {
             final double maxScore) {
         super(name, maxScore, null);
         // adapter is set by concrete subclass
-    }
-
-    @Override
-    public double getTotalMaxScore() {
-        return maxScore;
     }
 
     @Override
