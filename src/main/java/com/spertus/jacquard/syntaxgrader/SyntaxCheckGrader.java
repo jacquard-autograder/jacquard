@@ -7,13 +7,18 @@ import com.spertus.jacquard.common.Result;
 import java.util.*;
 
 /**
- * The base class for syntax-based graders involving multiple items of the
- * same type. Examples include:
+ * The base class for syntax-based graders that may involve multiple items of
+ * the same type. Examples include:
  * <ul>
  *     <li> {@link MethodModifierGrader}, which checks whether
- *      each of a list of methods has the correct modifiers</li>
+ *      each of a list of methods has the correct modifiers,
+ *      awarding up to {@link #maxScorePerInstance} per method</li>
  *     <li> {@link ImportRequiredGrader}, which checks whether
- *     all required imports are present</li>
+ *     all required imports are present, awarding up to
+ *     {@link #maxScorePerInstance} per import</li>
+ *     <li> {@link ImportDisallowedGrader}, which checks whether any
+ *     disallowed imports are present, awarding or withholding
+ *     {@link #maxScorePerInstance} (all or nothing)</li>
  * </ul>
  */
 public abstract class SyntaxCheckGrader extends SyntaxGrader {
@@ -36,10 +41,13 @@ public abstract class SyntaxCheckGrader extends SyntaxGrader {
      * completed.)
      *
      * @param name                the name of the syntax checker
-     * @param maxScorePerInstance the maximum score per application
+     * @param maxScorePerInstance the maximum score per application of the check
      * @param adapter             the adapter or {@code null}
      */
-    protected SyntaxCheckGrader(String name, double maxScorePerInstance, VoidVisitorAdapter<List<Result>> adapter) {
+    protected SyntaxCheckGrader(
+            final String name,
+            final double maxScorePerInstance,
+            final VoidVisitorAdapter<List<Result>> adapter) {
         super(name);
         this.maxScorePerInstance = maxScorePerInstance;
         this.adapter = adapter;
@@ -56,11 +64,11 @@ public abstract class SyntaxCheckGrader extends SyntaxGrader {
      *
      * @param results the list of results, which may be mutated by this call
      */
-    public void finalizeResults(List<Result> results) {
+    public void finalizeResults(final List<Result> results) {
     }
 
     @Override
-    public List<Result> grade(CompilationUnit cu) {
+    public List<Result> grade(final CompilationUnit cu) {
         initialize();
         final List<Result> results = new ArrayList<>();
         adapter.visit(cu, results);
@@ -74,7 +82,7 @@ public abstract class SyntaxCheckGrader extends SyntaxGrader {
      * @param message an accompanying message
      * @return the result
      */
-    protected Result makeFailingResult(String message) {
+    protected Result makeFailingResult(final String message) {
         return makeFailureResult(maxScorePerInstance, message);
     }
 
@@ -84,7 +92,7 @@ public abstract class SyntaxCheckGrader extends SyntaxGrader {
      * @param message an accompanying message
      * @return the result
      */
-    protected Result makeSuccessResult(String message) {
+    protected Result makeSuccessResult(final String message) {
         return makeSuccessResult(maxScorePerInstance, message);
     }
 }
