@@ -18,4 +18,5 @@ Features include:
     * student code
     * intentionally buggy staff-written code
     * correct staff-written code
-* [Leaderboards](https://gradescope-autograders.readthedocs.io/en/latest/leaderboards/)
+
+For more information, see [Jacquard Examples](https://github.com/espertus/jacquard-examples).
