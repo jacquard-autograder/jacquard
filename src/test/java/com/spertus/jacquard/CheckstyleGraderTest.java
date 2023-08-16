@@ -4,6 +4,7 @@ import com.spertus.jacquard.checkstylegrader.CheckstyleGrader;
 import com.spertus.jacquard.common.*;
 import org.junit.jupiter.api.*;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -11,6 +12,18 @@ public class CheckstyleGraderTest {
     @BeforeAll()
     public static void init() {
         Autograder.initForTest();
+        deleteDir(new File("lib"));
+    }
+
+    // https://stackoverflow.com/a/29175213/631051
+    private static void deleteDir(File file) {
+        File[] contents = file.listFiles();
+        if (contents != null) {
+            for (File f : contents) {
+                deleteDir(f);
+            }
+        }
+        file.delete();
     }
 
     @Test

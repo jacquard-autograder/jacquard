@@ -10,6 +10,7 @@ import javax.xml.parsers.*;
 import java.io.*;
 import java.net.*;
 import java.nio.channels.*;
+import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -115,6 +116,7 @@ public class CheckstyleGrader extends Grader {
         try {
             final File file = new File(CHECKSTYLE_SUBDIR + "/" + CHECKSTYLE_JAR);
             if (!file.exists()) {
+                Files.createDirectory(Paths.get(CHECKSTYLE_SUBDIR));
                 // https://www.baeldung.com/java-download-file#using-nio
                 try (ReadableByteChannel readableByteChannel =
                         Channels.newChannel(new URL(CHECKSTYLE_URL).openStream())) {
