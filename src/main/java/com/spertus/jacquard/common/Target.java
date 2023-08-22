@@ -1,8 +1,11 @@
 package com.spertus.jacquard.common;
 
+import com.spertus.jacquard.exceptions.ClientException;
+
 import java.io.File;
 import java.nio.file.*;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The target of a {@link Grader}, such as a file or a directory.
@@ -37,6 +40,24 @@ public final class Target {
         // https://stackoverflow.com/a/40163941/631051
         final Path absPath = FileSystems.getDefault().getPath(s).normalize().toAbsolutePath();
         return new Target(absPath);
+    }
+
+    /**
+     * Creates targets from a directory string and list of files in the directory.
+     *
+     * @param dir   a relative directory string (ending with <code>/</code> or
+     *              <code>\</code>)
+     * @param files the names of the files in the directory
+     * @return the target
+     * @throws ClientException if dir does not end with a path separator
+     */
+    public static List<Target> fromPathStrings(final String dir, final String... files) {
+        if (!dir.endsWith("/") && !dir.endsWith("\\")) {
+            throw new ClientException("dir must end with a path separator (/ or \\)");
+        }
+        return Arrays.stream(files)
+                .map(file -> fromPathString(dir + file))
+                .collect(Collectors.toList());
     }
 
     /**
