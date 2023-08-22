@@ -20,3 +20,5 @@ Features include:
     * correct staff-written code
 
 For more information, see [Jacquard Examples](https://github.com/espertus/jacquard-examples).
+
+[![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://www.ellenspertus.com/jacquard)
