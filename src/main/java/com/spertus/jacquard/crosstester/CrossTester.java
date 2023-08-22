@@ -39,7 +39,7 @@ public class CrossTester {
      * the leftmost column), and maximum points for each combination.
      * A positive points value means that points should be scored if the
      * test passes, a negative points value means that points should be scored
-     * if the text fails, while a points value of zero means that no points
+     * if the test fails, while a points value of zero means that no points
      * should be scored for the combination. If a points value is non-zero
      * and there are no tests of the specified method, a score of 0 is given.
      * <p>

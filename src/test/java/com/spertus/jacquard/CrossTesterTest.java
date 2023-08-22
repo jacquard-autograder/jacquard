@@ -23,7 +23,7 @@ public class CrossTesterTest {
 
     private static final String CSV_FILE_WITH_INT_PARAMS = String.format("""
             , %1$s#0, %1$s#1, %1$s#2, %1$s#3,
-            addZero, -1, -2, -3, -4
+            addZero, -1, -2, -3, 4
             """, "com.spertus.jacquard.crosstester.ParameterizedBuggyAdder");
 
     private List<Result> getResults(String csv) throws ClientException {
@@ -52,11 +52,11 @@ public class CrossTesterTest {
                 new ByteArrayInputStream(CSV_FILE_WITH_INT_PARAMS.getBytes()));
         List<Result> results = grader.run();
         assertEquals(4, results.size());
-        // Tests 0, 1, and 2 will fail. Test 3 will succeed.
+        // Tests 0, 1, and 2 will fail. Test 3 will succeed. This is as intended.
         testResult(results.get(0), 1, 1);
         testResult(results.get(1), 2, 2);
         testResult(results.get(2), 3, 3);
-        testResult(results.get(3), 0, 4);
+        testResult(results.get(3), 4, 4);
     }
 
 }
