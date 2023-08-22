@@ -153,7 +153,7 @@ public final class PmdGrader extends Grader {
     }
 
     @Override
-    public Callable<List<Result>> getCallable(final Target target) {
+    public Callable<List<Result>> getCallableSingleTarget(final Target target) {
         return () -> {
             try (PmdAnalysis analysis = createAnalysis()) {
                 final boolean added = analysis.files().addFileOrDirectory(target.toPath());

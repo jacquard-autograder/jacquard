@@ -5,14 +5,21 @@ import com.spertus.jacquard.common.*;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.util.List;
 
 public class CheckstyleGraderTest {
+    private static Target badFormattingTarget;
+    private static Target missingCommentsTarget;
+
     @BeforeAll()
-    public static void init() {
+    public static void init() throws URISyntaxException {
         Autograder.initForTest();
+        // The next line makes this test slow but tests that the library is
+        // downloaded if needed.
         deleteDir(new File("lib"));
+        badFormattingTarget = TestUtilities.getTargetFromResource("good/BadFormatting.java");
+        missingCommentsTarget = TestUtilities.getTargetFromResource("good/MissingComments.java");
     }
 
     // https://stackoverflow.com/a/29175213/631051
@@ -33,23 +40,26 @@ public class CheckstyleGraderTest {
     }
 
     @Test
-    public void testCheckstyleSingleAwfulFile() throws URISyntaxException {
-        CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 1.0, 5);
-        List<Result> results = grader.grade( List.of(
-                TestUtilities.getTargetFromResource("good/BadFormatting.java")
-        ));
-        // There are lots of violations.
-        TestUtilities.assertResultsMatch(results, 1, 0, 5.0);
+    public void testCheckstyleSingleAwfulFile() {
+        CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 1.0, 20.0);
+        List<Result> results = grader.grade(badFormattingTarget);
+        // There are 8 violations.
+        TestUtilities.assertResultsMatch(results, 1, 12.0, 20.0);
     }
 
     @Test
-    public void testCheckstyleSingleFlawedFile() throws URISyntaxException {
+    public void testCheckstyleSingleFlawedFile() {
         CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", .5, 20);
-        List<Result> results = grader.grade(
-                List.of(
-                TestUtilities.getTargetFromResource("good/MissingComments.java")
-        ));
+        List<Result> results = grader.grade(missingCommentsTarget);
         // There are 4 violations.
         TestUtilities.assertResultsMatch(results, 1, 18.0, 20.0);
+    }
+
+    @Test
+    public void testCheckstyleMultipleFiles() throws URISyntaxException {
+        CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 1.0, 20.0);
+        List<Result> results = grader.grade(badFormattingTarget, missingCommentsTarget);
+        // There are 11 violations (because package-info violation counted only once).
+        TestUtilities.assertResultsMatch(results, 1, 9.0, 20.0);
     }
 }

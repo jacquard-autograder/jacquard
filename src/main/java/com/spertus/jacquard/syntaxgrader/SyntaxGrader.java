@@ -21,7 +21,7 @@ public abstract class SyntaxGrader extends Grader {
     }
 
     @Override
-    public Callable<List<Result>> getCallable(final Target target) {
+    public Callable<List<Result>> getCallableSingleTarget(final Target target) {
         final Parser parser = new Parser();
         return () -> grade(parser.parse(target.toFile()));
     }

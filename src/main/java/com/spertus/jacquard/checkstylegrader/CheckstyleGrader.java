@@ -96,17 +96,20 @@ public class CheckstyleGrader extends Grader {
     }
 
     private int addOutputForFileNode(final StringBuilder sb, final Node elementNode) {
+        // Extract information from elementNode.
         final String fullPath = elementNode.getAttributes().getNamedItem("name").toString();
         final String fileName = fullPath.substring(fullPath.lastIndexOf(System.getProperty("file.separator")) + 1, fullPath.length() - 1);
         final NodeList errorNodes = ((Element) elementNode).getElementsByTagName("error");
+
+        // Format result.
         if (errorNodes.getLength() > 0) {
             sb.append(fileName).append(":\n");
         }
-
         for (int i = 0; i < errorNodes.getLength(); ++i) {
             sb.append(this.getOutputForErrorNode(errorNodes.item(i).getAttributes()));
         }
 
+        // Return number of errors.
         return errorNodes.getLength();
     }
 
@@ -132,16 +135,13 @@ public class CheckstyleGrader extends Grader {
         }
     }
 
-    private void runCheckstyle(final Target target) throws InternalException {
-        // Delete old output file.
-        final File file = new File(RESULT_FILE_NAME);
-        file.delete();
-
-        // Run checkstyle.
+    private void runCheckstyle(final Target... targets) throws InternalException {
         downloadCheckstyleIfNeeded();
         final List<String> arguments = new ArrayList<>(FIRST_COMMAND_PARTS);
         arguments.add(String.format(CONFIG_TEMPLATE, ruleFile));
-        arguments.add(target.toPathString());
+        for (Target target : targets) {
+            arguments.add(target.toPathString());
+        }
         final ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
             final Process p = pb.start(); // IOException
@@ -160,6 +160,7 @@ public class CheckstyleGrader extends Grader {
         final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         final File file = new File(RESULT_FILE_NAME);
         final Document doc = builder.parse(file);
+     //   new File(RESULT_FILE_NAME).delete(); // comment out when debugging
         final NodeList filesWithErrors = doc.getElementsByTagName("file");
         int numErrors = 0;
         final StringBuilder sb = new StringBuilder();
@@ -176,12 +177,20 @@ public class CheckstyleGrader extends Grader {
     }
 
     @Override
-    public Callable<List<Result>> getCallable(final Target target) {
+    public Callable<List<Result>> getCallableSingleTarget(final Target target) {
         return () -> {
             // Either of the next two method calls could throw
             // InternalException. If so, it will be caught in
             // Grader.gradeTimed() or Grader.gradeUntimed().
             runCheckstyle(target);
+            return List.of(interpretOutput());
+        };
+    }
+
+    @Override
+    public Callable<List<Result>> getCallableMultiTarget(final Target... targets) {
+        return () -> {
+            runCheckstyle(targets);
             return List.of(interpretOutput());
         };
     }

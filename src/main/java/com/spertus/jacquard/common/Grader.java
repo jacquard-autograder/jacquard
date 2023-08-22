@@ -3,8 +3,10 @@ package com.spertus.jacquard.common;
 import com.spertus.jacquard.exceptions.*;
 import com.spertus.jacquard.exceptions.TimeoutException;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.*;
 
 /**
  * The superclass of all graders.
@@ -28,12 +30,38 @@ public abstract class Grader {
     }
 
     /**
-     * Gets a {@link Callable} through which this grader can be called.
+     * Gets a {@link Callable} through which this grader can be called on
+     * a single target.
      *
      * @param target the target
      * @return a {@link Callable} through which this grader can be called
      */
-    public abstract Callable<List<Result>> getCallable(Target target);
+    public abstract Callable<List<Result>> getCallableSingleTarget(Target target);
+
+    /**
+     * Gets a {@link Callable} through which this grader can be called on
+     * multiple targets. The default implementation just appends the results
+     * of successive calls to {@link #getCallableSingleTarget(Target)}, but
+     * subclasses may provide their own implementations to handle multiple
+     * targets specially.
+     *
+     * @param targets the targets
+     * @return a {@link Callable} through which this grader can be called
+     */
+    public Callable<List<Result>> getCallableMultiTarget(Target... targets) {
+        final List<Callable<List<Result>>> callables = Arrays.stream(targets)
+                .map(target -> getCallableSingleTarget(target))
+                .collect(Collectors.toList());
+        ;
+        final List<Result> results = new ArrayList<>();
+
+        return () -> {
+            for (Callable<List<Result>> callable : callables) {
+                results.addAll(callable.call());
+            }
+            return results;
+        };
+    }
 
     /**
      * Grades the specified target files and directories.
@@ -53,8 +81,10 @@ public abstract class Grader {
     private List<Result> gradeUntimed(final Target... targets) {
         final List<Result> results = new ArrayList<>();
         try {
-            for (final Target target : targets) {
-                results.addAll(getCallable(target).call());
+            if (targets.length == 1) {
+                results.addAll(getCallableSingleTarget(targets[0]).call());
+            } else if (targets.length > 1) {
+                results.addAll(getCallableMultiTarget(targets).call());
             }
         } catch (Exception e) { // NOPMD
             results.add(makeExceptionResult(new InternalException(e)));
@@ -65,10 +95,10 @@ public abstract class Grader {
     private List<Result> gradeTimed(final Target... targets) {
         final List<Result> results = new ArrayList<>();
         try {
-            for (final Target target : targets) {
-                final Future<List<Result>> future = executor.submit(getCallable(target));
-                results.addAll(future.get(Autograder.getInstance().timeoutMillis, TimeUnit.MILLISECONDS));
-            }
+            final Future<List<Result>> future = executor.submit(
+                    targets.length == 1 ? getCallableMultiTarget(targets[0])
+                            : getCallableMultiTarget(targets));
+            results.addAll(future.get(Autograder.getInstance().timeoutMillis, TimeUnit.MILLISECONDS));
         } catch (java.util.concurrent.TimeoutException e) {
             results.add(makeExceptionResult(
                     new TimeoutException("Operation timed out")));
