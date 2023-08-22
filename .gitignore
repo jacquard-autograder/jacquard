@@ -19,3 +19,4 @@ lib/
 checkstyle-results.xml
 gradle.properties
 s01.oss.sonatype.org/
+*~
