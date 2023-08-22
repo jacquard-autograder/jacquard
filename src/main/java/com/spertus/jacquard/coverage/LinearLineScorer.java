@@ -19,6 +19,6 @@ public class LinearLineScorer extends LinearScorer {
 
     @Override
     protected String getMessage(final double branchCoverage, final double lineCoverage) {
-        return String.format("Line coverage is %.0f%%", lineCoverage);
+        return String.format("Line coverage is %.0f%%", 100 * lineCoverage);
     }
 }
