@@ -95,7 +95,7 @@ public final class PmdGrader extends Grader {
                 if (rule == null) {
                     throw new ClientException(String.format(
                             "Did not find rule %s in %s",
-                            rule, ruleSetPath));
+                            ruleName, ruleSetPath));
                 }
                 analysis.addRuleSet(RuleSet.forSingleRule(rule));
             }
@@ -119,6 +119,7 @@ public final class PmdGrader extends Grader {
      * @param ruleSetPaths        the path to one or more rule sets
      * @return new PMD grader
      * @throws ClientException if any rule set path is invalid
+     * @see <a href="https://pmd.github.io/pmd/pmd_userdocs_making_rulesets.html">Making rulesets</a>
      */
     public static PmdGrader createFromRuleSetPaths(
             final double penaltyPerViolation,
@@ -152,21 +153,36 @@ public final class PmdGrader extends Grader {
         return new PmdGrader(penaltyPerViolation, maxPenalty, ruleSetPath, ruleNames);
     }
 
-    @Override
-    public Callable<List<Result>> getCallableSingleTarget(final Target target) {
+    private Callable<List<Result>> makeCallable(final Target... targets) {
         return () -> {
             try (PmdAnalysis analysis = createAnalysis()) {
-                final boolean added = analysis.files().addFileOrDirectory(target.toPath());
-                if (!added) {
-                    throw new ClientException("File or directory cannot be found: " + target.toPathString());
+                for (final Target target : targets) {
+                    try {
+                        final boolean added = analysis.files().addFileOrDirectory(target.toPath());
+                        if (!added) {
+                            throw new ClientException("File or directory cannot be found: " + target.toPathString());
+                        }
+                    } catch (IOException e) {
+                        return makeExceptionResultList(
+                                new ClientException("File or directory cannot be found: " + target.toPathString()));
+                    }
                 }
                 final Report report = analysis.performAnalysisAndCollectReport();
                 return produceResults(report);
-            } catch (IOException e) {
-                return makeExceptionResultList(
-                        new ClientException("File or directory cannot be found: " + target.toPathString()));
             }
         };
+    }
+
+    @Override
+    public Callable<List<Result>> getCallableSingleTarget(
+            final Target target) {
+        return makeCallable(target);
+    }
+
+    @Override
+    public Callable<List<Result>> getCallableMultiTarget(final Target...
+                                                                 targets) {
+        return makeCallable(targets);
     }
 
     private String violationToString(final RuleViolation violation) {

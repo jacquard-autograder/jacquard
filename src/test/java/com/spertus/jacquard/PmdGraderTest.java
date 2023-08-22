@@ -15,6 +15,7 @@ public class PmdGraderTest {
     private static final double MAX_PENALTY = 2.5;
 
     private Target missingCommentsTarget;
+    private Target missingOverrideTarget;
 
     @BeforeAll()
     public static void init() {
@@ -24,6 +25,7 @@ public class PmdGraderTest {
     @BeforeEach
     public void setup() throws URISyntaxException {
         missingCommentsTarget = TestUtilities.getTargetFromResource("good/MissingComments.java");
+        missingOverrideTarget = TestUtilities.getTargetFromResource("good/FavoritesIterator.java");
     }
 
     @Test
@@ -113,16 +115,36 @@ public class PmdGraderTest {
     }
 
     @Test
-    public void testFormatting() throws URISyntaxException {
+    public void testFormatting() {
         PmdGrader pmdGrader = PmdGrader.createFromRules(
                 1.0,
                 5.0,
                 "category/java/bestpractices.xml",
                 "MissingOverride");
-        Target target = TestUtilities.getTargetFromResource("good/FavoritesIterator.java");
-        List<Result> results = pmdGrader.grade(target);
+        List<Result> results = pmdGrader.grade(missingOverrideTarget);
         TestUtilities.assertResultsMatch(results, 1, 4.0, 5.0);
         assertTrue(results.get(0).getMessage().contains(
                 "The method 'hasNext()' is missing an @Override annotation."));
+    }
+
+    @Test
+    public void testRulesetIsFile() throws URISyntaxException {
+        PmdGrader pmdGrader = PmdGrader.createFromRuleSetPaths(
+                1.0,
+                5.0,
+                TestUtilities.getPath("pmd-ruleset.xml").toAbsolutePath().toString());
+        List<Result> results = pmdGrader.grade(missingOverrideTarget);
+        TestUtilities.assertResultsMatch(results, 1, 3.0, 5.0);
+    }
+
+    @Test
+    public void testMultipleTargets() {
+        PmdGrader pmdGrader = PmdGrader.createFromRuleSetPaths(
+                1.0,
+                5.0,
+                "category/java/bestpractices.xml");
+        List<Result> results = pmdGrader.grade(missingCommentsTarget, missingOverrideTarget);
+        // 3 violations expected (1 missing override, 2 comment required)
+        TestUtilities.assertResultsMatch(results, 1, 2.0, 5.0);
     }
 }
