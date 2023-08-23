@@ -1,5 +1,6 @@
 package com.spertus.jacquard.crosstester;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.spertus.jacquard.common.Result;
 import com.spertus.jacquard.exceptions.ClientException;
 import org.junit.platform.engine.TestExecutionResult;
@@ -66,15 +67,16 @@ public class CrossTester {
      * with names beginning with "size".
      *
      * @param testClass   the test class to be instantiated with each class under test
-     * @param scoringData a source of CSV data with the names of classes under
-     *                    test, methods under tests, and scoring information
+     * @param csvFileName the name of the CSV file, which must be in a resource
+     *                    directory
      */
-    public CrossTester(final Class<?> testClass, final InputStream scoringData) {
+    public CrossTester(final Class<?> testClass, final String csvFileName) {
         generalizedTestClass = testClass;
-        processCsvFile(scoringData);
+        InputStream is = getClass().getResourceAsStream("/" + csvFileName);
+        processCsvFile(is); // callee closes input stream
     }
 
-    // helper method for initialization
+    // helper method for initialization, closes input stream
     private void processCsvFile(final InputStream is) {
         // Read in file so we know size (number of methods).
         final List<String[]> rows = new ArrayList<>();
