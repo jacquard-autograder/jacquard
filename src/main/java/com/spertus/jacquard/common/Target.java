@@ -39,7 +39,10 @@ public final class Target {
      *
      * @param s a relative path string
      * @return the target
+     *
+     * @deprecated Call {@link #fromClass(Class)} instead.
      */
+    @Deprecated()
     public static Target fromPathString(final String s) {
         // https://stackoverflow.com/a/40163941/631051
         final Path absPath = FileSystems.getDefault().getPath(s).normalize().toAbsolutePath();
@@ -76,7 +79,7 @@ public final class Target {
      * @return the target
      * @throws ClientException if dir does not end with a path separator
      */
-    public static List<Target> fromPathStrings(final String dir, final String... files) {
+    private static List<Target> fromPathStrings(final String dir, final String... files) {
         if (!dir.endsWith("/") && !dir.endsWith("\\")) {
             throw new ClientException("dir must end with a path separator (/ or \\)");
         }
