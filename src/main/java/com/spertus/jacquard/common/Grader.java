@@ -63,21 +63,6 @@ public abstract class Grader {
         };
     }
 
-    /**
-     * Grades the specified target files and directories.
-     *
-     * @param targets the targets
-     * @return the results
-     * @throws ClientException if {@link Autograder} has not been initialized
-     */
-    public List<Result> grade(final List<Target> targets) {
-        final List<Result> results = new ArrayList<>();
-        for (final Target target : targets) {
-            results.addAll(grade(target));
-        }
-        return results;
-    }
-
     private List<Result> gradeUntimed(final Target... targets) {
         final List<Result> results = new ArrayList<>();
         try {
@@ -115,6 +100,18 @@ public abstract class Grader {
      *
      * @param targets the targets
      * @return the results
+     * @throws ClientException if {@link Autograder} has not been initialized
+     */
+    public List<Result> grade(final List<Target> targets) {
+        return grade(targets.toArray(new Target[0]));
+    }
+
+    /**
+     * Grades the provided targets.
+     *
+     * @param targets the targets
+     * @return the results
+     * @throws ClientException if {@link Autograder} has not been initialized
      */
     public List<Result> grade(final Target... targets) {
         if (Autograder.getInstance().timeoutMillis == 0) {
@@ -130,6 +127,7 @@ public abstract class Grader {
      * @param target  the target for each of the graders
      * @param graders graders, in the order they should be run
      * @return the collected results
+     * @throws ClientException if {@link Autograder} has not been initialized
      */
     public static List<Result> gradeAll(final Target target, final Grader... graders) {
         final List<Result> results = new ArrayList<>();

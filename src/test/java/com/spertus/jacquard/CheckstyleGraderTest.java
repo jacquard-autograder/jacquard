@@ -62,4 +62,12 @@ public class CheckstyleGraderTest {
         // There are 11 violations (because package-info violation counted only once).
         TestUtilities.assertResultsMatch(results, 1, 9.0, 20.0);
     }
+
+    @Test
+    public void testCheckstyleMultipleFilesWithList() throws URISyntaxException {
+        CheckstyleGrader grader = new CheckstyleGrader("sun_checks.xml", 1.0, 20.0);
+        List<Result> results = grader.grade(List.of(badFormattingTarget, missingCommentsTarget));
+        // There are 11 violations (because package-info violation counted only once).
+        TestUtilities.assertResultsMatch(results, 1, 9.0, 20.0);
+    }
 }
