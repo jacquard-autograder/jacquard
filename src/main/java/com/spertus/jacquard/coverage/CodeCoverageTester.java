@@ -146,8 +146,16 @@ public class CodeCoverageTester extends Tester {
     public List<Result> run() {
         try {
             final IClassCoverage cc = calculateCoverage();
-            final double branchCoverage = cc.getBranchCounter().getCoveredRatio();
-            final double lineCoverage = cc.getLineCounter().getCoveredRatio();
+            double branchCoverage = cc.getBranchCounter().getCoveredRatio();
+            // Branch coverage could be NaN if the class under test had no code.
+            if (!Double.isFinite(branchCoverage)) {
+                branchCoverage = 1.0;
+            }
+            // Line coverage could be NaN if the class under test had no code.
+            double lineCoverage = cc.getLineCounter().getCoveredRatio();
+            if (!Double.isFinite(lineCoverage)) {
+                lineCoverage = 1.0;
+            }
             return List.of(
                     scorer.getResult(name, branchCoverage, lineCoverage));
         } catch (Exception e) { // NOPMD
