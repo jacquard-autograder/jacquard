@@ -191,7 +191,7 @@ public class CrossTester {
                 .filter((TestResult tr) ->
                         tr.methodUnderTestName().equals(mutName))
                 .toList();
-        final String name = String.format("Tests of %s.%s()", cutNames[cutIndex], mutName);
+        final String name = String.format("Submitted tests of %s.%s()", cutNames[cutIndex], mutName);
         final StringBuilder sb = new StringBuilder();
         int successes = 0;
         int failures = 0;
