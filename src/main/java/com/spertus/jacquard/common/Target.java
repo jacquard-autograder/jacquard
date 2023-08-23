@@ -11,6 +11,10 @@ import java.util.stream.Collectors;
  * The target of a {@link Grader}, such as a file or a directory.
  */
 public final class Target {
+    private static final String SUBMISSION_PATH_TEMPLATE =
+            // arguments are package and class
+            "src/main/java/%s/%s.java";
+
     private final Path path;
     //private String packageName; // lazy initialization
     //private String className; // lazy initialization
@@ -40,6 +44,27 @@ public final class Target {
         // https://stackoverflow.com/a/40163941/631051
         final Path absPath = FileSystems.getDefault().getPath(s).normalize().toAbsolutePath();
         return new Target(absPath);
+    }
+
+    /**
+     * Creates a target from a class that the student is responsible for
+     * submitting. The class's package must not be a subpackage (contain a
+     * period) or be empty.
+     *
+     * @param targetClass the class
+     * @return the target
+     * @throws ClientException if the package of the class is invalid
+     */
+    public static Target fromClass(Class<?> targetClass) {
+        String pkgName = targetClass.getPackageName();
+        if (pkgName.isEmpty()) {
+            throw new ClientException("Package name may not be empty.");
+        }
+        if (pkgName.contains(".")) {
+            throw new ClientException("Subpackages are not yet allowed.");
+        }
+        String pathString = String.format(SUBMISSION_PATH_TEMPLATE, pkgName, targetClass.getSimpleName());
+        return fromPathString(pathString);
     }
 
     /**
