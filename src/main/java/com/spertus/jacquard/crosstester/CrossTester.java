@@ -200,7 +200,7 @@ public class CrossTester {
                 sb.append(String.format("Test %s PASSED\n", tr.testName()));
                 successes++;
             } else {
-                sb.append(String.format("Test %s FAILED: %s", tr.testName(), tr.message()));
+                sb.append(String.format("Test %s FAILED: %s\n", tr.testName(), tr.message()));
                 failures++;
             }
         }
