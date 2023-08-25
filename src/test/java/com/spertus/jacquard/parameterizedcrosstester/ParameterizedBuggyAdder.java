@@ -1,4 +1,4 @@
-package com.spertus.jacquard.crosstester;
+package com.spertus.jacquard.parameterizedcrosstester;
 
 public class ParameterizedBuggyAdder extends AbstractAdder {
     private int variant;

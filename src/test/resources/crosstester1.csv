@@ -1,2 +1,2 @@
-, com.spertus.jacquard.crosstester.CorrectAdder, com.spertus.jacquard.crosstester.BuggyAdder
+, com.spertus.jacquard.parameterizedcrosstester.CorrectAdder, com.spertus.jacquard.parameterizedcrosstester.BuggyAdder
 addZero, 2, -1

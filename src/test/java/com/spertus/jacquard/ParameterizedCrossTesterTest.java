@@ -3,13 +3,14 @@ package com.spertus.jacquard;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.crosstester.*;
 import com.spertus.jacquard.exceptions.ClientException;
+import com.spertus.jacquard.parameterizedcrosstester.GeneralizedAdderTest;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CrossTesterTest {
+public class ParameterizedCrossTesterTest {
     @BeforeAll()
     public static void init() {
         Autograder.initForTest();
@@ -17,7 +18,7 @@ public class CrossTesterTest {
 
     @Test
     public void testClassesWithoutIntParameters() throws ClientException {
-        CrossTester grader = new CrossTester(GeneralizedAdderTest.class,
+        ParameterizedCrossTester grader = new ParameterizedCrossTester(GeneralizedAdderTest.class,
                 "crosstester1.csv");
         List<Result> results = grader.run();
         assertEquals(2, results.size());
@@ -33,7 +34,7 @@ public class CrossTesterTest {
 
     @Test
     public void testClassesWithIntParameters() throws ClientException {
-        CrossTester grader = new CrossTester(GeneralizedAdderTest.class,
+        ParameterizedCrossTester grader = new ParameterizedCrossTester(GeneralizedAdderTest.class,
                "crosstester2.csv");
         List<Result> results = grader.run();
         assertEquals(4, results.size());

@@ -1,19 +1,38 @@
 package com.spertus.jacquard.crosstester;
 
 record TestResult(String testName, boolean passed,
+                  String packageUnderTestName,
                   String methodUnderTestName, String message) {
     private static final String SUCCESS_MESSAGE = "PASSED";
 
     static TestResult makeFailure(
             final String testName,
+            final String packageUnderTestName,
             final String methodUnderTestName,
             final String message) {
-        return new TestResult(testName, false, methodUnderTestName, message);
+        return new TestResult(testName, false, methodUnderTestName, packageUnderTestName, message);
     }
 
     static TestResult makeSuccess(
             final String testName,
+            final String packageUnderTestName,
             final String methodUnderTestName) {
-        return new TestResult(testName, true, methodUnderTestName, SUCCESS_MESSAGE);
+        return new TestResult(testName, true, methodUnderTestName, packageUnderTestName, SUCCESS_MESSAGE);
+    }
+
+    // So ParamterizedCrossTester doesn't break.
+    @Deprecated
+    static TestResult makeFailure(
+            final String testName,
+            final String methodUnderTestName,
+            final String message) {
+        return new TestResult(testName, false, methodUnderTestName, null, message);
+    }
+
+    @Deprecated
+    static TestResult makeSuccess(
+            final String testName,
+            final String methodUnderTestName) {
+        return new TestResult(testName, true, methodUnderTestName, null, SUCCESS_MESSAGE);
     }
 }

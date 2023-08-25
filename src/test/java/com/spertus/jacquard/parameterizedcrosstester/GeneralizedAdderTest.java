@@ -1,5 +1,6 @@
-package com.spertus.jacquard.crosstester;
+package com.spertus.jacquard.parameterizedcrosstester;
 
+import com.spertus.jacquard.crosstester.DependencyInjector;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 

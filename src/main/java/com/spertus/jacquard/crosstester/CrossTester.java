@@ -1,77 +1,68 @@
 package com.spertus.jacquard.crosstester;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.spertus.jacquard.common.Result;
 import com.spertus.jacquard.exceptions.ClientException;
-import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.*;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.*;
-import org.junit.platform.launcher.core.LauncherFactory;
+import org.junit.platform.launcher.core.*;
 
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
-
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 /**
  * A grader for running student-provided tests against multiple implementations.
  * This can be used to test whether student tests fail intentionally buggy
- * code (which is good) or pass correct code.
+ * code (which is good) or pass correct code (also good).
  */
 public class CrossTester {
     private static final String DELIM = "\\s*,\\s*";
-    private final Class<?> generalizedTestClass;
-    // The next four instance variables are initialized in processCsvFile().
+    private final Class<?> testClass;
+    // The next three instance variables are initialized in processCsvFile().
     private String[] methodNames;
-    private String[] cutNames; // classes under test
+    private String[] putNames; // packages under test
     private double[][] points;
 
     /**
-     * Creates a cross grader that uses the provided test class to instantiate
-     * classes under test that are specified in the score input stream.
+     * Creates a cross tester that uses the provided test class to instantiate
+     * classes under test that are specified in a CSV file.
      * <p>
-     * The test class must have a constructor that takes the fully-qualified
-     * name of a class as its single (string) argument. This class should
-     * contain JUnit tests whose names begin with the names of methods
-     * under test.
-     * <p>
-     * The score input stream should be CSV with information about the
-     * classes under test (in the header row), methods under test (in
-     * the leftmost column), and maximum points for each combination.
-     * A positive points value means that points should be scored if the
-     * test passes, a negative points value means that points should be scored
-     * if the test fails, while a points value of zero means that no points
-     * should be scored for the combination. If a points value is non-zero
-     * and there are no tests of the specified method, a score of 0 is given.
+     * The file should contain the packages under test (in the header row), the
+     * methods under test (in the leftmost column), and maximum points for each
+     * combination. A positive points value means that points should be scored
+     * if the test passes, a negative points value means that points should be
+     * scored if the test fails, while a points value of zero means that no
+     * points should be scored for the combination. If a points value is
+     * non-zero and there are no tests of the specified method, a score of 0 is
+     * given.
      * <p>
      * Consider this sample file, which might be used to check whether student
      * tests do not report bugs on instructor-provided correct code but do
      * report bugs (fail) on instructor-provided code that has a deliberate
      * but in the `add()` method:
      * <pre>
-     *         , correct.Flist, buggy.Flist#1
-     *      add,           2.5,    -5
-     *     size,           1.5,     0
+     *         , correct, buggy
+     *      add,     2.5,  -5
+     *     size,     1.5,   0
      * </pre>
-     * The test class would be instantiated first with the class "correct.Flist".
+     * The test class would be instantiated first with the package "correct".
      * If all tests whose names begin with "add" pass, the result would be 2.5/2.5
      * points. If any tests beginning with "add" failed or if there were none,
      * the result would be 0/2.5. The results would be similar (except for
      * maxing out at 1.5) for tests starting with "size".
      * <p>
-     * Next, the test class would be instantiated with the class "buggy.Flist"
-     * and the integer argument 1 (specified after the hash sign).
-     * If any test whose name begins with "add" _fails_, the result would be 5/5.
+     * Next, the test class would be instantiated with the package "buggy". If
+     * any test whose name begins with "add" _fails_, the result would be 5/5.
      * If all tests beginning with "add" passed or if there were none, the
      * result would be 0/5. No results would be produced for test methods
      * with names beginning with "size".
      *
-     * @param testClass   the test class to be instantiated with each class under test
+     * @param testClass   the class containing the tests
      * @param csvFileName the name of the CSV file, which must be in a resource
      *                    directory
      */
     public CrossTester(final Class<?> testClass, final String csvFileName) {
-        generalizedTestClass = testClass;
+        this.testClass = testClass;
         InputStream is = getClass().getResourceAsStream("/" + csvFileName);
         processCsvFile(is); // callee closes input stream
     }
@@ -83,7 +74,7 @@ public class CrossTester {
         try (Scanner scanner = new Scanner(is)) {
             if (scanner.hasNextLine()) {
                 final String[] fields = scanner.nextLine().split(DELIM);
-                cutNames = Arrays.copyOfRange(fields, 1, fields.length);
+                putNames = Arrays.copyOfRange(fields, 1, fields.length);
                 while (scanner.hasNextLine()) {
                     final String line = scanner.nextLine().trim();
                     if (!line.isEmpty()) {
@@ -97,12 +88,12 @@ public class CrossTester {
 
         // Build and populate maxScores 2D-array.
         methodNames = new String[rows.size()];
-        points = new double[rows.size()][cutNames.length];
+        points = new double[rows.size()][putNames.length];
         for (int i = 0; i < methodNames.length; i++) {
             final String[] row = rows.get(i);
-            if (row.length != cutNames.length + 1) {
+            if (row.length != putNames.length + 1) {
                 throw new ClientException(String.format("Row %d has length %d, not expected length %d",
-                        i, row.length, cutNames.length + 1));
+                        i, row.length, putNames.length + 1));
             }
             methodNames[i] = row[0];
             for (int j = 1; j < row.length; j++) {
@@ -112,86 +103,90 @@ public class CrossTester {
     }
 
     /**
-     * Run all the tests as specified in the constructor.
+     * Runs all the tests as specified in the constructor.
      *
      * @return the results of the tests
-     * @throws ClientException if an error occurs due to misconfiguration
+     * @throws ClassNotFoundException if a specified package does not contain
+     *                                the expected test class
      */
-    public List<Result> run() {
-        final List<Result> results = new ArrayList<>();
-        for (int i = 0; i < cutNames.length; i++) {
-            results.addAll(grade(i));
-        }
-        return results;
-    }
-
-    private List<Result> grade(final int cutIndex) {
-        DependencyInjector.reset(); // clear previous injected values
-        DependencyInjector.setGeneralizedTestClass(generalizedTestClass);
-        final String cutField = cutNames[cutIndex];
+    public List<Result> run() throws ClassNotFoundException {
         final List<TestResult> testResults = new ArrayList<>();
-        final String[] cutFields = cutField.split("#");
-        try {
-            final Class<?> classUnderTest = Class.forName(cutFields[0]);
-            DependencyInjector.setClassToInject(classUnderTest);
-            if (cutFields.length > 1) {
-                DependencyInjector.setIntToInject(Integer.parseInt(cutFields[1]));
-            }
-            final Launcher launcher = LauncherFactory.create();
-            launcher.registerTestExecutionListeners(new TestExecutionListener() {
-                @Override
-                public void executionFinished(
-                        final TestIdentifier testIdentifier,
-                        final TestExecutionResult testExecutionResult) {
-                    final String mutName =
-                            Arrays.stream(methodNames)
-                                    .filter((String name) -> testIdentifier.getDisplayName().startsWith(name))
-                                    .findFirst()
-                                    .orElse("Method name not found");
-                    testResults.add(switch (testExecutionResult.getStatus()) {
-                        case SUCCESSFUL -> TestResult.makeSuccess(
-                                testIdentifier.getDisplayName(),
-                                mutName);
-                        case FAILED, ABORTED -> TestResult.makeFailure(
-                                testIdentifier.getDisplayName(),
-                                mutName,
-                                testExecutionResult.getThrowable().isPresent() ?
-                                        testExecutionResult.getThrowable().get().getMessage() :
-                                        "no information");
-                    });
-                    TestExecutionListener.super.executionFinished(testIdentifier, testExecutionResult);
-                }
-            });
-            launcher.execute(request().selectors(DiscoverySelectors.selectClass(generalizedTestClass)).build());
-            return generateResults(cutIndex, testResults);
-        } catch (ClassNotFoundException e) {
-            throw new ClientException(
-                    String.format(
-                            "Crossgrader execution failed because class '%s' specified in the CSV file could not be loaded.",
-                            cutFields[0]),
-                    e);
+
+        // Create LauncherDiscoveryRequest.
+        LauncherDiscoveryRequestBuilder builder = LauncherDiscoveryRequestBuilder.request();
+        for (String putName : putNames) {
+            Class<?> test = Class.forName(putName + "." + testClass.getSimpleName());
+            builder.selectors(DiscoverySelectors.selectClass(test));
         }
+        LauncherDiscoveryRequest request = builder.build();
+
+        //  Create Launcher.
+        final Launcher launcher = LauncherFactory.create();
+        launcher.registerTestExecutionListeners(new TestExecutionListener() {
+            @Override
+            public void executionFinished(
+                    final TestIdentifier testIdentifier,
+                    final TestExecutionResult testExecutionResult) {
+                if (!testIdentifier.getType().isTest()) {
+                    return;
+                }
+                final String mutName = Arrays
+                        .stream(methodNames)
+                        .filter(name -> testIdentifier.getDisplayName().startsWith(name))
+                        .findFirst()
+                        .orElse("Method name not found");
+                String putName = "Class name not found"; // likely reinitialized in loop
+                for (final UniqueId.Segment segment : testIdentifier.getUniqueIdObject().getSegments()) {
+                    if (segment.getType().equals("class")) {
+                        String qcn = segment.getValue(); // qualified class name
+                        putName = qcn.substring(0, qcn.lastIndexOf('.'));
+                        break;
+                    }
+                }
+                testResults.add(switch (testExecutionResult.getStatus()) {
+                    case SUCCESSFUL -> TestResult.makeSuccess(
+                            testIdentifier.getDisplayName(),
+                            mutName,
+                            putName);
+                    case FAILED, ABORTED -> TestResult.makeFailure(
+                            testIdentifier.getDisplayName(),
+                            mutName,
+                            putName,
+                            testExecutionResult.getThrowable().isPresent() ?
+                                    testExecutionResult.getThrowable().get().getMessage() :
+                                    "no information");
+                });
+                TestExecutionListener.super.executionFinished(testIdentifier, testExecutionResult);
+            }
+        });
+
+        launcher.execute(request);
+        return generateResults(testResults);
     }
 
-    private List<Result> generateResults(final int cutIndex, final List<TestResult> testResults) {
-        final List<Result> results = new ArrayList<>(methodNames.length);
+    private List<Result> generateResults(final List<TestResult> testResults) {
+        final List<Result> results = new ArrayList<>();
         for (int mutIndex = 0; mutIndex < methodNames.length; mutIndex++) {
-            // Skip cases where points is 0.
-            if (points[mutIndex][cutIndex] != 0) {
-                results.add(generateResult(cutIndex, mutIndex, testResults));
+            for (int putIndex = 0; putIndex < putNames.length; putIndex++) {
+                // Skip cases with 0 points.
+                if (points[mutIndex][putIndex] != 0) {
+                    results.add(generateResult(putIndex, mutIndex, testResults));
+                }
             }
         }
         return results;
     }
 
-    private Result generateResult(final int cutIndex, final int mutIndex, final List<TestResult> testResults) {
+    private Result generateResult(final int putIndex, final int mutIndex, final List<TestResult> testResults) {
         final String mutName = methodNames[mutIndex];
+        final String putName = putNames[putIndex];
         final List<TestResult> mutTestResults = testResults
                 .stream()
                 .filter((TestResult tr) ->
-                        tr.methodUnderTestName().equals(mutName))
+                        tr.methodUnderTestName().equals(mutName) &&
+                                tr.packageUnderTestName().equals(putName))
                 .toList();
-        final String name = String.format("Submitted tests of %s.%s()", cutNames[cutIndex], mutName);
+        final String name = String.format("Submitted tests of %s.%s()", putNames[putIndex], mutName);
         final StringBuilder sb = new StringBuilder();
         int successes = 0;
         int failures = 0;
@@ -206,7 +201,7 @@ public class CrossTester {
         }
         // If maxPoints is positive, full credit is earned for success.
         // If maxPoints is negative, full credit is earned for failure.
-        final double maxPoints = points[mutIndex][cutIndex];
+        final double maxPoints = points[mutIndex][putIndex];
         double points;
         if (failures > 0) {
             points = maxPoints > 0 ? 0 : -maxPoints;

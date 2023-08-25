@@ -1,4 +1,4 @@
-package com.spertus.jacquard.crosstester;
+package com.spertus.jacquard.parameterizedcrosstester;
 
 import org.junit.jupiter.api.*;
 

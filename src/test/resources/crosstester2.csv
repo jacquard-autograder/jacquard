@@ -1,2 +1,2 @@
-, com.spertus.jacquard.crosstester.ParameterizedBuggyAdder#0, com.spertus.jacquard.crosstester.ParameterizedBuggyAdder#1, com.spertus.jacquard.crosstester.ParameterizedBuggyAdder#2, com.spertus.jacquard.crosstester.ParameterizedBuggyAdder#3,
+, com.spertus.jacquard.parameterizedcrosstester.ParameterizedBuggyAdder#0, com.spertus.jacquard.parameterizedcrosstester.ParameterizedBuggyAdder#1, com.spertus.jacquard.parameterizedcrosstester.ParameterizedBuggyAdder#2, com.spertus.jacquard.parameterizedcrosstester.ParameterizedBuggyAdder#3,
 addZero, -1, -2, -3, 4

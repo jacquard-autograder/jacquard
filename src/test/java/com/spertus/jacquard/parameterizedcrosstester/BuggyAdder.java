@@ -1,4 +1,4 @@
-package com.spertus.jacquard.crosstester;
+package com.spertus.jacquard.parameterizedcrosstester;
 
 public class BuggyAdder extends AbstractAdder {
     @Override
