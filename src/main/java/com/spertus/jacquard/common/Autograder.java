@@ -27,11 +27,6 @@ public final class Autograder {
     public final Visibility visibility;
 
     /**
-     * The level of debugging information to provide.
-     */
-    public final DebugLevel debugLevel;
-
-    /**
      * A singleton class for building the Autograder.
      */
     @SuppressWarnings({"PMD.AvoidFieldNameMatchingMethodName", "PMD.AvoidFieldNameMatchingTypeName"})
@@ -51,18 +46,12 @@ public final class Autograder {
          */
         public static final Visibility DEFAULT_VISIBILITY = Visibility.VISIBLE;
 
-        /**
-         * The default debug level.
-         */
-        public static final DebugLevel DEFAULT_DEBUG_LEVEL = DebugLevel.LOW;
-
         private static final Builder INSTANCE = new Builder();
 
         private boolean built = false;
         private long timeoutMillis = DEFAULT_TIMEOUT_MS;
         private int javaLevel = DEFAULT_JAVA_LEVEL;
         private Visibility visibility = DEFAULT_VISIBILITY;
-        private DebugLevel debugLevel;
 
         private Builder() {
         }
@@ -81,6 +70,7 @@ public final class Autograder {
                 throw new ClientException("The builder must not be modified after build() is called.");
             }
         }
+
         /**
          * Sets the timeout for {@link Grader} execution (or 0 for no timeout).
          * If this method is not called, {@link #DEFAULT_TIMEOUT_MS} is used.
@@ -124,20 +114,6 @@ public final class Autograder {
         }
 
         /**
-         * Sets debug level, which is by default {@link #DEFAULT_DEBUG_LEVEL}.
-         *
-         * @param debugLevel the level of debugging information
-         * @return the builder
-         * @throws ClientException if this builder has already been built
-         * @see DebugLevel
-         */
-        public Builder debugLevel(final DebugLevel debugLevel) {
-            verifyMutability();
-            this.debugLevel = debugLevel;
-            return this;
-        }
-
-        /**
          * Builds the Autograder using information from this builder. This
          * may be called only once per program execution (unless
          * {@code VisibleForTesting} methods are used).
@@ -157,7 +133,6 @@ public final class Autograder {
             timeout(DEFAULT_TIMEOUT_MS);
             javaLevel(DEFAULT_JAVA_LEVEL);
             visibility(DEFAULT_VISIBILITY);
-            debugLevel(DEFAULT_DEBUG_LEVEL);
         }
     }
 
@@ -165,7 +140,6 @@ public final class Autograder {
         javaLevel = builder.javaLevel;
         timeoutMillis = builder.timeoutMillis;
         visibility = builder.visibility;
-        debugLevel = builder.debugLevel;
     }
 
     private static void makeAutograder(final Builder builder) {

@@ -27,9 +27,8 @@ public final class PmdGrader extends Grader {
 
     private static PMDConfiguration createConfiguration() {
         final PMDConfiguration config = new PMDConfiguration();
-        final PMDConfiguration configuration = new PMDConfiguration();
         final LanguagePropertyBundle properties =
-                configuration.getLanguageProperties(LanguageRegistry.PMD.getLanguageById("java"));
+                config.getLanguageProperties(LanguageRegistry.PMD.getLanguageById("java"));
         properties.setLanguageVersion(JAVA_VERSION);
         return config;
     }
