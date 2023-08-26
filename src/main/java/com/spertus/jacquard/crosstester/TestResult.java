@@ -19,20 +19,4 @@ record TestResult(String testName, boolean passed,
             final String methodUnderTestName) {
         return new TestResult(testName, true, methodUnderTestName, packageUnderTestName, SUCCESS_MESSAGE);
     }
-
-    // So ParamterizedCrossTester doesn't break.
-    @Deprecated
-    static TestResult makeFailure(
-            final String testName,
-            final String methodUnderTestName,
-            final String message) {
-        return new TestResult(testName, false, methodUnderTestName, null, message);
-    }
-
-    @Deprecated
-    static TestResult makeSuccess(
-            final String testName,
-            final String methodUnderTestName) {
-        return new TestResult(testName, true, methodUnderTestName, null, SUCCESS_MESSAGE);
-    }
 }
