@@ -16,8 +16,6 @@ public final class Target {
             "src/main/java/%s/%s.java";
 
     private final Path path;
-    //private String packageName; // lazy initialization
-    //private String className; // lazy initialization
 
     private Target(final Path path) {
         this.path = path;
@@ -114,58 +112,6 @@ public final class Target {
     public File toFile() {
         return new File(toPathString());
     }
-
-//    /**
-//     * Gets the name of the package of the target Java file.
-//     *
-//     * @return the package name (empty string for the default package)
-//     * @throws ClientException if the target is not a Java file
-//     *                         or cannot be parsed
-//     */
-//    public String toPackageName() {
-//        // While we could infer the package name from the directory hierarchy,
-//        // that might not work for files in resources directories, etc.
-//        if (packageName == null) {
-//            if (!toPathString().endsWith(".java")) {
-//                throw new ClientException("Filename does not end with '.java'.");
-//            }
-//            File file = toFile();
-//            if (file.isDirectory()) {
-//                throw new ClientException("Found directory where file name was expected: " + toPathString());
-//            }
-//            CompilationUnit cu = Parser.parse(toFile()); // throws ClientException if parse fails
-//            Optional<PackageDeclaration> pd = cu.getPackageDeclaration();
-//            packageName = pd.isPresent() ? pd.get().getName().toString() : ""; // default package
-//        }
-//        return packageName;
-//    }
-//
-//    /**
-//     * Gets the name of the top-level class (or interface) of the target Java file
-//     * from the file name.
-//     *
-//     * @return the class name
-//     * @throws ClientException if the target is not a Java file
-//     */
-//    public String toClassName() {
-//        if (className == null) {
-//            File file = toFile();
-//            if (file.isDirectory()) {
-//                throw new ClientException("Found directory where file name was expected: " + toPathString());
-//            }
-//            String fileName = file.getName();
-//            if (fileName.endsWith(".java")) {
-//                className = fileName.substring(0, fileName.indexOf(".java"));
-//            } else {
-//                throw new ClientException("Specified file is not java source code: " + fileName);
-//            }
-//        }
-//        return className;
-//    }
-//
-//    public String toQualifiedName() {
-//        return toPackageName() + "." + toClassName();
-//    }
 
     /**
      * Gets this target's directory. This is the target itself if it is a
