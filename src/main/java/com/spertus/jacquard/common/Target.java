@@ -15,6 +15,9 @@ public final class Target {
             // arguments are package and class
             "src/main/java/%s/%s.java";
 
+    // This works on Windows, even though it's not the normal separator.
+    private static final char SEP = '/';
+
     private final Path path;
 
     private Target(final Path path) {
@@ -49,8 +52,7 @@ public final class Target {
 
     /**
      * Creates a target from a class that the student is responsible for
-     * submitting. The class's package must not be a subpackage (contain a
-     * period) or be empty.
+     * submitting. The class's package must not be empty.
      *
      * @param targetClass the class
      * @return the target
@@ -61,10 +63,9 @@ public final class Target {
         if (pkgName.isEmpty()) {
             throw new ClientException("Package name may not be empty.");
         }
-        if (pkgName.contains(".")) {
-            throw new ClientException("Subpackages are not yet allowed.");
-        }
-        String pathString = String.format(SUBMISSION_PATH_TEMPLATE, pkgName, targetClass.getSimpleName());
+        String pathString = String.format(SUBMISSION_PATH_TEMPLATE,
+                pkgName.replace('.', SEP),
+                targetClass.getSimpleName());
         return fromPathString(pathString);
     }
 
