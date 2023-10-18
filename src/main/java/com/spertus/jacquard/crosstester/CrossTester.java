@@ -115,8 +115,15 @@ public class CrossTester {
         // Create LauncherDiscoveryRequest.
         LauncherDiscoveryRequestBuilder builder = LauncherDiscoveryRequestBuilder.request();
         for (String putName : putNames) {
-            Class<?> test = Class.forName(putName + "." + testClass.getSimpleName());
-            builder.selectors(DiscoverySelectors.selectClass(test));
+            try {
+                Class<?> test = Class.forName(putName + "." + testClass.getSimpleName());
+                builder.selectors(DiscoverySelectors.selectClass(test));
+            } catch (ClassNotFoundException e) {
+                throw new ClientException(
+                        "Class could not be found, possibly because this was run through the IDE " +
+                                "instead of with the proper script.", e);
+
+            }
         }
         LauncherDiscoveryRequest request = builder.build();
 
