@@ -28,7 +28,20 @@ public abstract class Publisher {
      * @param results the results
      * @return whether the results were successfully published
      */
-    public abstract boolean publishResults(List<Result> results);
+    public boolean publishResults(List<Result> results) {
+        return publishResults(results, Result.Order.NATURAL);
+    }
+
+    /**
+     * Publishes the results in a manner appropriate for the external grading
+     * tool. This does nothing (and returns {@code false}) if it detects that
+     * it is not running within the tool (i.e., is on a development machine).
+     *
+     * @param results the results
+     * @param order how to order the results
+     * @return whether the results were successfully published
+     */
+    public abstract boolean publishResults(List<Result> results, Result.Order order);
 
     /**
      * Displays the results in a human-readable format.

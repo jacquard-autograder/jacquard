@@ -3,12 +3,23 @@ package com.spertus.jacquard;
 import com.spertus.jacquard.common.*;
 import org.junit.jupiter.api.*;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResultTest {
+    private Result rBigSuccess;
+    private Result rHugeFailure;
+    private Result rMixed;
+    private List<Result> results;
+
     @BeforeEach
     public void setup() {
         Autograder.initForTest();
+        rBigSuccess = Result.makeSuccess("big success", 10, "big success message");
+        rHugeFailure = Result.makeFailure("huge Failure", 15, "huge failure message");
+        rMixed = Result.makeResult("mixed success", 3.0, 6.0, "mixed success message");
+        results = List.of(rBigSuccess, rHugeFailure, rMixed);
     }
 
     @Test
@@ -32,5 +43,28 @@ public class ResultTest {
             assertEquals(v, result.getVisibility());
             Autograder.resetForTest(); // keep from affecting downstream tests
         }
+    }
+
+    @Test
+    public void testReorderNaturally() {
+        assertEquals(
+                List.of(rBigSuccess, rHugeFailure, rMixed),
+                Result.reorderResults(results, Result.Order.NATURAL)
+        );
+    }
+
+    @Test
+    public void testReorderAlphabetically() {
+        assertEquals(List.of(rBigSuccess, rHugeFailure, rMixed), Result.reorderResults(results, Result.Order.ALPHABETICAL));
+    }
+
+    @Test
+    public void testReorderDecreasingMaxScore() {
+        assertEquals(List.of(rHugeFailure, rBigSuccess, rMixed), Result.reorderResults(results, Result.Order.DECREASING_MAX_SCORE));
+    }
+
+    @Test
+    public void testReorderIncreasingMaxScore() {
+        assertEquals(List.of(rMixed, rBigSuccess, rHugeFailure), Result.reorderResults(results, Result.Order.INCREASING_MAX_SCORE));
     }
 }
