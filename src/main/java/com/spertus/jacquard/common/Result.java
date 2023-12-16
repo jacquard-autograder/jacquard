@@ -297,4 +297,56 @@ public class Result {
             final List<Result> results, final Visibility visibility) {
         results.forEach((Result r) -> r.setVisibility(visibility));
     }
+
+    /**
+     * The publication order for results. The default is {@link #NATURAL}.
+     *
+     * @see {@link #reorderResults(List, Order)}
+     */
+    public enum Order {
+        /**
+         * The order in which they were generated. In other words,
+         * this will not reorder elements.
+         */
+        // This relies on Collection.sort() being stable, per API
+        // https://stackoverflow.com/a/44452446/631051
+        NATURAL((r1, r2) -> 0),
+
+        /**
+         * Alphabetical order by result name.
+         */
+        ALPHABETICAL(Comparator.comparing(r -> r.name)),
+
+        /**
+         * In increasing order by maximum score.
+         */
+        INCREASING_MAX_SCORE(Comparator.comparing(r -> r.maxScore)),
+
+        /**
+         * In decreasing order by maximum score.
+         */
+        DECREASING_MAX_SCORE(Comparator.comparing(r -> -r.maxScore));
+
+        private Comparator<Result> comparator;
+
+        Order(Comparator<Result> comparator) {
+            this.comparator = comparator;
+        }
+    }
+
+    /**
+     * Produces a sorted copy of the results.
+     *
+     * @param results the results
+     * @param order   the ordering
+     * @return the sorted result list
+     */
+    public static List<Result> reorderResults(List<Result> results, Order order) {
+        // This copies the list rather than sorting in place for two reasons:
+        // 1. The list parameter might be immutable.
+        // 2. To avoid side effects.
+        List<Result> mutableResults = new ArrayList<>(results);
+        Collections.sort(mutableResults, order.comparator);
+        return mutableResults;
+    }
 }

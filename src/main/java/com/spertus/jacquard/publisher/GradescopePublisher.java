@@ -32,10 +32,13 @@ public class GradescopePublisher extends Publisher {
     }
 
     @Override
-    public boolean publishResults(final List<Result> results) {
+    public boolean publishResults(final List<Result> results, Result.Order order) {
         try {
             if (Files.exists(RESULTS_PATH)) {
-                Files.write(RESULTS_PATH.resolve(RESULTS_FILE_NAME), serializeResults(results).getBytes());
+                List<Result> sortedResults = Result.reorderResults(results, order);
+                Files.write(
+                        RESULTS_PATH.resolve(RESULTS_FILE_NAME),
+                        serializeResults(sortedResults).getBytes());
                 return true;
             }
         } catch (IOException e) {
