@@ -300,8 +300,7 @@ public class Result {
 
     /**
      * The publication order for results. The default is {@link #NATURAL}.
-     *
-     * @see {@link #reorderResults(List, Order)}
+     * This is used by {@link #reorderResults(List, Order)}.
      */
     public enum Order {
         /**
