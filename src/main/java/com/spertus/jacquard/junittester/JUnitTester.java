@@ -1,5 +1,7 @@
 package com.spertus.jacquard.junittester;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.spertus.jacquard.common.*;
 
 import org.junit.platform.engine.*;
@@ -11,6 +13,7 @@ import org.junit.platform.launcher.core.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -66,8 +69,38 @@ public class JUnitTester extends Tester {
         return listener.results;
     }
 
+    @VisibleForTesting
+    static Result mergeResults(List<Result> results) {
+        Preconditions.checkArgument(!results.isEmpty());
+        String name = results.get(0).getName();
+        Preconditions.checkArgument(
+                results.stream().allMatch((r) -> r.getName().equals(name)));
+
+        double score = results.stream().mapToDouble(Result::getScore).sum();
+        double maxScore = results.stream().mapToDouble(Result::getMaxScore).sum();
+        String message = results.stream()
+                .filter((r) -> r.getScore() < r.getMaxScore())
+                .map(r ->  String.format(Locale.US,
+                                "%.1f: %s",
+                                r.getScore() - r.getMaxScore(),
+                                r.getMessage()))
+                .collect(Collectors.joining("\n"));
+
+        return Result.makeResult(name, score, maxScore, message);
+    }
+
+    private static List<Result> processResults(ArrayList<Result> results) {
+        return results.stream()
+                .collect(Collectors.groupingBy(Result::getName))
+                .values()
+                .stream()
+                .map(JUnitTester::mergeResults)
+                .collect(Collectors.toList());
+    }
+
     private static class Listener implements TestExecutionListener { // NOPMD
-        private final List<Result> results = new ArrayList<>();
+        // ArrayList is used so we know it's mutable.
+        private final ArrayList<Result> results = new ArrayList<>();
         // These get set in executionStarted and used/closed in executionFinished.
         private PrintStream ps;
         private ByteArrayOutputStream baos;

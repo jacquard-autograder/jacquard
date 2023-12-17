@@ -42,7 +42,7 @@ public class Result {
     }
 
     @VisibleForTesting
-    /* package private */ static String trimMessage(final String message, int maxLength, String overflowIndicator) {
+    static String trimMessage(final String message, int maxLength, String overflowIndicator) {
         if (message.length() > maxLength) {
             return message.substring(0, maxLength - overflowIndicator.length())
                     + overflowIndicator;

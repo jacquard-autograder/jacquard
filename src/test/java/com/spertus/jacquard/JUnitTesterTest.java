@@ -3,6 +3,7 @@ package com.spertus.jacquard;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.junittester.SampleTest;
 import com.spertus.jacquard.junittester.JUnitTester;
+import com.spertus.jacquard.junittester.group.GroupTest;
 import com.spertus.jacquard.junittester.visibility.VisibilityLevelsTest;
 import org.junit.jupiter.api.*;
 
@@ -60,7 +61,7 @@ public class JUnitTesterTest {
     public void testPackageIncludingSubpackages() {
         JUnitTester tester = new JUnitTester("com.spertus.jacquard.junittester", true);
         List<Result> results = tester.run();
-        assertEquals(7, results.size());
+        assertEquals(9, results.size());
     }
 
     @Test
@@ -80,5 +81,12 @@ public class JUnitTesterTest {
             assertEquals(expectedVisibility, result.getVisibility(),
                     "Visibility incorrect for " + result.getName());
         }
+    }
+
+    @Test
+    public void testGrouping() {
+        JUnitTester tester = new JUnitTester(GroupTest.class);
+        List<Result> results = tester.run();
+        assertEquals(1, results.size());
     }
 }
