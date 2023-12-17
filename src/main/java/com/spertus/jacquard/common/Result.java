@@ -1,5 +1,7 @@
 package com.spertus.jacquard.common;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -8,6 +10,9 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class Result {
+    private static final int MAX_MESSAGE_LENGTH = 8192;
+    private static final String MESSAGE_OVERFLOW_INDICATOR = "...";
+
     private final String name;
     private final double score;
     private final double maxScore;
@@ -32,8 +37,18 @@ public class Result {
         this.name = name;
         this.score = score;
         this.maxScore = maxScore;
-        this.message = message;
+        this.message = trimMessage(message, MAX_MESSAGE_LENGTH, MESSAGE_OVERFLOW_INDICATOR);
         this.visibility = visibility;
+    }
+
+    @VisibleForTesting
+    /* package private */ static String trimMessage(final String message, int maxLength, String overflowIndicator) {
+        if (message.length() > maxLength) {
+            return message.substring(0, maxLength - overflowIndicator.length())
+                    + overflowIndicator;
+        } else {
+            return message;
+        }
     }
 
     /**

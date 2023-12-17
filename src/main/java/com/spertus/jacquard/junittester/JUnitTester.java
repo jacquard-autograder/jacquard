@@ -82,16 +82,25 @@ public class JUnitTester extends Tester {
             System.setOut(ps);
         }
 
-        private String makeOutput(final TestExecutionResult teResult) {
-            final Optional<Throwable> throwable = teResult.getThrowable();
-            final String s = baos.toString();
-            if (throwable.isEmpty()) {
-                return s;
-            } else if (s.isEmpty()) {
-                return throwable.get().toString();
-            } else {
-                return s + "\n" + throwable.get();
+        private String makeMessage(final String description, final TestExecutionResult teResult) {
+            final List<String> items = new ArrayList<>();
+
+            // First, use description, if present.
+            if (!description.isEmpty()) {
+                items.add(description);
             }
+
+            // Second, use throwable, if present.
+            teResult.getThrowable().ifPresent(value -> items.add(value.toString()));
+
+            // Third, include output, if present.
+            final String output = baos.toString();
+            if (!output.isEmpty()) {
+                items.add("OUTPUT");
+                items.add("======");
+                items.add(output);
+            }
+            return String.join("\n", items);
         }
 
         @Override
@@ -109,7 +118,7 @@ public class JUnitTester extends Tester {
                                 case SUCCESSFUL ->
                                         Result.makeSuccess(name, gt.points(), baos.toString());
                                 case FAILED, ABORTED ->
-                                        Result.makeFailure(name, gt.points(), makeOutput(testExecutionResult));
+                                        Result.makeFailure(name, gt.points(), makeMessage(gt.description(), testExecutionResult));
                             };
                             results.add(result.changeVisibility(gt.visibility()));
                             ps.close();

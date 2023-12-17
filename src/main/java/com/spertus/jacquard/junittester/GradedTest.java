@@ -27,6 +27,11 @@ public @interface GradedTest {
     String name() default "";
 
     /**
+     * A description of the defect detected by this test.
+     */
+    String description() default "";
+
+    /**
      * The number of points the test is worth.
      *
      * @return the number of points the test is worth
