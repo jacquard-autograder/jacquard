@@ -4,6 +4,7 @@ import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.junittester.SampleTest;
 import com.spertus.jacquard.junittester.JUnitTester;
 import com.spertus.jacquard.junittester.group.GroupTest;
+import com.spertus.jacquard.junittester.output.OutputTest;
 import com.spertus.jacquard.junittester.visibility.VisibilityLevelsTest;
 import org.junit.jupiter.api.*;
 
@@ -62,10 +63,11 @@ public class JUnitTesterTest {
         JUnitTester tester = new JUnitTester("com.spertus.jacquard.junittester", true);
         List<Result> results = tester.run();
         // There should be:
-        // 2 results from SampleTest
         // 1 result from GroupTest
+        // 2 from OutputTest
+        // 2 results from SampleTest
         // 5 results from VisibilityTest
-        assertEquals(8, results.size());
+        assertEquals(10, results.size());
     }
 
     @Test
@@ -92,5 +94,17 @@ public class JUnitTesterTest {
         JUnitTester tester = new JUnitTester(GroupTest.class);
         List<Result> results = tester.run();
         assertEquals(1, results.size());
+    }
+
+    @Test
+    public void testOutput() {
+        JUnitTester tester = new JUnitTester(OutputTest.class);
+        List<Result> results = tester.run();
+        assertEquals(2, results.size());
+        // The test with name1, description1 should have no output included.
+        Result result1 = results.get(0).getName().equals("name1") ? results.get(0) : results.get(1);
+        Result result2 = result1.equals(results.get(0)) ? results.get(1) : results.get(0);
+        assertEquals("description1", result1.getMessage());
+        assertEquals("description2\nOUTPUT\n======\noutput2", result2.getMessage());
     }
 }

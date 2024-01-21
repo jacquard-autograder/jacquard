@@ -121,20 +121,20 @@ public class JUnitTester extends Tester {
             System.setOut(ps);
         }
 
-        private String makeMessage(final String description, final TestExecutionResult teResult) {
+        private String makeMessage(final GradedTest gt, final TestExecutionResult teResult) {
             final List<String> items = new ArrayList<>();
 
             // First, use description, if present.
-            if (!description.isEmpty()) {
-                items.add(description);
+            if (!gt.description().isEmpty()) {
+                items.add(gt.description());
             }
 
             // Second, use throwable, if present.
             teResult.getThrowable().ifPresent(value -> items.add(value.toString()));
 
-            // Third, include output, if present.
-            final String output = baos.toString();
-            if (!output.isEmpty()) {
+            // Third, include output, if present and supposed to be shown.
+            final String output = baos.toString().trim();
+            if (gt.includeOutput() && !output.isEmpty()) {
                 items.add("OUTPUT");
                 items.add("======");
                 items.add(output);
@@ -155,9 +155,9 @@ public class JUnitTester extends Tester {
                         try {
                             final Result result = switch (testExecutionResult.getStatus()) {
                                 case SUCCESSFUL ->
-                                        Result.makeSuccess(name, gt.points(), baos.toString());
+                                        Result.makeSuccess(name, gt.points(), makeMessage(gt, testExecutionResult));
                                 case FAILED, ABORTED ->
-                                        Result.makeFailure(name, gt.points(), makeMessage(gt.description(), testExecutionResult));
+                                        Result.makeFailure(name, gt.points(), makeMessage(gt, testExecutionResult));
                             };
                             results.add(result.changeVisibility(gt.visibility()));
                             ps.close();
