@@ -1,6 +1,5 @@
-package com.spertus.jacquard;
+package com.spertus.jacquard.common;
 
-import com.spertus.jacquard.common.*;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -66,5 +65,19 @@ public class ResultTest {
     @Test
     public void testReorderIncreasingMaxScore() {
         assertEquals(List.of(rMixed, rBigSuccess, rHugeFailure), Result.reorderResults(results, Result.Order.INCREASING_MAX_SCORE));
+    }
+
+    @Test
+    public void testTrimMessage() {
+        String message = "Hello, world!";
+        assertEquals(message, Result.trimMessage(message, message.length(), "..."));
+        assertEquals(
+                "Hello, wo...",
+                Result.trimMessage(message, message.length() - 1, "...")
+        );
+        assertEquals(
+                "Hello!",
+                Result.trimMessage(message, 6, "!")
+        );
     }
 }

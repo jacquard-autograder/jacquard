@@ -1,5 +1,7 @@
 package com.spertus.jacquard.common;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -8,6 +10,9 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class Result {
+    private static final int MAX_MESSAGE_LENGTH = 8192;
+    private static final String MESSAGE_OVERFLOW_INDICATOR = "...";
+
     private final String name;
     private final double score;
     private final double maxScore;
@@ -32,8 +37,18 @@ public class Result {
         this.name = name;
         this.score = score;
         this.maxScore = maxScore;
-        this.message = message;
+        this.message = trimMessage(message, MAX_MESSAGE_LENGTH, MESSAGE_OVERFLOW_INDICATOR);
         this.visibility = visibility;
+    }
+
+    @VisibleForTesting
+    static String trimMessage(final String message, int maxLength, String overflowIndicator) {
+        if (message.length() > maxLength) {
+            return message.substring(0, maxLength - overflowIndicator.length())
+                    + overflowIndicator;
+        } else {
+            return message;
+        }
     }
 
     /**
@@ -146,7 +161,8 @@ public class Result {
     }
 
     /**
-     * Makes a result with the provided score.
+     * Makes a result with the provided score and message with the visibility level specified in
+     * {@link Autograder#visibility}.
      *
      * @param name        the name
      * @param actualScore the number of points earned
@@ -160,6 +176,25 @@ public class Result {
             final double maxScore,
             final String message) {
         return new Result(name, actualScore, maxScore, message);
+    }
+
+    /**
+     * Makes a result with the provided characteristics.
+     *
+     * @param name        the name
+     * @param actualScore the number of points earned
+     * @param maxScore    the number of points possible
+     * @param message     any message
+     * @param visibility  the visibility
+     * @return a result
+     */
+    public static Result makeResult(
+            final String name,
+            final double actualScore,
+            final double maxScore,
+            final String message,
+            final Visibility visibility) {
+        return new Result(name, actualScore, maxScore, message, visibility);
     }
 
     /**

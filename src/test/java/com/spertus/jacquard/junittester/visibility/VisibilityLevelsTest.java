@@ -2,10 +2,12 @@ package com.spertus.jacquard.junittester.visibility;
 
 import com.spertus.jacquard.common.Visibility;
 import com.spertus.jacquard.junittester.GradedTest;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Tag("IndirectTest")
 public class VisibilityLevelsTest {
     @Test
     @GradedTest(points = 2.0)
