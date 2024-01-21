@@ -70,16 +70,17 @@ public class MergeResultsTest {
         }
     }
 
+    // single results don't get merged
     @Test
     public void testMerge1() {
         // Success
-        assertMatching(NAME, 1.0, 1.0, "", List.of(result1));
+        assertMatching(NAME, 1.0, 1.0, "message1", List.of(result1));
 
         // Failure
-        assertMatching(NAME, 0.0, 2.0, "-2.0: message2", List.of(result2));
+        assertMatching(NAME, 0.0, 2.0, "message2", List.of(result2));
 
         // Partial success
-        assertMatching(NAME, 3.5, 4.0, "-0.5: message3", List.of(result3));
+        assertMatching(NAME, 3.5, 4.0, "message3", List.of(result3));
     }
 
     @Test

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+// These 2 tests should get merged together.
 @Tag("IndirectTest")
 public class GroupTest {
     @Test

@@ -161,7 +161,8 @@ public class Result {
     }
 
     /**
-     * Makes a result with the provided score.
+     * Makes a result with the provided score and message with the visibility level specified in
+     * {@link Autograder#visibility}.
      *
      * @param name        the name
      * @param actualScore the number of points earned
@@ -175,6 +176,25 @@ public class Result {
             final double maxScore,
             final String message) {
         return new Result(name, actualScore, maxScore, message);
+    }
+
+    /**
+     * Makes a result with the provided characteristics.
+     *
+     * @param name        the name
+     * @param actualScore the number of points earned
+     * @param maxScore    the number of points possible
+     * @param message     any message
+     * @param visibility  the visibility
+     * @return a result
+     */
+    public static Result makeResult(
+            final String name,
+            final double actualScore,
+            final double maxScore,
+            final String message,
+            final Visibility visibility) {
+        return new Result(name, actualScore, maxScore, message, visibility);
     }
 
     /**

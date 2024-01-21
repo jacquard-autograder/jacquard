@@ -66,12 +66,16 @@ public class JUnitTester extends Tester {
         }
         launcher.execute(builder.build());
         System.setOut(originalOut);
-        return listener.results;
+        return processResults(listener.results);
     }
 
+    // Note that the merged result has the default visibility set when the autograder was constructed.
     @VisibleForTesting
     static Result mergeResults(List<Result> results) {
         Preconditions.checkArgument(!results.isEmpty());
+        if (results.size() == 1) {
+            return results.get(0);
+        }
         String name = results.get(0).getName();
         Preconditions.checkArgument(
                 results.stream().allMatch((r) -> r.getName().equals(name)));
@@ -89,7 +93,9 @@ public class JUnitTester extends Tester {
         return Result.makeResult(name, score, maxScore, message);
     }
 
-    private static List<Result> processResults(ArrayList<Result> results) {
+    // Merge all the results having the same name. The merged result has the
+    // default visibility level specified when creating the autograder.
+    private static List<Result> processResults(List<Result> results) {
         return results.stream()
                 .collect(Collectors.groupingBy(Result::getName))
                 .values()

@@ -61,7 +61,11 @@ public class JUnitTesterTest {
     public void testPackageIncludingSubpackages() {
         JUnitTester tester = new JUnitTester("com.spertus.jacquard.junittester", true);
         List<Result> results = tester.run();
-        assertEquals(9, results.size());
+        // There should be:
+        // 2 results from SampleTest
+        // 1 result from GroupTest
+        // 5 results from VisibilityTest
+        assertEquals(8, results.size());
     }
 
     @Test
