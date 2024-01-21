@@ -24,3 +24,6 @@ selected](https://github.com/espertus/jacquard/assets/661056/5f33dcb0-76ab-4e4e-
 IntelliJ sometimes grays out most of `build.gradle`. If this happens, select `Reload All Gradle Projects` (the circular icon in the top left
 of the [Gradle panel screenshot](https://github.com/espertus/jacquard/assets/661056/5f33dcb0-76ab-4e4e-80e5-bf344c7a0ab9).
 [[Stack Overflow](https://stackoverflow.com/a/60207549/631051)].
+
+## Javadoc
+Javadoc is automatically generated through a github action and pushed to [https://ellenspertus.com/jacquard/index.html](https://ellenspertus.com/jacquard/index.html) when changes are merged into `main`.
