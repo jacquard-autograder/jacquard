@@ -28,6 +28,8 @@ public @interface GradedTest {
 
     /**
      * A description of the defect detected by this test.
+     *
+     * @return the description
      */
     String description() default "";
 
