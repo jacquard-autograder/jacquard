@@ -167,7 +167,20 @@ public class CrossTester {
             }
         });
 
+        // Suppress output.
+        PrintStream oldOut = System.out;
+        PrintStream oldErr = System.err;
+        System.setOut(new PrintStream(OutputStream.nullOutputStream()));
+        System.setErr(new PrintStream(OutputStream.nullOutputStream()));
+
+        // Run tests.
         launcher.execute(request);
+
+        // Reenable output.
+        System.setOut(oldOut);
+        System.setErr(oldErr);
+
+        // Generate and return results.
         return generateResults(testResults);
     }
 
