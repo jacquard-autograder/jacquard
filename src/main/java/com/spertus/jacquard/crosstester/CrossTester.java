@@ -8,6 +8,7 @@ import org.junit.platform.launcher.*;
 import org.junit.platform.launcher.core.*;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -130,6 +131,21 @@ public class CrossTester {
         //  Create Launcher.
         final Launcher launcher = LauncherFactory.create();
         launcher.registerTestExecutionListeners(new TestExecutionListener() {
+            // TODO: Factor out duplicated code from JUnitTester.
+            private PrintStream ps;
+            private ByteArrayOutputStream baos;
+
+            @Override
+            public void executionStarted(final TestIdentifier testIdentifier) {
+                baos = new ByteArrayOutputStream();
+                if (ps != null) {
+                    ps.close();
+                }
+                ps = new PrintStream(baos, true, StandardCharsets.UTF_8);
+                System.setOut(ps);
+                // TODO: Capture System.err.
+            }
+
             @Override
             public void executionFinished(
                     final TestIdentifier testIdentifier,
@@ -150,35 +166,36 @@ public class CrossTester {
                         break;
                     }
                 }
+                final String output = baos.toString().trim();
                 testResults.add(switch (testExecutionResult.getStatus()) {
                     case SUCCESSFUL -> TestResult.makeSuccess(
                             testIdentifier.getDisplayName(),
                             mutName,
-                            putName);
+                            putName,
+                            output);
                     case FAILED, ABORTED -> TestResult.makeFailure(
                             testIdentifier.getDisplayName(),
                             mutName,
                             putName,
                             testExecutionResult.getThrowable().isPresent() ?
                                     testExecutionResult.getThrowable().get().getMessage() :
-                                    "no information");
+                                    "no information",
+                            output);
                 });
                 TestExecutionListener.super.executionFinished(testIdentifier, testExecutionResult);
             }
         });
 
-        // Suppress output.
-        PrintStream oldOut = System.out;
-        PrintStream oldErr = System.err;
-        System.setOut(new PrintStream(OutputStream.nullOutputStream()));
-        System.setErr(new PrintStream(OutputStream.nullOutputStream()));
+        // Prepare to mess with streams.
+        final PrintStream originalOut = System.out; // NOPMD
+        final PrintStream originalErr = System.err; // NOPMD
 
         // Run tests.
         launcher.execute(request);
 
-        // Reenable output.
-        System.setOut(oldOut);
-        System.setErr(oldErr);
+        // Restore streams.
+        System.setOut(originalOut);
+        System.setErr(originalErr);
 
         // Generate and return results.
         return generateResults(testResults);
@@ -198,6 +215,7 @@ public class CrossTester {
     }
 
     private Result generateResult(final int putIndex, final int mutIndex, final List<TestResult> testResults) {
+        // Build list of results for the specified package and method under test
         final String mutName = methodNames[mutIndex];
         final String putName = putNames[putIndex];
         final List<TestResult> mutTestResults = testResults
@@ -217,6 +235,10 @@ public class CrossTester {
             } else {
                 sb.append(String.format("Test %s FAILED: %s\n", tr.testName(), tr.message()));
                 failures++;
+            }
+            if (!tr.output().isEmpty()) {
+                sb.append('\n');
+                sb.append(tr.output());
             }
         }
         // If maxPoints is positive, full credit is earned for success.
