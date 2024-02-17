@@ -18,6 +18,11 @@ import java.util.*;
  */
 public class CrossTester {
     private static final String DELIM = "\\s*,\\s*";
+    private static final String FOUND_BUG_TEMPLATE = "Test %s SUCCEEDED by reporting a bug in the hidden buggy implementation: %s\n";
+    private static final String MISSED_BUG_TEMPLATE = "Test %s DID NOT report an existing bug in the hidden buggy implementation\n";
+    private static final String BLAMED_CORRECT_TEMPLATE = "Test %s FAILED by reporting a bug in the hidden correct implementation: %s\n";
+    private static final String PASSED_CORRECT_TEMPLATE = "Test %s SUCCEEDED by not falsely reporting a bug in the hidden correct implementation\n";
+
     private final Class<?> testClass;
     // The next three instance variables are initialized in processCsvFile().
     private String[] methodNames;
@@ -214,6 +219,16 @@ public class CrossTester {
         return results;
     }
 
+    private static double calculatePoints(int failures, int successes, double maxPoints) {
+        if (failures > 0) {
+            return maxPoints > 0 ? 0 : -maxPoints;
+        } else if (successes > 0) {
+            return maxPoints > 0 ? maxPoints : 0;
+        } else {
+            return 0;
+        }
+    }
+
     private Result generateResult(final int putIndex, final int mutIndex, final List<TestResult> testResults) {
         // Build list of results for the specified package and method under test
         final String mutName = methodNames[mutIndex];
@@ -224,16 +239,27 @@ public class CrossTester {
                         tr.methodUnderTestName().equals(mutName) &&
                                 tr.packageUnderTestName().equals(putName))
                 .toList();
-        final String name = String.format("Submitted tests of %s.%s()", putNames[putIndex], mutName);
+
+        // Generate name.
+        final String name = String.format("Tests of %s.%s()", putNames[putIndex], mutName);
+
+        // If maxPoints is positive, full credit is earned for success.
+        // If maxPoints is negative, full credit is earned for failure.
+        final double maxPoints = points[mutIndex][putIndex];
+        final boolean testsShouldPass = maxPoints > 0;
+
+        // Generate message.
         final StringBuilder sb = new StringBuilder();
         int successes = 0;
         int failures = 0;
         for (final TestResult tr : mutTestResults) {
             if (tr.passed()) {
-                sb.append(String.format("Test %s PASSED\n", tr.testName()));
+                String template = testsShouldPass ? PASSED_CORRECT_TEMPLATE : MISSED_BUG_TEMPLATE;
+                sb.append(String.format(template, tr.testName()));
                 successes++;
             } else {
-                sb.append(String.format("Test %s FAILED: %s\n", tr.testName(), tr.message()));
+                String template = testsShouldPass ? BLAMED_CORRECT_TEMPLATE : FOUND_BUG_TEMPLATE;
+                sb.append(String.format(template, tr.testName(), tr.message()));
                 failures++;
             }
             if (!tr.output().isEmpty()) {
@@ -241,21 +267,13 @@ public class CrossTester {
                 sb.append(tr.output());
             }
         }
-        // If maxPoints is positive, full credit is earned for success.
-        // If maxPoints is negative, full credit is earned for failure.
-        final double maxPoints = points[mutIndex][putIndex];
-        double points;
-        if (failures > 0) {
-            points = maxPoints > 0 ? 0 : -maxPoints;
-        } else if (successes > 0) {
-            points = maxPoints > 0 ? maxPoints : 0;
-        } else {
-            points = 0;
+        if (successes == 0 && failures == 0) {
             sb.append("No tests found");
         }
+
         return new Result(
                 name,
-                points,
+                calculatePoints(failures, successes, maxPoints),
                 Math.abs(maxPoints),
                 sb.toString());
     }
