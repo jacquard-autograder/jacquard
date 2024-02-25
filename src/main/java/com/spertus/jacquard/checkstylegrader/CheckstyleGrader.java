@@ -119,7 +119,7 @@ public class CheckstyleGrader extends Grader {
         try {
             final File file = new File(CHECKSTYLE_SUBDIR + "/" + CHECKSTYLE_JAR);
             if (!file.exists()) {
-                Files.createDirectory(Paths.get(CHECKSTYLE_SUBDIR));
+                Files.createDirectories(Paths.get(CHECKSTYLE_SUBDIR));
                 // https://www.baeldung.com/java-download-file#using-nio
                 try (ReadableByteChannel readableByteChannel =
                         Channels.newChannel(new URL(CHECKSTYLE_URL).openStream())) {
