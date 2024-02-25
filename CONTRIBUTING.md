@@ -25,5 +25,8 @@ IntelliJ sometimes grays out most of `build.gradle`. If this happens, select `Re
 of the [Gradle panel screenshot](https://github.com/espertus/jacquard/assets/661056/5f33dcb0-76ab-4e4e-80e5-bf344c7a0ab9).
 [[Stack Overflow](https://stackoverflow.com/a/60207549/631051)].
 
+Publishing to Maven Central (Sonatype) requires a secret key, which is not part
+of the distribution. It is stored in `settings.gradle`.
+
 ## Javadoc
 Javadoc is automatically generated through a github action and pushed to [https://ellenspertus.com/jacquard/index.html](https://ellenspertus.com/jacquard/index.html) when changes are merged into `main`.
