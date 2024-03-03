@@ -1,0 +1,9 @@
+com.spertus.jacquard.checkstylegrader
+com.spertus.jacquard.common
+com.spertus.jacquard.coverage
+com.spertus.jacquard.crosstester
+com.spertus.jacquard.exceptions
+com.spertus.jacquard.junittester
+com.spertus.jacquard.pmdgrader
+com.spertus.jacquard.publisher
+com.spertus.jacquard.syntaxgrader
