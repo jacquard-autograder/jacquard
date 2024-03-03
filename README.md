@@ -24,4 +24,4 @@ For more information, see [Jacquard Examples](https://github.com/espertus/jacqua
 Jacquard was influenced by Tim Kutcher's [JGrade](https://github.com/tkutcher/jgrade) and
 includes some of its `Visibility` and `GradedTest` code.
 
-[![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://www.ellenspertus.com/jacquard)
+[![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://www.ellenspertus.com/jacquard/docs)
