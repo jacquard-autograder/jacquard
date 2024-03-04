@@ -35,7 +35,6 @@ loadScripts(document, 'script');</script>
 <li><a href="package-summary.html">Package</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
 <li><a href="../../../../help-doc.html#class">Help</a></li>
 </ul>
@@ -78,7 +77,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">Target</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The target of a <a href="Grader.html" title="class in com.spertus.jacquard.common"><code>Grader</code></a>, such as a file or a directory.</div>
+<div class="block">The target of a <a href="Grader.html" title="class in com.spertus.jacquard.common"><code>Grader</code></a>, which must be a file.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -87,7 +86,7 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
@@ -102,17 +101,26 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a target from a class that the student is responsible for
  submitting.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Target.html" title="class in com.spertus.jacquard.common">Target</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromPath(java.nio.file.Path)" class="member-name-link">fromPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;path)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Target.html" title="class in com.spertus.jacquard.common">Target</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromDirectory(java.lang.String)" class="member-name-link">fromDirectory</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dir)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Creates a target from a path, which could be to a file or directory.</div>
+<div class="block">Creates targets from all the files in the specified directory.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static <a href="Target.html" title="class in com.spertus.jacquard.common">Target</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#fromPathString(java.lang.String)" class="member-name-link">fromPathString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Call <a href="#fromClass(java.lang.Class)"><code>fromClass(Class)</code></a> instead.</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Target.html" title="class in com.spertus.jacquard.common">Target</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromPath(java.nio.file.Path)" class="member-name-link">fromPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;path)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a target from a path, which must be to a single file.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Target.html" title="class in com.spertus.jacquard.common">Target</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromPathString(java.lang.String)" class="member-name-link">fromPathString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a target from a relative path string to a file.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Target.html" title="class in com.spertus.jacquard.common">Target</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromPathStrings(java.lang.String,java.lang.String...)" class="member-name-link">fromPathStrings</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dir,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;files)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates targets from a directory string and list of files in the directory.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
@@ -158,30 +166,30 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="fromPath(java.nio.file.Path)">
 <h3>fromPath</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Target.html" title="class in com.spertus.jacquard.common">Target</a></span>&nbsp;<span class="element-name">fromPath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;path)</span></div>
-<div class="block">Creates a target from a path, which could be to a file or directory.</div>
+<div class="block">Creates a target from a path, which must be to a single file.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>path</code> - the path</dd>
 <dt>Returns:</dt>
 <dd>the target</dd>
+<dt>Throws:</dt>
+<dd><code><a href="../exceptions/ClientException.html" title="class in com.spertus.jacquard.exceptions">ClientException</a></code> - if the path is to a directory rather than a file</dd>
 </dl>
 </section>
 </li>
 <li>
 <section class="detail" id="fromPathString(java.lang.String)">
 <h3>fromPathString</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Target.html" title="class in com.spertus.jacquard.common">Target</a></span>&nbsp;<span class="element-name">fromPathString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Call <a href="#fromClass(java.lang.Class)"><code>fromClass(Class)</code></a> instead.</div>
-</div>
-<div class="block">Creates a target from a relative path string. It does not matter whether
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Target.html" title="class in com.spertus.jacquard.common">Target</a></span>&nbsp;<span class="element-name">fromPathString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</span></div>
+<div class="block">Creates a target from a relative path string to a file. It does not matter whether
  forward slashes or backslashes are used as separators.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>s</code> - a relative path string</dd>
+<dd><code>s</code> - a relative path string to a file</dd>
 <dt>Returns:</dt>
 <dd>the target</dd>
+<dt>Throws:</dt>
+<dd><code><a href="../exceptions/ClientException.html" title="class in com.spertus.jacquard.exceptions">ClientException</a></code> - if the path is to a directory rather than a file</dd>
 </dl>
 </section>
 </li>
@@ -198,6 +206,39 @@ loadScripts(document, 'script');</script>
 <dd>the target</dd>
 <dt>Throws:</dt>
 <dd><code><a href="../exceptions/ClientException.html" title="class in com.spertus.jacquard.exceptions">ClientException</a></code> - if the package of the class is invalid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fromPathStrings(java.lang.String,java.lang.String...)">
+<h3>fromPathStrings</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Target.html" title="class in com.spertus.jacquard.common">Target</a>&gt;</span>&nbsp;<span class="element-name">fromPathStrings</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dir,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;files)</span></div>
+<div class="block">Creates targets from a directory string and list of files in the directory.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>dir</code> - a relative directory string (ending with <code>/</code> or
+              <code>\</code>)</dd>
+<dd><code>files</code> - the names of the files in the directory</dd>
+<dt>Returns:</dt>
+<dd>the targets</dd>
+<dt>Throws:</dt>
+<dd><code><a href="../exceptions/ClientException.html" title="class in com.spertus.jacquard.exceptions">ClientException</a></code> - if dir does not end with a path separator</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fromDirectory(java.lang.String)">
+<h3>fromDirectory</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Target.html" title="class in com.spertus.jacquard.common">Target</a>&gt;</span>&nbsp;<span class="element-name">fromDirectory</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dir)</span></div>
+<div class="block">Creates targets from all the files in the specified directory.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>dir</code> - a relative directory string</dd>
+<dt>Returns:</dt>
+<dd>the targets</dd>
+<dt>Throws:</dt>
+<dd><code><a href="../exceptions/ClientException.html" title="class in com.spertus.jacquard.exceptions">ClientException</a></code> - if dir is not a directory or is not accessible</dd>
 </dl>
 </section>
 </li>
@@ -238,8 +279,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="toDirectory()">
 <h3>toDirectory</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">toDirectory</span>()</div>
-<div class="block">Gets this target's directory. This is the target itself if it is a
- directory; otherwise, it is the parent directory of the file.</div>
+<div class="block">Gets this target's directory.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the directory</dd>

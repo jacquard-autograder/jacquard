@@ -31,7 +31,6 @@ loadScripts(document, 'script');</script>
 <li>Package</li>
 <li>Class</li>
 <li><a href="overview-tree.html">Tree</a></li>
-<li><a href="deprecated-list.html">Deprecated</a></li>
 <li class="nav-bar-cell1-rev">Index</li>
 <li><a href="help-doc.html#index">Help</a></li>
 </ul>
@@ -304,15 +303,21 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a target from a class that the student is responsible for
  submitting.</div>
 </dd>
+<dt><a href="com/spertus/jacquard/common/Target.html#fromDirectory(java.lang.String)" class="member-name-link">fromDirectory(String)</a> - Static method in class com.spertus.jacquard.common.<a href="com/spertus/jacquard/common/Target.html" title="class in com.spertus.jacquard.common">Target</a></dt>
+<dd>
+<div class="block">Creates targets from all the files in the specified directory.</div>
+</dd>
 <dt><a href="com/spertus/jacquard/common/Target.html#fromPath(java.nio.file.Path)" class="member-name-link">fromPath(Path)</a> - Static method in class com.spertus.jacquard.common.<a href="com/spertus/jacquard/common/Target.html" title="class in com.spertus.jacquard.common">Target</a></dt>
 <dd>
-<div class="block">Creates a target from a path, which could be to a file or directory.</div>
+<div class="block">Creates a target from a path, which must be to a single file.</div>
 </dd>
 <dt><a href="com/spertus/jacquard/common/Target.html#fromPathString(java.lang.String)" class="member-name-link">fromPathString(String)</a> - Static method in class com.spertus.jacquard.common.<a href="com/spertus/jacquard/common/Target.html" title="class in com.spertus.jacquard.common">Target</a></dt>
 <dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Call <a href="com/spertus/jacquard/common/Target.html#fromClass(java.lang.Class)"><code>Target.fromClass(Class)</code></a> instead.</div>
-</div>
+<div class="block">Creates a target from a relative path string to a file.</div>
+</dd>
+<dt><a href="com/spertus/jacquard/common/Target.html#fromPathStrings(java.lang.String,java.lang.String...)" class="member-name-link">fromPathStrings(String, String...)</a> - Static method in class com.spertus.jacquard.common.<a href="com/spertus/jacquard/common/Target.html" title="class in com.spertus.jacquard.common">Target</a></dt>
+<dd>
+<div class="block">Creates targets from a directory string and list of files in the directory.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
@@ -973,7 +978,7 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="com/spertus/jacquard/common/Target.html" class="type-name-link" title="class in com.spertus.jacquard.common">Target</a> - Class in <a href="com/spertus/jacquard/common/package-summary.html">com.spertus.jacquard.common</a></dt>
 <dd>
-<div class="block">The target of a <a href="com/spertus/jacquard/common/Grader.html" title="class in com.spertus.jacquard.common"><code>Grader</code></a>, such as a file or a directory.</div>
+<div class="block">The target of a <a href="com/spertus/jacquard/common/Grader.html" title="class in com.spertus.jacquard.common"><code>Grader</code></a>, which must be a file.</div>
 </dd>
 <dt><a href="com/spertus/jacquard/common/Tester.html" class="type-name-link" title="class in com.spertus.jacquard.common">Tester</a> - Class in <a href="com/spertus/jacquard/common/package-summary.html">com.spertus.jacquard.common</a></dt>
 <dd>
