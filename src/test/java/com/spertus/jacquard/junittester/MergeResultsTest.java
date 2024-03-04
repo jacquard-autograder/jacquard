@@ -1,7 +1,6 @@
 package com.spertus.jacquard.junittester;
 
 import com.google.common.collect.Sets;
-import com.spertus.jacquard.JUnitTesterTest;
 import com.spertus.jacquard.common.*;
 import org.junit.jupiter.api.*;
 
@@ -54,6 +53,7 @@ public class MergeResultsTest {
     }
 
     // Checks if all resultLists produce results that match the arguments.
+    @SafeVarargs
     private void assertMatching(
             String name,
             double score,
