@@ -109,8 +109,8 @@ public class PmdGraderTest {
                 MAX_PENALTY,
                 "category/java/documentation.xml",
                 "category/java/codestyle.xml");
-        Target target = Target.fromPathString("src/test/resources/good/");
-        List<Result> results = pmdGrader.grade(target); // lots of errors
+        List<Target> targets = Target.fromDirectory("src/test/resources/good/");
+        List<Result> results = pmdGrader.grade(targets); // lots of errors
         TestUtilities.assertResultsMatch(results, 1, 0, MAX_PENALTY);
     }
 

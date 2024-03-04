@@ -3,12 +3,14 @@ package com.spertus.jacquard.common;
 import com.spertus.jacquard.exceptions.ClientException;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * The target of a {@link Grader}, such as a file or a directory.
+ * The target of a {@link Grader}, which must be a file.
  */
 public final class Target {
     private static final String SUBMISSION_PATH_TEMPLATE =
@@ -21,33 +23,35 @@ public final class Target {
     private final Path path;
 
     private Target(final Path path) {
+        if (path.toFile().isDirectory()) {
+            throw new ClientException("The path argument must be to a file, not a directory.");
+        }
         this.path = path;
     }
 
     /**
-     * Creates a target from a path, which could be to a file or directory.
+     * Creates a target from a path, which must be to a single file.
      *
      * @param path the path
      * @return the target
+     * @throws ClientException if the path is to a directory rather than a file
      */
     public static Target fromPath(final Path path) {
         return new Target(path);
     }
 
     /**
-     * Creates a target from a relative path string. It does not matter whether
+     * Creates a target from a relative path string to a file. It does not matter whether
      * forward slashes or backslashes are used as separators.
      *
-     * @param s a relative path string
+     * @param s a relative path string to a file
      * @return the target
-     *
-     * @deprecated Call {@link #fromClass(Class)} instead.
+     * @throws ClientException if the path is to a directory rather than a file
      */
-    @Deprecated()
     public static Target fromPathString(final String s) {
         // https://stackoverflow.com/a/40163941/631051
-        final Path absPath = FileSystems.getDefault().getPath(s).normalize().toAbsolutePath();
-        return new Target(absPath);
+        final Path path = FileSystems.getDefault().getPath(s).normalize().toAbsolutePath();
+        return fromPath(path);
     }
 
     /**
@@ -75,16 +79,38 @@ public final class Target {
      * @param dir   a relative directory string (ending with <code>/</code> or
      *              <code>\</code>)
      * @param files the names of the files in the directory
-     * @return the target
+     * @return the targets
      * @throws ClientException if dir does not end with a path separator
      */
-    private static List<Target> fromPathStrings(final String dir, final String... files) {
+    public static List<Target> fromPathStrings(final String dir, final String... files) {
         if (!dir.endsWith("/") && !dir.endsWith("\\")) {
             throw new ClientException("dir must end with a path separator (/ or \\)");
         }
         return Arrays.stream(files)
                 .map(file -> fromPathString(dir + file))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Creates targets from all the files in the specified directory.
+     *
+     * @param dir a relative directory string
+     * @return the targets
+     * @throws ClientException if dir is not a directory or is not accessible
+     */
+    public static List<Target> fromDirectory(final String dir) {
+        Path path = Paths.get(dir);
+        if (!path.toFile().isDirectory()) {
+            throw new ClientException("Argument to fromDirectory() must be a directory.");
+        }
+        try (Stream<Path> paths = Files.walk(path)) {
+            return paths
+                    .filter(Files::isRegularFile)
+                    .map(file -> fromPath(file.toAbsolutePath()))
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new ClientException("Unable to access directory " + dir);
+        }
     }
 
     /**
@@ -115,40 +141,23 @@ public final class Target {
     }
 
     /**
-     * Gets this target's directory. This is the target itself if it is a
-     * directory; otherwise, it is the parent directory of the file.
+     * Gets this target's directory.
      *
      * @return the directory
      */
     public Path toDirectory() {
         final File file = toFile();
         if (file.isDirectory()) {
-            return file.toPath();
+            throw new RuntimeException("It should not be possible to have a Target that is a directory.");
         } else {
             return file.getParentFile().toPath();
         }
     }
 
-//    /**
-//     * Parses this target, if it is a file.
-//     *
-//     * @param autograder autograder (for language level)
-//     * @return the parsed file
-//     * @throws ClientException if this target is a directory
-//     */
-//    public CompilationUnit toCompilationUnit(Autograder autograder) {
-//        if (toFile().isDirectory()) {
-//            throw new ClientException("Cannot parse directory " + toPathString());
-//        }
-//        return Parser.parse(autograder.getJavaLevel(), toFile());
-//    }
-
     @Override
     public boolean equals(final Object o) {
         if (o instanceof Target other) {
-            return this.toPath().equals(other.toPath()) &&
-                    this.toFile().equals(other.toFile()) &&
-                    this.toDirectory().equals(other.toDirectory());
+            return this.path.equals(other.path);
         }
         return false;
     }

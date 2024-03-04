@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 
 import java.net.URISyntaxException;
 import java.nio.file.*;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -59,49 +60,21 @@ public class TargetTest {
         assertEquals(Paths.get(GOOD_RESOURCES_SUBDIR).toAbsolutePath(), mobTarget.toDirectory());
     }
 
-//    @Test
-//    public void testToClassName() {
-//        assertEquals("Mob", mobTarget.toClassName());
-//    }
-//
-//    @Test
-//    public void testToClassNameThrowsExceptionForNonJava() {
-//        assertThrows(ClientException.class,
-//                () -> TestUtilities.getTargetFromResource("invalid/NotJava.txt").toClassName());
-//    }
-//
-//    @Test
-//    public void testToClassNameThrowsExceptionForDirectory() {
-//        assertThrows(ClientException.class,
-//                () -> Target.fromPathString(".").toClassName());
-//    }
-//
-//    @Test
-//    public void testToClassNameWorksForUnparseable() throws URISyntaxException {
-//        assertEquals("Unparseable", TestUtilities.getTargetFromResource("invalid/Unparseable.java").toClassName());
-//    }
-//
-//    @Test
-//    public void testToPackageName() {
-//        assertEquals("student", mobTarget.toPackageName());
-//    }
-//
-//    @Test
-//    public void testToPackageNameThrowsExceptionForNonJava() {
-//        assertThrows(ClientException.class,
-//                () -> TestUtilities.getTargetFromResource("invalid/NotJava.txt").toPackageName());
-//    }
-//
-//    @Test
-//    public void testToPackageNameThrowsExceptionForDirectory() {
-//        assertThrows(ClientException.class,
-//                () -> Target.fromPathString(".").toPackageName());
-//    }
-//
-//    @Test
-//    public void testToPackageNameThrowsExceptionForUnparseable() {
-//        assertThrows(ClientException.class,
-//                () -> TestUtilities.getTargetFromResource("invalid/Unparseable.java").toPackageName());
-//    }
+    @Test
+    public void testFromDirectoryReturnsAllFiles() {
+        List<Target> targets = Target.fromDirectory("src/test/resources/good/");
+        assertEquals(12, targets.size());
+    }
 
+    @Test
+    public void testFromDirectoryRejectsFilePath() {
+        assertThrows(ClientException.class,
+                () -> Target.fromDirectory("src/test/resources/good/BadFormatting.java"));
+    }
+
+    @Test
+    public void testFromDirectoryRejectsBadPath() {
+        assertThrows(ClientException.class,
+                () -> Target.fromDirectory("src/test/resources/nosuchdir"));
+    }
 }
