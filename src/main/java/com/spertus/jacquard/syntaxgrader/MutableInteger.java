@@ -3,19 +3,19 @@ package com.spertus.jacquard.syntaxgrader;
 /**
  * A wrapper around a mutable integer value.
  */
-/* default */ class MutableInteger {
+public class MutableInteger {
     private int value;
 
     /**
      * Constructs a mutable integer with an initial value of 0.
      */
-    /* default */ MutableInteger() {
+    public MutableInteger() {
     }
 
     /**
      * Increments the value by 1.
      */
-    /* default */ void increment() {
+    public void increment() {
         value++;
     }
 
@@ -24,7 +24,7 @@ package com.spertus.jacquard.syntaxgrader;
      *
      * @return the value
      */
-    /* default */ int getValue() {
+    public int getValue() {
         return value;
     }
 }
