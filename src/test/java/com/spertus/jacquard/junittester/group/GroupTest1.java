@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 // These 2 tests should get merged together.
 @Tag("IndirectTest")
-public class GroupTest {
+public class GroupTest1 {
     @Test
     @GradedTest(name = "Bus constructor",
             description = "Verifies exception is thrown for null argument",

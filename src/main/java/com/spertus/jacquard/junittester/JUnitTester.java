@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -69,7 +70,7 @@ public class JUnitTester extends Tester {
         return processResults(listener.results);
     }
 
-    // Note that the merged result has the default visibility set when the autograder was constructed.
+    // Merge results having the same name and visibility
     @VisibleForTesting
     static Result mergeResults(List<Result> results) {
         Preconditions.checkArgument(!results.isEmpty());
@@ -77,30 +78,32 @@ public class JUnitTester extends Tester {
             return results.get(0);
         }
         String name = results.get(0).getName();
+        Visibility vis = results.get(0).getVisibility();
         Preconditions.checkArgument(
-                results.stream().allMatch((r) -> r.getName().equals(name)));
+                results.stream()
+                        .allMatch((r) -> r.getName().equals(name) && r.getVisibility().equals(vis)));
 
         double score = results.stream().mapToDouble(Result::getScore).sum();
         double maxScore = results.stream().mapToDouble(Result::getMaxScore).sum();
         String message = results.stream()
                 .filter((r) -> r.getScore() < r.getMaxScore())
-                .map(r ->  String.format(Locale.US,
-                                "%.1f: %s",
-                                r.getScore() - r.getMaxScore(),
-                                r.getMessage()))
+                .map(r -> String.format(Locale.US,
+                        "%.1f: %s",
+                        r.getScore() - r.getMaxScore(),
+                        r.getMessage()))
                 .collect(Collectors.joining("\n"));
 
-        return Result.makeResult(name, score, maxScore, message);
+        return Result.makeResult(name, score, maxScore, message, vis);
     }
 
-    // Merge all the results having the same name. The merged result has the
-    // default visibility level specified when creating the autograder.
+    // Merge all the results having the same name and visibility.
     private static List<Result> processResults(List<Result> results) {
-        return results.stream()
-                .collect(Collectors.groupingBy(Result::getName))
+        Map<String, Map<Visibility, List<Result>>> groupedResults = results.stream().collect(groupingBy(Result::getName, groupingBy(Result::getVisibility)));
+        return groupedResults
                 .values()
                 .stream()
-                .map(JUnitTester::mergeResults)
+                .flatMap(visibilityMap -> visibilityMap.values().stream())
+                .map(group -> mergeResults(group))
                 .collect(Collectors.toList());
     }
 
