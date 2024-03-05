@@ -72,12 +72,12 @@ public abstract class SyntaxCountGrader extends SyntaxGrader {
             return String.format("Code was required to have at least %d %s", minCount, countedName);
         }
 
-        if (minCount == 0) {
-            return String.format("Code was required to have up to %d %s", maxCount, countedName);
-        }
-
         if (minCount == maxCount) {
             return String.format("Code was required to have %d %s", minCount, countedName);
+        }
+
+        if (minCount == 0) {
+            return String.format("Code was required to have up to %d %s", maxCount, countedName);
         }
 
         return String.format("Code was required to have %d-%d %s", minCount, maxCount, countedName);
