@@ -3,14 +3,19 @@ package com.spertus.jacquard;
 import com.spertus.jacquard.common.*;
 import com.spertus.jacquard.junittester.SampleTest;
 import com.spertus.jacquard.junittester.JUnitTester;
-import com.spertus.jacquard.junittester.group.GroupTest;
+import com.spertus.jacquard.junittester.group.GroupTest1;
+import com.spertus.jacquard.junittester.group.GroupTest2;
 import com.spertus.jacquard.junittester.output.OutputTest;
 import com.spertus.jacquard.junittester.visibility.VisibilityLevelsTest;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JUnitTesterTest {
     private static final String PASSING_TEST_NAME = "passingTest";
@@ -63,11 +68,12 @@ public class JUnitTesterTest {
         JUnitTester tester = new JUnitTester("com.spertus.jacquard.junittester", true);
         List<Result> results = tester.run();
         // There should be:
-        // 1 result from GroupTest
+        // 1 from GroupTest1
+        // 2 from GroupTest2
         // 2 from OutputTest
         // 2 results from SampleTest
         // 5 results from VisibilityTest
-        assertEquals(10, results.size());
+        assertEquals(12, results.size());
     }
 
     @Test
@@ -90,10 +96,24 @@ public class JUnitTesterTest {
     }
 
     @Test
-    public void testGrouping() {
-        JUnitTester tester = new JUnitTester(GroupTest.class);
+    public void testGroupingWithSameVisibility() {
+        JUnitTester tester = new JUnitTester(GroupTest1.class);
         List<Result> results = tester.run();
         assertEquals(1, results.size());
+    }
+
+    @Test
+    public void testGroupingWithDifferentVisibility() {
+        JUnitTester tester = new JUnitTester(GroupTest2.class);
+        List<Result> results = tester.run();
+        assertEquals(2, results.size());
+        Map<Visibility, List<Result>> map = results.stream().collect(Collectors.groupingBy(Result::getVisibility));
+        assertEquals(2, map.size());
+        assertTrue(map.containsKey(Visibility.VISIBLE));
+        assertEquals(1, map.get(Visibility.VISIBLE).size());
+        assertEquals(1.0, map.get(Visibility.VISIBLE).get(0).getMaxScore());
+        assertEquals(1, map.get(Visibility.AFTER_PUBLISHED).size());
+        assertEquals(2.0, map.get(Visibility.AFTER_PUBLISHED).get(0).getMaxScore());
     }
 
     @Test
