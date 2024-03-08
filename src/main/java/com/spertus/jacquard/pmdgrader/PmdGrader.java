@@ -23,7 +23,7 @@ public final class PmdGrader extends Grader {
 
     // These are used only if createFromRules() is used.
     private String ruleSetPath;
-    private String[] ruleNames;
+    private List<String> ruleNames;
 
     private static PMDConfiguration createConfiguration() {
         final PMDConfiguration config = new PMDConfiguration();
@@ -60,7 +60,7 @@ public final class PmdGrader extends Grader {
             final double penaltyPerViolation,
             final double maxPenalty,
             final String ruleSetPath,
-            final String... ruleNames) {
+            final List<String> ruleNames) {
         super(GRADER_NAME);
         this.penaltyPerViolation = penaltyPerViolation;
         this.maxPenalty = maxPenalty;
@@ -132,15 +132,15 @@ public final class PmdGrader extends Grader {
      * argument should be the path to a rule set in <a
      * href="https://github.com/pmd/pmd/tree/master/pmd-java/src/main/resources">
      * the PMD resource directory</a> (such as "category/java/quickstart.xml")
-     * or in one of the client project's resource directories. The ruleNames
-     * argument should give rule names without a preceding path, such as
-     * "MissingOverride".
+     * or in one of the client project's resource directories. The rule names
+     * should be provided without a preceding path, such as "MissingOverride".
      *
      * @param penaltyPerViolation the penalty per violation, which should be a
      *                            positive number
      * @param maxPenalty          the maximum penalty
      * @param ruleSetPath         the path to a rule set
-     * @param ruleNames           the names of the rules in the rule set to use
+     * @param ruleName0           the first rule in the set to use
+     * @param moreRuleNames       additions rules in the set to use
      * @return new PMD grader
      * @throws ClientException if any rule set path is invalid or a rule cannot be found
      */
@@ -148,8 +148,12 @@ public final class PmdGrader extends Grader {
             final double penaltyPerViolation,
             final double maxPenalty,
             final String ruleSetPath,
-            final String... ruleNames) {
-        return new PmdGrader(penaltyPerViolation, maxPenalty, ruleSetPath, ruleNames);
+            final String ruleName0,
+            final String... moreRuleNames) {
+        List<String> allRuleNames = new ArrayList<>(moreRuleNames.length + 1);
+        allRuleNames.add(ruleName0);
+        allRuleNames.addAll(Arrays.asList(moreRuleNames));
+        return new PmdGrader(penaltyPerViolation, maxPenalty, ruleSetPath, allRuleNames);
     }
 
     private Callable<List<Result>> makeCallable(final Target... targets) {
