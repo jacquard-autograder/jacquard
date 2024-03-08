@@ -96,10 +96,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="PmdGrader.html" title="class in com.spertus.jacquard.pmdgrader">PmdGrader</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createFromRules(double,double,java.lang.String,java.lang.String...)" class="member-name-link">createFromRules</a><wbr>(double&nbsp;penaltyPerViolation,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createFromRules(double,double,java.lang.String,java.lang.String,java.lang.String...)" class="member-name-link">createFromRules</a><wbr>(double&nbsp;penaltyPerViolation,
  double&nbsp;maxPenalty,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ruleSetPath,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;ruleNames)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ruleName0,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;moreRuleNames)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates a PMD-based grader for the specified rules.</div>
 </div>
@@ -172,25 +173,26 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="createFromRules(double,double,java.lang.String,java.lang.String...)">
+<section class="detail" id="createFromRules(double,double,java.lang.String,java.lang.String,java.lang.String...)">
 <h3>createFromRules</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="PmdGrader.html" title="class in com.spertus.jacquard.pmdgrader">PmdGrader</a></span>&nbsp;<span class="element-name">createFromRules</span><wbr><span class="parameters">(double&nbsp;penaltyPerViolation,
  double&nbsp;maxPenalty,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ruleSetPath,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;ruleNames)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;ruleName0,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;moreRuleNames)</span></div>
 <div class="block">Creates a PMD-based grader for the specified rules. The ruleSetPath
  argument should be the path to a rule set in <a href="https://github.com/pmd/pmd/tree/master/pmd-java/src/main/resources">
  the PMD resource directory</a> (such as "category/java/quickstart.xml")
- or in one of the client project's resource directories. The ruleNames
- argument should give rule names without a preceding path, such as
- "MissingOverride".</div>
+ or in one of the client project's resource directories. The rule names
+ should be provided without a preceding path, such as "MissingOverride".</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>penaltyPerViolation</code> - the penalty per violation, which should be a
                             positive number</dd>
 <dd><code>maxPenalty</code> - the maximum penalty</dd>
 <dd><code>ruleSetPath</code> - the path to a rule set</dd>
-<dd><code>ruleNames</code> - the names of the rules in the rule set to use</dd>
+<dd><code>ruleName0</code> - the first rule in the set to use</dd>
+<dd><code>moreRuleNames</code> - additions rules in the set to use</dd>
 <dt>Returns:</dt>
 <dd>new PMD grader</dd>
 <dt>Throws:</dt>

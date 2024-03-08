@@ -181,7 +181,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Syntax-based grader, which scores code based on its parse tree.</div>
 </dd>
-<dt><a href="com/spertus/jacquard/pmdgrader/PmdGrader.html#createFromRules(double,double,java.lang.String,java.lang.String...)" class="member-name-link">createFromRules(double, double, String, String...)</a> - Static method in class com.spertus.jacquard.pmdgrader.<a href="com/spertus/jacquard/pmdgrader/PmdGrader.html" title="class in com.spertus.jacquard.pmdgrader">PmdGrader</a></dt>
+<dt><a href="com/spertus/jacquard/pmdgrader/PmdGrader.html#createFromRules(double,double,java.lang.String,java.lang.String,java.lang.String...)" class="member-name-link">createFromRules(double, double, String, String, String...)</a> - Static method in class com.spertus.jacquard.pmdgrader.<a href="com/spertus/jacquard/pmdgrader/PmdGrader.html" title="class in com.spertus.jacquard.pmdgrader">PmdGrader</a></dt>
 <dd>
 <div class="block">Creates a PMD-based grader for the specified rules.</div>
 </dd>
@@ -283,7 +283,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/spertus/jacquard/syntaxgrader/ImportRequiredGrader.html#finalizeResults(java.util.List)" class="member-name-link">finalizeResults(List&lt;Result&gt;)</a> - Method in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/ImportRequiredGrader.html" title="class in com.spertus.jacquard.syntaxgrader">ImportRequiredGrader</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/spertus/jacquard/syntaxgrader/MethodModifierGrader.html#finalizeResults(java.util.List)" class="member-name-link">finalizeResults(List&lt;Result&gt;)</a> - Method in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/MethodModifierGrader.html" title="class in com.spertus.jacquard.syntaxgrader">MethodModifierGrader</a></dt>
+<dt><a href="com/spertus/jacquard/syntaxgrader/FieldModifierGrader.html#finalizeResults(java.util.List)" class="member-name-link">finalizeResults(List&lt;Result&gt;)</a> - Method in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/FieldModifierGrader.html" title="class in com.spertus.jacquard.syntaxgrader">FieldModifierGrader</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/spertus/jacquard/syntaxgrader/SyntaxCheckGrader.html#finalizeResults(java.util.List)" class="member-name-link">finalizeResults(List&lt;Result&gt;)</a> - Method in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/SyntaxCheckGrader.html" title="class in com.spertus.jacquard.syntaxgrader">SyntaxCheckGrader</a></dt>
 <dd>
@@ -379,6 +379,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/spertus/jacquard/common/Result.html#getScore()" class="member-name-link">getScore()</a> - Method in class com.spertus.jacquard.common.<a href="com/spertus/jacquard/common/Result.html" title="class in com.spertus.jacquard.common">Result</a></dt>
 <dd>
 <div class="block">Gets the score (points earned) of this result.</div>
+</dd>
+<dt><a href="com/spertus/jacquard/syntaxgrader/MutableInteger.html#getValue()" class="member-name-link">getValue()</a> - Method in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/MutableInteger.html" title="class in com.spertus.jacquard.syntaxgrader">MutableInteger</a></dt>
+<dd>
+<div class="block">Gets the value.</div>
 </dd>
 <dt><a href="com/spertus/jacquard/common/Result.html#getVisibility()" class="member-name-link">getVisibility()</a> - Method in class com.spertus.jacquard.common.<a href="com/spertus/jacquard/common/Result.html" title="class in com.spertus.jacquard.common">Result</a></dt>
 <dd>
@@ -515,6 +519,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">In increasing order by maximum score.</div>
 </dd>
+<dt><a href="com/spertus/jacquard/syntaxgrader/MutableInteger.html#increment()" class="member-name-link">increment()</a> - Method in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/MutableInteger.html" title="class in com.spertus.jacquard.syntaxgrader">MutableInteger</a></dt>
+<dd>
+<div class="block">Increments the value by 1.</div>
+</dd>
 <dt><a href="com/spertus/jacquard/common/Autograder.html#init()" class="member-name-link">init()</a> - Static method in class com.spertus.jacquard.common.<a href="com/spertus/jacquard/common/Autograder.html" title="class in com.spertus.jacquard.common">Autograder</a></dt>
 <dd>
 <div class="block">Initializes the autograder with all default values.</div>
@@ -527,7 +535,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/spertus/jacquard/syntaxgrader/ImportRequiredGrader.html#initialize()" class="member-name-link">initialize()</a> - Method in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/ImportRequiredGrader.html" title="class in com.spertus.jacquard.syntaxgrader">ImportRequiredGrader</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/spertus/jacquard/syntaxgrader/MethodModifierGrader.html#initialize()" class="member-name-link">initialize()</a> - Method in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/MethodModifierGrader.html" title="class in com.spertus.jacquard.syntaxgrader">MethodModifierGrader</a></dt>
+<dt><a href="com/spertus/jacquard/syntaxgrader/FieldModifierGrader.html#initialize()" class="member-name-link">initialize()</a> - Method in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/FieldModifierGrader.html" title="class in com.spertus.jacquard.syntaxgrader">FieldModifierGrader</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/spertus/jacquard/syntaxgrader/SyntaxCheckGrader.html#initialize()" class="member-name-link">initialize()</a> - Method in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/SyntaxCheckGrader.html" title="class in com.spertus.jacquard.syntaxgrader">SyntaxCheckGrader</a></dt>
 <dd>
@@ -746,6 +754,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/spertus/jacquard/syntaxgrader/Parser.html#MIN_JAVA_LEVEL" class="member-name-link">MIN_JAVA_LEVEL</a> - Static variable in class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/Parser.html" title="class in com.spertus.jacquard.syntaxgrader">Parser</a></dt>
 <dd>
 <div class="block">The minimum level of Java supported through this class.</div>
+</dd>
+<dt><a href="com/spertus/jacquard/syntaxgrader/MutableInteger.html" class="type-name-link" title="class in com.spertus.jacquard.syntaxgrader">MutableInteger</a> - Class in <a href="com/spertus/jacquard/syntaxgrader/package-summary.html">com.spertus.jacquard.syntaxgrader</a></dt>
+<dd>
+<div class="block">A wrapper around a mutable integer value.</div>
+</dd>
+<dt><a href="com/spertus/jacquard/syntaxgrader/MutableInteger.html#%3Cinit%3E()" class="member-name-link">MutableInteger()</a> - Constructor for class com.spertus.jacquard.syntaxgrader.<a href="com/spertus/jacquard/syntaxgrader/MutableInteger.html" title="class in com.spertus.jacquard.syntaxgrader">MutableInteger</a></dt>
+<dd>
+<div class="block">Constructs a mutable integer with an initial value of 0.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:N">N</h2>
