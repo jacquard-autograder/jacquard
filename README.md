@@ -1,11 +1,9 @@
 # Jacquard
 
-This is a Java autograder released in
-late summer 2023. While most of it is platform-independent, it will
-include Gradescope integration. I would be happy to get collaborators
-familiar with other systems this could hook into.
+Jacquard is a Java autograder developed at Northeastern University
+with Gradescope integration.
 
-Features include:
+## Features
 
 * Syntax-based analysis using [JavaParser](https://github.com/javaparser/javaparser)
 * Static analysis with [Checkstyle](https://checkstyle.org/) and
@@ -21,7 +19,28 @@ Features include:
 
 For more information, see [Jacquard Examples](https://github.com/espertus/jacquard-examples).
 
+## User Information
+
+* [Javadoc](https://jacquard.ellenspertus.com/)
+* [FAQ](doc/FAQ.md)
+* [User Guide](doc/Guide.md) (incomplete)
+* Examples
+  * [Jacquard Example 0](https://github.com/jacquard-autograder/jacquard-example0), which shows how to grade based on Checkstyle, PMD, and JUnit 5 tests.
+  * [Jacquard Example 1](https://github.com/jacquard-autograder/jacquard-example1), which adds grading based on the parse tree, such as whether students
+    use certain language features and methods.
+* Groups
+  * [jacquard-announce](https://groups.google.com/g/jacquard-announce)
+  * [jacquard-discuss](https://groups.google.com/g/jacquard-discuss)
+
+## Information for Contributors
+
+I welcome contributors, especially ones interested in integrating Jacquard with learning
+management systems (LMSs) and GitHub Class.
+
+See [tips for contributors](CONTRIBUTING.md).
+
+## Credits
 Jacquard was influenced by Tim Kutcher's [JGrade](https://github.com/tkutcher/jgrade) and
 includes some of its `Visibility` and `GradedTest` code.
 
-[![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://www.ellenspertus.com/jacquard/docs)
+[![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://jacquard.ellenspertus.com/)
