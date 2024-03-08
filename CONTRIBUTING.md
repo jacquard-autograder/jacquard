@@ -2,12 +2,12 @@ For now, these are just some tips:
 
 ## Writing tests
 
-Contributions should include unit tests. In general, these should go in [src/test/java/com/spertus/jacquard](https://github.com/espertus/jacquard/tree/main/src/test/java/com/spertus/jacquard). There are a few exceptions...
+Contributions should include unit tests. In general, these should go in [src/test/java/com/spertus/jacquard](https://github.com/jacquard-autograder/jacquard/tree/main/src/test/java/com/spertus/jacquard). There are a few exceptions...
 
 To test a method that would ordinarily be private, annotate it with the tag `@VisibleForTesting`, make the method package private, and put the test in the same package. [An example will be added soon.]
 
-If you are testing `JUnitTester`, put your test in the ordinary location, but put any tests it runs dynamically in [`src/test/java/com/spertus/jacquard/junittester`](https://github.com/espertus/jacquard/tree/main/src/test/java/com/spertus/jacquard/junittester) or a subdirectory,
-tagging the class `"IndirectTest"`. For example, see [`JUnitTesterTest.java`](https://github.com/espertus/jacquard/blob/main/src/test/java/com/spertus/jacquard/JUnitTesterTest.java), which dynamically runs [`SampleTest.java`](https://github.com/espertus/jacquard/tree/main/src/test/java/com/spertus/jacquard/junittester/SampleTest.java).
+If you are testing `JUnitTester`, put your test in the ordinary location, but put any tests it runs dynamically in [`src/test/java/com/spertus/jacquard/junittester`](https://github.com/jacquard-autograder/jacquard/tree/main/src/test/java/com/spertus/jacquard/junittester) or a subdirectory,
+tagging the class `"IndirectTest"`. For example, see [`JUnitTesterTest.java`](https://github.com/jacquard-autograder/jacquard/blob/main/src/test/java/com/spertus/jacquard/JUnitTesterTest.java), which dynamically runs [`SampleTest.java`](https://github.com/jacquard-autograder/jacquard/tree/main/src/test/java/com/spertus/jacquard/junittester/SampleTest.java).
 
 ## Running Tests
 
