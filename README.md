@@ -27,7 +27,7 @@ which shows how to grade based on Checkstyle, PMD, and JUnit 5 tests.
 [Jacquard Example 1](https://github.com/jacquard-autograder/jacquard-example1) adds syntactic analysis based on 
 the parse tree, such as whether students use certain language features and methods.
 
-[Jacquard Example 2](https://github.com/jacquard-autograder/jacquard-example2) demonstrates
+[Jacquard Example 2](https://github.com/jacquard-autograder/jacquard-example2) demonstrates:
 * Changing the default configuration values:
   * visibility level of results
   * timeouts
