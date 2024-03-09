@@ -24,7 +24,7 @@ publishing {
             pom {
                 name = 'Jacquard'
                 description = 'Java autograder with Gradescope integration'
-                url = 'https://github.com/espertus/jacquard'
+                url = 'https://github.com/jacquard-autograder/jacquard'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -39,9 +39,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://github.com/espertus/jacquard.git'
-                    developerConnection = 'scm:git:ssh://github.com:espertus/jacquard.git'
-                    url = 'http://github.com/espertus/jacquard'
+                    connection = 'scm:git:git://github.com/jacquard-autograder/jacquard.git'
+                    developerConnection = 'scm:git:ssh://github.com:jacquard-autograder/jacquard.git'
+                    url = 'http://github.com/jacquard-autograder/jacquard'
                 }
             }
         }
