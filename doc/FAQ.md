@@ -14,14 +14,7 @@
 
 ## How do I make sure I have the latest version of the Jacquard library?
 
-See [Refreshing the Jacquard library](https://northeastern.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=8578e267-2bf0-4849-94c0-b066015c1ee3)
-or follow these steps in IntelliJ:
-
-1. Click on `Gradle` in the right sidebar.
-2. Right-click (or control-click) on the project name (or the elephant icon to its left).
-3. Select `Refresh Gradle Dependencies`.
-
-![screenshot](../images/refresh-jar.png)
+Make the changes shown in commit [Use Jacquard 1.00 instead of snapshot](https://github.com/jacquard-autograder/jacquard-example2/commit/357aabef51b5d8fd541c789753af6801878c77fe).
 
 ## What configuration options are there?
 There are currently 3 configurable values:
