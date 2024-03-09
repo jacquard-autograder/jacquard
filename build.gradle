@@ -14,7 +14,7 @@ repositories {
 }
 
 group = 'com.spertus'
-version = '0.1-SNAPSHOT'
+version = '1.0.0'
 
 publishing {
     publications {
@@ -55,6 +55,10 @@ java {
 
 compileTestJava {
     options.compilerArgs += ['-Xlint:deprecation']
+}
+
+signing {
+    sign(publishing.publications["mavenJava"])
 }
 
 nexusPublishing {
