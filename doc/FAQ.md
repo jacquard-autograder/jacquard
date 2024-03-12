@@ -175,7 +175,7 @@ Cross-testing is my term for running multiple sets of tests against multiple imp
 Most autograders only run instructor tests against student code. Jacquard also supports running
 student tests against multiple versions of instructor code.
 
-Cross-testing using submitted code is specified by a CSV file, such as
+Cross-testing using submitted test code is specified by a CSV file, such as
 [Example 2's `student-tests.csv`](https://github.com/jacquard-autograder/jacquard-example2/blob/main/src/main/resources/student-tests.csv):
 
 |   | student  | correct   | buggy  |
@@ -190,10 +190,10 @@ The header and first row mean:
 
 The negative signs in the "buggy" column indicate that the tests are inverted (i.e., points are earned if they fail).
 
-Test names must start with the name of the method under test, such as "sizeWorksForEmptyList()".
+Test names must start with the name of the method under test, such as `sizeWorksForEmptyList()` for tests of `size()`.
 
 This excerpt from [Example 2's `main()` method](https://github.com/jacquard-autograder/jacquard-example2/blob/main/src/main/java/student/AutograderMain.java#L79)
-shows how the cross-tester is created and run:
+shows how the cross-tester is programmatically created and run:
 ```java
 // Create CrossTester to run student tests on:
 // * student code (20 points)
@@ -207,7 +207,7 @@ CrossTester crossTester = new CrossTester(
 results.addAll(crossTester.run());
 ```
 
-See also the [Example 2 cross-tester video](https://northeastern.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=165ca9fa-98eb-4f0f-8841-b069013430c5).
+See also the [Example 2 documentation](https://github.com/jacquard-autograder/jacquard-example2?tab=readme-ov-file#configini) for needed changes to `config.ini` and the [Example 2 cross-tester video](https://northeastern.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=165ca9fa-98eb-4f0f-8841-b069013430c5).
 
 ## Why was the name "Jacquard" chosen?
 
