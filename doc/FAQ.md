@@ -1,15 +1,15 @@
 
 # Jacquard FAQ
-* [How do I make sure I have the latest version of the Jacquard library?](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#how-do-i-make-sure-i-have-the-latest-version-of-the-jacquard-library)
-* [What configuration options are there?](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#what-configuration-options-are-there)
-* [How do I use Checkstyle?](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#how-do-i-use-checkstyle)
-* [What's PMD? How do I use it?](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#whats-pmd-how-do-i-use-it)
-* [How do I set test result visibility?](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#how-do-i-set-test-result-visibility)
-* [How is code coverage measured?](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#how-is-code-coverage-measured)
-* [What is cross-testing?](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#what-is-cross-testing)
-* [Why was the name "Jacquard" chosen?](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#why-was-the-name-jacquard-chosen)
-* [Where can I view the Javadoc?](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#where-can-i-view-the-javadoc)
-* [Where can I get support?](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#where-can-i-get-support)
+* [How do I make sure I have the latest version of the Jacquard library?](https://github.com/jacquard-autograder/jacquard/blob/main/doc/FAQ.md#how-do-i-make-sure-i-have-the-latest-version-of-the-jacquard-library)
+* [What configuration options are there?](https://github.com/jacquard-autograder/jacquard/blob/main/doc/FAQ.md#what-configuration-options-are-there)
+* [How do I use Checkstyle?](https://github.com/jacquard-autograder/jacquard/blob/main/doc/FAQ.md#how-do-i-use-checkstyle)
+* [What's PMD? How do I use it?](https://github.com/jacquard-autograder/jacquard/blob/main/doc/FAQ.md#whats-pmd-how-do-i-use-it)
+* [How do I set test result visibility?](https://github.com/jacquard-autograder/jacquard/blob/main/doc/FAQ.md#how-do-i-set-test-result-visibility)
+* [How is code coverage measured?](https://github.com/jacquard-autograder/jacquard/blob/main/doc/FAQ.md#how-is-code-coverage-measured)
+* [What is cross-testing?](https://github.com/jacquard-autograder/jacquard/blob/main/doc/FAQ.md#what-is-cross-testing)
+* [Why was the name "Jacquard" chosen?](https://github.com/jacquard-autograder/jacquard/blob/main/doc/FAQ.md#why-was-the-name-jacquard-chosen)
+* [Where can I view the Javadoc?](https://github.com/jacquard-autograder/jacquard/blob/main/doc/FAQ.md#where-can-i-view-the-javadoc)
+* [Where can I get support?](https://github.com/jacquard-autograder/jacquard/blob/main/doc/FAQ.md#where-can-i-get-support)
 
 
 ## How do I make sure I have the latest version of the Jacquard library?
@@ -130,7 +130,7 @@ public void iteratorOverEmptyList() {
 
 ### Other results
 The visibility level can be set for all other types of autograder results through the
-[initial configuration](https://github.com/jacquard-autograder/jacquard-examples/blob/main/README.md#what-configuration-options-are-there).
+[initial configuration](https://github.com/jacquard-autograder/jacquard-examples/blob/main/doc/FAQ.md#what-configuration-options-are-there).
 
 The visibility level of a generated [`Result`](https://jacquard.ellenspertus.com/com/spertus/jacquard/common/Result.html) can be mutated by calling the [`changeVisibility(Visibility visibility)` instance method](https://jacquard.ellenspertus.com/com/spertus/jacquard/common/Result.html#changeVisibility(com.spertus.jacquard.common.Visibility)) or [`Result.changeVisibility(List<Result> results, Visibility visibility)`](https://jacquard.ellenspertus.com/com/spertus/jacquard/common/Result.html#changeVisibility(java.util.List,com.spertus.jacquard.common.Visibility)), as shown:
 
