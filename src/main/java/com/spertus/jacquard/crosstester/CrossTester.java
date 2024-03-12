@@ -18,10 +18,10 @@ import java.util.*;
  */
 public class CrossTester {
     private static final String DELIM = "\\s*,\\s*";
-    private static final String FOUND_BUG_TEMPLATE = "Test %s SUCCEEDED by reporting a bug in the hidden buggy implementation: %s\n";
-    private static final String MISSED_BUG_TEMPLATE = "Test %s DID NOT report an existing bug in the hidden buggy implementation\n";
-    private static final String BLAMED_CORRECT_TEMPLATE = "Test %s FAILED by reporting a bug in the hidden correct implementation: %s\n";
-    private static final String PASSED_CORRECT_TEMPLATE = "Test %s SUCCEEDED by not falsely reporting a bug in the hidden correct implementation\n";
+    private static final String FOUND_BUG_TEMPLATE = "Test %s SUCCEEDED by reporting a bug in the %s implementation of %s(): %s\n";
+    private static final String MISSED_BUG_TEMPLATE = "Test %s FAILED to report an existing bug in the %s implementation of %s()\n";
+    private static final String BLAMED_CORRECT_TEMPLATE = "Test %s FAILED by reporting a bug in the %s implementation of %s(): %s\n";
+    private static final String PASSED_CORRECT_TEMPLATE = "Test %s SUCCEEDED by not falsely reporting a bug in the %s implementation of %s()\n";
 
     private final Class<?> testClass;
     // The next three instance variables are initialized in processCsvFile().
@@ -255,11 +255,11 @@ public class CrossTester {
         for (final TestResult tr : mutTestResults) {
             if (tr.passed()) {
                 String template = testsShouldPass ? PASSED_CORRECT_TEMPLATE : MISSED_BUG_TEMPLATE;
-                sb.append(String.format(template, tr.testName()));
+                sb.append(String.format(template, tr.testName(), tr.packageUnderTestName(), tr.methodUnderTestName()));
                 successes++;
             } else {
                 String template = testsShouldPass ? BLAMED_CORRECT_TEMPLATE : FOUND_BUG_TEMPLATE;
-                sb.append(String.format(template, tr.testName(), tr.message()));
+                sb.append(String.format(template, tr.testName(), tr.packageUnderTestName(), tr.methodUnderTestName(), tr.message()));
                 failures++;
             }
             if (!tr.output().isEmpty()) {
