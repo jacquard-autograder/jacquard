@@ -13,8 +13,10 @@
 
 
 ## How do I make sure I have the latest version of the Jacquard library?
+If you began using Jacquard before version 1.0.0 was released (March 9, 2024), your `build.gradle` file will reference
+the snapshot version of Jacquard. Make the changes shown in commit [Use Jacquard 1.00 instead of snapshot](https://github.com/jacquard-autograder/jacquard-example2/commit/357aabef51b5d8fd541c789753af6801878c77fe).
 
-Make the changes shown in commit [Use Jacquard 1.00 instead of snapshot](https://github.com/jacquard-autograder/jacquard-example2/commit/357aabef51b5d8fd541c789753af6801878c77fe).
+You can always see the latest release number at [Jacquard releases](https://github.com/jacquard-autograder/jacquard/releases) or [Sonatype](https://central.sonatype.com/artifact/com.spertus/jacquard).
 
 ## What configuration options are there?
 There are currently 3 configurable values:
