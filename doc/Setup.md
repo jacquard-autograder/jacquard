@@ -5,11 +5,10 @@ Follow these instructions to set up IntelliJ IDEA Ultimate and your environment.
 
 ## IntelliJ
 
-[Create a Jet Brains academic account](https://www.jetbrains.com/shop/eform/students) and follow the instructions
-in these short videos to download and install IntelliJ IDEA Ultimate (which we will just call IntelliJ) and JDK 21.
+First, [create a Jet Brains academic account](https://www.jetbrains.com/shop/eform/students).
 
-### Download and Install
-You can download IntelliJ from [https://jetbrains.com/idea](https://jetbrains.com/idea).
+### Download and Install IntelliJ
+You can download IntelliJ IDEA Ultimate from [https://jetbrains.com/idea](https://jetbrains.com/idea) and install it.
 
 Video instructions:
 
@@ -22,7 +21,7 @@ and [installation](https://northeastern.hosted.panopto.com/Panopto/Pages/Viewer.
 [Video instructions](https://northeastern.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=e2656560-4711-4fc5-8f43-b0ed0051931f&start=0)
 
 If you get a message that there are no available licenses, open your browser to 
-[https://account.jetbrains.com/licenses](https://account.jetbrains.com/licenses),  where you should see:
+[https://account.jetbrains.com/licenses](https://account.jetbrains.com/licenses), where you should see:
 
 ![image](https://github.com/jacquard-autograder/jacquard/assets/661056/a44d96a2-dfb1-417e-85d2-6b4bac2c0278)
 
@@ -35,7 +34,9 @@ license](https://www.jetbrains.com/student), and follow the instructions there.
 
 ## Environment
 
-### Windows
+### Installing git
+
+#### Windows
 
 While not strictly required if you run `git` through IntelliJ, we recommend:
 
@@ -44,8 +45,16 @@ While not strictly required if you run `git` through IntelliJ, we recommend:
 * pinning Git Bash to the Taskbar and configuring it to open in your preferred directory
 ([video instructions](https://northeastern.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=473e830b-bd18-4e87-a1ab-b0ea017447b5&start=0))
 
-### Mac
+#### Mac
 
 Try running `git` from the command line. If it hasn't been installed, you may be prompted to install the
 command line developer tools, which you should do. If you get an `xcrun` error, install them manually with
 `xcode-select --install` or (if that doesn't work) `sudo xcode-select --reset`.
+
+### Configuring git
+
+If you have not configured git, we recommend running these commands, substituting your information (retaining the quotation marks).
+```
+git config --global user.name "YOUR NAME"
+git config --global user.email "YOUR EMAIL"
+```
