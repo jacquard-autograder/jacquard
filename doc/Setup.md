@@ -1,7 +1,9 @@
 
 # Setup
 
-## Install IntelliJ
+Follow these instructions to set up IntelliJ IDEA Ultimate and your environment.
+
+## IntelliJ
 
 [Create a Jet Brains academic account](https://www.jetbrains.com/shop/eform/students) and follow the instructions
 in these short videos to download and install IntelliJ IDEA Ultimate (which we will just call IntelliJ) and JDK 21.
@@ -30,3 +32,20 @@ license](https://www.jetbrains.com/student), and follow the instructions there.
 ### Install JDK 21
 
 [Video instructions](https://northeastern.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=edc1d4ac-0f28-4e44-b14a-b0ed005186c1&start=0)
+
+## Environment
+
+### Windows
+
+While not strictly required if you run `git` through IntelliJ, we recommend:
+
+* installing [Git for Windows](https://gitforwindows.org/) ([video instructions](https://northeastern.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6fae1c27-6b37-4b7c-a3b6-b0e201546e2e&start=0))
+
+* pinning Git Bash to the Taskbar and configuring it to open in your preferred directory
+([video instructions](https://northeastern.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=473e830b-bd18-4e87-a1ab-b0ea017447b5&start=0))
+
+### Mac
+
+Try running `git` from the command line. If it hasn't been installed, you may be prompted to install the
+command line developer tools, which you should do. If you get an `xcrun` error, install them manually with
+`xcode-select --install` or (if that doesn't work) `sudo xcode-select --reset`.
