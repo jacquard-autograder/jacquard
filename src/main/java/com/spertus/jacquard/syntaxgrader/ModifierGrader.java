@@ -71,7 +71,8 @@ abstract class ModifierGrader extends SyntaxCheckGrader {
 
         private String getEnclosingClassName(final Node node) {
             if (node.getParentNode().isPresent() &&
-                    node.getParentNode().get() instanceof ClassOrInterfaceDeclaration classOrInterface) {
+                    node.getParentNode().get() instanceof ClassOrInterfaceDeclaration) {
+                ClassOrInterfaceDeclaration classOrInterface = (ClassOrInterfaceDeclaration) node.getParentNode().get();
                 return classOrInterface.getNameAsString();
             } else {
                 return "CLASS UNKNOWN";

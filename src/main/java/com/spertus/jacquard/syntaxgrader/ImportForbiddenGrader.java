@@ -58,7 +58,7 @@ public abstract class ImportForbiddenGrader extends SyntaxCheckGrader {
          * @param importDecl an import declaration
          * @return the package name
          */
-        protected static String importToPackageName(final ImportDeclaration importDecl) {
+        protected String importToPackageName(final ImportDeclaration importDecl) {
             final String name = importDecl.getNameAsString();
             if (importDecl.isAsterisk()) {
                 return name;

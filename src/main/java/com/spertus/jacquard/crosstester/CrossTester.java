@@ -10,6 +10,7 @@ import org.junit.platform.launcher.core.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A grader for running student-provided tests against multiple implementations.
@@ -172,21 +173,27 @@ public class CrossTester {
                     }
                 }
                 final String output = baos.toString().trim();
-                testResults.add(switch (testExecutionResult.getStatus()) {
-                    case SUCCESSFUL -> TestResult.makeSuccess(
-                            testIdentifier.getDisplayName(),
-                            mutName,
-                            putName,
-                            output);
-                    case FAILED, ABORTED -> TestResult.makeFailure(
-                            testIdentifier.getDisplayName(),
-                            mutName,
-                            putName,
-                            testExecutionResult.getThrowable().isPresent() ?
-                                    testExecutionResult.getThrowable().get().getMessage() :
-                                    "no information",
-                            output);
-                });
+                switch (testExecutionResult.getStatus()) {
+                    case SUCCESSFUL:
+                        testResults.add(TestResult.makeSuccess(
+                                testIdentifier.getDisplayName(),
+                                mutName,
+                                putName,
+                                output));
+                        break;
+
+                    case FAILED:
+                    case ABORTED:
+                        testResults.add(TestResult.makeFailure(
+                                testIdentifier.getDisplayName(),
+                                mutName,
+                                putName,
+                                testExecutionResult.getThrowable().isPresent() ?
+                                        testExecutionResult.getThrowable().get().getMessage() :
+                                        "no information",
+                                output));
+                        break;
+                }
                 TestExecutionListener.super.executionFinished(testIdentifier, testExecutionResult);
             }
         });
@@ -238,7 +245,7 @@ public class CrossTester {
                 .filter((TestResult tr) ->
                         tr.methodUnderTestName().equals(mutName) &&
                                 tr.packageUnderTestName().equals(putName))
-                .toList();
+                .collect(Collectors.toList());
 
         // Generate name.
         final String name = String.format("Tests of %s.%s()", putNames[putIndex], mutName);

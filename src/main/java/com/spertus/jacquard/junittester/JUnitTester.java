@@ -35,7 +35,7 @@ public class JUnitTester extends Tester {
         super();
         selectors = Arrays.stream(classes)
                 .map(DiscoverySelectors::selectClass)
-                .toList();
+                .collect(Collectors.toList());
         filter = null;
     }
 
@@ -151,27 +151,15 @@ public class JUnitTester extends Tester {
                 final TestExecutionResult testExecutionResult) {
             if (testIdentifier.getSource().isPresent()) {
                 final TestSource source = testIdentifier.getSource().get();
-                if (source instanceof MethodSource methodSource) {
+                if (source instanceof MethodSource) {
+                    MethodSource methodSource = (MethodSource) source;
                     final GradedTest gt = methodSource.getJavaMethod().getAnnotation(GradedTest.class);
                     if (gt != null) {
                         final String name = gt.name().isEmpty() ? testIdentifier.getDisplayName() : gt.name();
-                        try {
-                            final Result result = switch (testExecutionResult.getStatus()) {
-                                case SUCCESSFUL ->
-                                        Result.makeSuccess(name, gt.points(), makeMessage(gt, testExecutionResult));
-                                case FAILED, ABORTED ->
-                                        Result.makeFailure(name, gt.points(), makeMessage(gt, testExecutionResult));
-                            };
-                            results.add(result.changeVisibility(gt.visibility()));
-                            ps.close();
-                        } catch (NoSuchElementException e) { // if get() failed
-                            results.add(
-                                    Result.makeFailure(
-                                                    name,
-                                                    gt.points(),
-                                                    "Test failed with no additional information")
-                                            .changeVisibility(gt.visibility()));
-                        }
+                        double points = testExecutionResult.getStatus() == TestExecutionResult.Status.SUCCESSFUL ? gt.points() : 0;
+                        Result result = Result.makeResult(name, points, gt.points(), makeMessage(gt, testExecutionResult));
+                        results.add(result.changeVisibility(gt.visibility()));
+                        ps.close();
                     }
                 }
             }

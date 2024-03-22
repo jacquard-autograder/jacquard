@@ -13,6 +13,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -85,7 +86,7 @@ public class CodeCoverageTester extends Tester {
         final List<? extends DiscoverySelector> selectors =
                 Arrays.stream(testClasses)
                         .map(DiscoverySelectors::selectClass)
-                        .toList();
+                        .collect(Collectors.toList());
         final CustomContextClassLoaderExecutor executor =
                 new CustomContextClassLoaderExecutor(Optional.ofNullable(memoryClassLoader));
         executor.invoke(() -> executeTests(selectors));

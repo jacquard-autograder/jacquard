@@ -155,9 +155,10 @@ public final class Target {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (o instanceof Target other) {
-            return this.path.equals(other.path);
+    public boolean equals(final Object other) {
+        if (other instanceof Target) {
+            Target target = (Target) other;
+            return this.path.equals(target.path);
         }
         return false;
     }

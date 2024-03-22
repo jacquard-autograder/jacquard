@@ -135,7 +135,8 @@ public class Result {
 
     @Override
     public boolean equals(final Object other) {
-        if (other instanceof Result result) {
+        if (other instanceof Result ) {
+            Result result = (Result) other;
             return name.equals(result.name) &&
                     score == result.score &&
                     maxScore == result.maxScore &&

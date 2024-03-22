@@ -82,14 +82,25 @@ public class JUnitTesterTest {
         List<Result> results = tester.run();
 
         for (Result result : results) {
-            Visibility expectedVisibility = switch (result.getName()) {
-                case "visibleTest1()", "visibleTest2()" -> Visibility.VISIBLE;
-                case "afterDueDateTest()" -> Visibility.AFTER_DUE_DATE;
-                case "afterPublishedTest()" -> Visibility.AFTER_PUBLISHED;
-                case "hiddenTest()" -> Visibility.HIDDEN;
-                default ->
-                        throw new AssertionError("Test had unexpected name: " + result.getName());
-            };
+            Visibility expectedVisibility;
+            switch (result.getName()) {
+                case "visibleTest1()":
+                case "visibleTest2()":
+                    expectedVisibility = Visibility.VISIBLE;
+                    break;
+                case "afterDueDateTest()":
+                    expectedVisibility = Visibility.AFTER_DUE_DATE;
+                    break;
+                case "afterPublishedTest()":
+                    expectedVisibility = Visibility.AFTER_PUBLISHED;
+                    break;
+                case "hiddenTest()":
+                    expectedVisibility = Visibility.HIDDEN;
+                    break;
+                default:
+                    throw new AssertionError("Test had unexpected name: " + result.getName());
+            }
+
             assertEquals(expectedVisibility, result.getVisibility(),
                     "Visibility incorrect for " + result.getName());
         }

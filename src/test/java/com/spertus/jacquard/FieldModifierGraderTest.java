@@ -28,7 +28,7 @@ public class FieldModifierGraderTest {
     }
 
     @Test
-    public void testWithPenalizeMissingFields() throws URISyntaxException {
+    public void testWithPenalizeMissingFields() {
         FieldModifierGrader grader = FieldModifierGrader.makeChecker("Private/final check", 1.0,
                 List.of("behavior", "maxHearts", "maxDamage", "minDamage", "type", "nosuchfield"),
                 List.of(Modifier.finalModifier(), Modifier.privateModifier()),

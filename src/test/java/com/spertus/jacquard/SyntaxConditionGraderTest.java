@@ -26,7 +26,8 @@ public class SyntaxConditionGraderTest {
                 "toString() method with override annotation",
                 5.0,
                 node -> {
-                    if (node instanceof MethodDeclaration methodDecl) {
+                    if (node instanceof MethodDeclaration) {
+                        MethodDeclaration methodDecl = (MethodDeclaration) node;
                         return methodDecl.getAnnotationByClass(Override.class).isPresent()
                                 && methodDecl.getNameAsString().equals("toString");
                     }
