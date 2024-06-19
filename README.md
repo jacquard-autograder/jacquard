@@ -57,7 +57,7 @@ and [jacquard-discuss](https://groups.google.com/g/jacquard-discuss).
 I welcome contributors, especially ones interested in integrating Jacquard with learning
 management systems (LMSs) and GitHub Classroom. See [tips for contributors](CONTRIBUTING.md).
 
-I also welcome [reports](https://github.com/jacquard-autograder/jacquard/issues)
+I also welcome [reports](https://github.com/jacquard-autograder/jacquard/issues), including
 suggestions of how to improve Jacquard, the documentation, or examples.
 
 ## Credits
