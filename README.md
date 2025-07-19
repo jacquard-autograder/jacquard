@@ -1,5 +1,7 @@
 # Jacquard
 
+**Jacquard is no longer being developed.**
+
 Jacquard is a Java autograder developed at Northeastern University
 with Gradescope integration. It has been used at multiple universities.
 
@@ -51,14 +53,6 @@ syntactic analysis.
 
 There are low-volume Google groups [jacquard-announce](https://groups.google.com/g/jacquard-announce)
 and [jacquard-discuss](https://groups.google.com/g/jacquard-discuss).
-
-## Information for Contributors
-
-I welcome contributors, especially ones interested in integrating Jacquard with learning
-management systems (LMSs) and GitHub Classroom. See [tips for contributors](CONTRIBUTING.md).
-
-I also welcome [reports](https://github.com/jacquard-autograder/jacquard/issues), including
-suggestions of how to improve Jacquard, the documentation, or examples.
 
 ## Credits
 
